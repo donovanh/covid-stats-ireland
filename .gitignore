@@ -1,0 +1,4 @@
+my-cache
+.DS_Store
+node_modules
+cached.json

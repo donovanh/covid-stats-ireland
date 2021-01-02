@@ -1,0 +1,18 @@
+{
+  "name": "covid-stats-ireland-static",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "NODE_ENV=development eleventy --serve",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "d3-node": "^2.2.2",
+    "fs": "0.0.1-security",
+    "make-fetch-happen": "^8.0.12",
+    "node-fetch": "^2.6.1"
+  }
+}

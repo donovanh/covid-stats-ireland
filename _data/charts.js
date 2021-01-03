@@ -18,6 +18,7 @@ module.exports = async function() {
     dailyNationalCases: dailyNationalCases(data),
     dailyHospitalised: dailyHospitalised(data),
     byAge: byAge(data),
-    lastUpdated
+    lastUpdated,
+    lastRun: new Date()
   };
 };

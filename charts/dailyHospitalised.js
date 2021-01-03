@@ -2,9 +2,9 @@ const D3Node = require('d3-node');
 
 module.exports = (data) => {
 
-  console.log('Generating national chart');
+  console.log('Generating daily hospitalised cases area chart');
 
-  const options = { selector: '#cases', container: '<div id="container"><div id="cases"></div></div>' }
+  const options = { selector: '#hospitalised', container: '<div id="container"><div id="hospitalised"></div></div>' }
   const d3n = new D3Node(options) // initializes D3 with container element
   const d3 = d3n.d3
 
@@ -26,24 +26,11 @@ module.exports = (data) => {
     .range([margin.left, w - margin.right]);
 
   const yScale = d3.scaleLinear()
-    .domain([0, d3.max(dataset, d => d.ConfirmedCovidCases)])
+    .domain([0, d3.max(dataset, d => d.dailyHospitalisedCovidCases)])
     .range([h - margin.bottom - 10, margin.top]);
 
-  // Define line
-  const cases = d3.line()
-    .curve(d3.curveBasis)
-    .x(d => xScale(d.date))
-    .y(d => yScale(d.ConfirmedCovidCases));
-
-  // Define hospitalised as an area
-  const hospitalised = d3.area()
-    .curve(d3.curveBasis)
-    .x(d => xScale(d.date))
-    .y0(() => yScale.range()[0])
-    .y1(d => yScale(d.dailyHospitalisedCovidCases))
-
   // Draw containing svg
-  const svg = d3.select(d3n.document.querySelector('#cases'))
+  const svg = d3.select(d3n.document.querySelector('#hospitalised'))
     .append('svg')
     .attr('viewBox', `0 0 ${w} ${h}`);
 
@@ -115,23 +102,37 @@ module.exports = (data) => {
   svg.selectAll('.tick text')
     .attr('fill', '#666')
 
-  // Draw total cases line
-  svg.append('path')
-    .datum(dataset)
-    .attr('class', 'cases')
-    .attr('fill', 'none')
-    .attr('stroke', '#000')
-    .attr('d', cases);
+  // Define hospitalised as an area
+  const hospitalised = d3.area()
+    .curve(d3.curveBasis)
+    .x(d => xScale(d.date))
+    .y0(() => yScale.range()[0])
+    .y1(d => yScale(d.dailyHospitalisedCovidCases))
 
   // Draw hospitalised area
   svg.append('path')
     .datum(dataset)
       .attr('class', 'hospitalised')
+      .attr('fill', '#ddd')
       .attr('d', hospitalised);
+
+  // Define deaths as an area
+  const deaths = d3.area()
+    .curve(d3.curveBasis)
+    .x(d => xScale(d.date))
+    .y0(() => yScale.range()[0])
+    .y1(d => yScale(d.ConfirmedCovidDeaths))
+
+  // Draw hospitalised area
+  svg.append('path')
+    .datum(dataset)
+      .attr('class', 'deaths')
+      .attr('fill', 'rgba(0, 0, 0, 0.5)')
+      .attr('d', deaths);
 
   d3n.html()
   const html = `
-    <h2>Daily cases and daily hospital cases</h2>
+    <h2>Hospitalised cases and deaths</h2>
     <div style="max-width: ${w}px">
       ${d3n.chartHTML()}
     </div>

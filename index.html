@@ -2,10 +2,18 @@
 <html lang="en">
     <head>
       <meta charset="utf-8">
-      <title>Covid Stats Ireland</title>
+      <title>Covid Stats Ireland - Hop.ie</title>
     </head>
     <body>
       <h1>Covid Stats Ireland</h1>
       {{ charts.dailyNationalCases }}
+      {{ charts.dailyHospitalised }}
+      {{ charts.byAge }}
+      <hr />
+      <h2>Credits</h2>
+      <p>Case data sourced from <a href="https://data.gov.ie/">data.gov.ie</a> using the <a href="https://covid19ireland-geohive.hub.arcgis.com/datasets/d8eb52d56273413b84b0187a4e9117be_0">arcgis API</a>.</p>
+      <p>Designed and built by <a href="https://hop.ie">Donovan Hutchinson</a>.</p>
+      <p>Daily case data updated as of {{charts.lastUpdated.national}}.</p>
+      <p>County case data updated as of {{charts.lastUpdated.county}}.</p>
     </body>
 </html>

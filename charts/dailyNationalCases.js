@@ -154,8 +154,7 @@ module.exports = (data) => {
     .datum(dataset)
     .attr('class', 'cases')
     .attr('fill', 'none')
-    .attr('stroke-dasharray', '1')
-    .attr('stroke', '#aaa')
+    .attr('stroke', '#ccc')
     .attr('d', casesLine);
 
   // Define weekly average line
@@ -168,7 +167,9 @@ module.exports = (data) => {
     .datum(sevenDayAverages)
     .attr('class', 'seven-day-avg')
     .attr('fill', 'none')
-    .attr('stroke', '#333')
+    .attr('stroke-dasharray', 2)
+    .attr('stroke-width', 2)
+    .attr('stroke', '#444')
     .attr('d', sevendayAvgLine);
 
   // Add a fade-out for the top larger values
@@ -182,10 +183,6 @@ module.exports = (data) => {
   gradient.append('stop')
     .attr('offset', '0')
     .attr('stop-color', 'rgba(255,255,255,1)');
-
-  // gradient.append('stop')
-  //   .attr('offset', '20%')
-  //   .attr('stop-color', 'rgba(255,255,255,1)');
 
   gradient.append('stop')
     .attr('offset', '100%')

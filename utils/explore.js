@@ -17,14 +17,29 @@ const data = fetchData().then(data => doStuff(JSON.parse(data)));
 // Do stuff to it!
 function doStuff(data) {
   // console.log('Got data', data)
-  const national = data.national;
-  const county = data.county;
+  const national = [...data.national];
+  const county = [...data.county];
 
-  for (const d of data.national) {
-    console.log(d.HospitalisedAged5)
-  }
 
   // Generate rolling 7-day average cases from today back
+
+  const rolling7DayAvgCases = national.map((d, i) => {
+    // For each day take the preceeding 6 days and produce average
+    const vals = [];
+    for (let j= 0; j < 7; j++) {
+      if (national[i - j]) {
+        vals.push(national[i - j].ConfirmedCovidCases);
+      }
+    }
+    const average = vals.reduce((a, b) => a + b, 0) / vals.length;
+    return {
+      date: new Date(d.date),
+      value: average
+    }
+  });
+
+  console.log(rolling7DayAvgCases)
+
   // Put data into 7-day groups
   // let cohort = [];
   // const groups = data.national.reverse().reduce((acc, d, i) => {

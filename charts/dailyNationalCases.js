@@ -18,36 +18,18 @@ module.exports = (data) => {
   const margin = ({ top: 20, right: 30, bottom: 30, left: 40 });
 
   // Generate rolling 7-day average cases from today back
-  // Put data into 7-day groups
-  let cohort = [];
-  const workingData = [...data.national];
-  const groups = workingData.reverse().reduce((acc, d, i) => {
-    if (cohort.length === 0) {
-      cohort.date = d.date;
-    }
-    if (cohort.length < 7) {
-      cohort.push(d.ConfirmedCovidCases);
-
-      if (i === data.national.length - 1) {
-        acc.push(cohort);
+  const sevenDayAverages = dataset.map((d, i) => {
+    // For each day take the preceeding 6 days and produce average
+    const vals = [];
+    for (let j = -7; j < 7; j++) {
+      if (dataset[i - j]) {
+        vals.push(dataset[i - j].ConfirmedCovidCases);
       }
-    } else {
-      acc.push(cohort);
-      cohort = [];
     }
-    return acc;
-  }, []);
-
-  const sevenDayAverageNumbers = groups.reverse().map(group => {
-    const sum = group.reduce((a, b) => a + b, 0);
-    return sum / group.length;
-  });
-
-  // Add dates to the averages
-  const sevenDayAverages = sevenDayAverageNumbers.map((d, i) => {
+    const average = vals.reduce((a, b) => a + b, 0) / vals.length;
     return {
-      date: new Date(groups[i].date),
-      value: d
+      date: new Date(d.date),
+      value: average
     }
   });
 
@@ -200,7 +182,7 @@ module.exports = (data) => {
   d3n.html()
   const html = `
     <h2>Confirmed cases</h2>
-    <h3>Daily confirmed cases and 7-day average</h3>
+    <h3>Daily confirmed cases and 14-day average</h3>
     <div style="max-width: ${w}px">
       ${d3n.chartHTML()}
     </div>

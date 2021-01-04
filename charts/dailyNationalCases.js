@@ -20,7 +20,8 @@ module.exports = (data) => {
   // Generate rolling 7-day average cases from today back
   // Put data into 7-day groups
   let cohort = [];
-  const groups = data.national.reverse().reduce((acc, d, i) => {
+  const workingData = [...data.national];
+  const groups = workingData.reverse().reduce((acc, d, i) => {
     if (cohort.length === 0) {
       cohort.date = d.date;
     }

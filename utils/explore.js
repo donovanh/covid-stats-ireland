@@ -20,40 +20,44 @@ function doStuff(data) {
   const national = data.national;
   const county = data.county;
 
+  for (const d of data.national) {
+    console.log(d.HospitalisedAged5)
+  }
+
   // Generate rolling 7-day average cases from today back
   // Put data into 7-day groups
-  let cohort = [];
-  const groups = data.national.reverse().reduce((acc, d, i) => {
-    if (cohort.length === 0) {
-      cohort.date = d.date;
-    }
-    if (cohort.length < 7) {
-      cohort.push(d.ConfirmedCovidCases);
+  // let cohort = [];
+  // const groups = data.national.reverse().reduce((acc, d, i) => {
+  //   if (cohort.length === 0) {
+  //     cohort.date = d.date;
+  //   }
+  //   if (cohort.length < 7) {
+  //     cohort.push(d.ConfirmedCovidCases);
 
-      if (i === data.national.length - 1) {
-        acc.push(cohort);
-      }
-    } else {
-      acc.push(cohort);
-      cohort = [];
-    }
-    return acc;
-  }, []);
+  //     if (i === data.national.length - 1) {
+  //       acc.push(cohort);
+  //     }
+  //   } else {
+  //     acc.push(cohort);
+  //     cohort = [];
+  //   }
+  //   return acc;
+  // }, []);
 
-  const sevenDayAverageNumbers = groups.reverse().map(group => {
-    const sum = group.reduce((a, b) => a + b, 0);
-    return sum / group.length;
-  });
+  // const sevenDayAverageNumbers = groups.reverse().map(group => {
+  //   const sum = group.reduce((a, b) => a + b, 0);
+  //   return sum / group.length;
+  // });
 
-  // Add dates to the averages
-  const sevenDayAverages = sevenDayAverageNumbers.map((d, i) => {
-    return {
-      date: groups[i].date,
-      value: d
-    }
-  });
+  // // Add dates to the averages
+  // const sevenDayAverages = sevenDayAverageNumbers.map((d, i) => {
+  //   return {
+  //     date: groups[i].date,
+  //     value: d
+  //   }
+  // });
 
-  // console.log(groups)
-  console.log(sevenDayAverages)
+  // // console.log(groups)
+  // console.log(sevenDayAverages)
 
 };

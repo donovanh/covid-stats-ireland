@@ -9,7 +9,13 @@ module.exports = (data) => {
   const d3 = d3n.d3;
 
   // Set up dimensions and options
-  const sourceData = data.national[data.national.length - 1];
+  let sourceData = { date: 0 };
+  
+  for (const d of data.national) {
+    if (new Date(d.date) > sourceData.date) {
+      sourceData = d;
+    }
+  }
 
   const getProps = (source, props) => {
     const res = {};
@@ -80,12 +86,17 @@ module.exports = (data) => {
     .domain([0, d3.max(casesByAgeArray, d => d.value)])
     .range([h - margin.bottom, margin.top]);
 
-  // Draw containing svg
+  // Scale for hospitalised by age
+  // const yScale1 = d3.scaleLinear()
+  //   .domain([0, d3.max(casesByAgeArray, d => d.value)])
+  //   .range([(h * 0.8) - margin.bottom, h - margin.bottom]);
+
+  // // Draw containing svg
   const svg = d3.select(d3n.document.querySelector('#byage'))
     .append('svg')
     .attr('viewBox', `0 0 ${w} ${h}`);
 
-  // Draw axes
+  // // Draw axes
   const xAxis = d3.axisBottom(xScale)
     .tickPadding(10)
     .tickSize(0);
@@ -98,6 +109,34 @@ module.exports = (data) => {
     .tickValues([0, maxHospitalisedValue, maxCaseValue])
     .tickPadding(5)
     .tickSize(0 - (w - margin.left - margin.right));
+    //.tickSize(0);
+
+  // Axis for hospitalised age
+  
+  // const yAxis1 = d3.axisLeft(yScale)
+  //   .tickValues([0, maxHospitalisedValue])
+  //   .tickPadding(5)
+  //   .tickSize(0 - (w - margin.left - margin.right));
+  //   //.tickSize(0);
+
+  // const getTicksDistance = (scale) => {
+  //   const ticks = scale.ticks();
+  //   const spaces = []
+  //   for(let i=0; i < ticks.length - 1; i++){
+  //     spaces.push(scale(ticks[i+1]) - scale(ticks[i]))
+  //   }
+  //   return spaces;
+  // };
+
+  // const xTickDistance = getTicksDistance(xScale)[0];
+
+  // svg.append('clipPath')
+  //   .attr('id', 'chart-area')
+  //   .append('rect')
+  //   .attr('x', margin.left)
+  //   .attr('y', margin.top)
+  //   .attr('width', w - margin.left - margin.right)
+  //   .attr('height', h - margin.top - margin.bottom);
 
   // x axis
   svg.append('g')
@@ -105,15 +144,32 @@ module.exports = (data) => {
     .attr('transform', `translate(0, ${h - margin.bottom})`)
     .call(xAxis);
 
+  // svg.select('.x-axis')
+  //   .selectAll('text')
+  //   .attr('transform', `translate(-${xScale.bandwidth() * 0.5}, 0)`)
+
   svg.select('.x-axis')
     .select('.domain')
     .remove();
+
+  // svg.select('.x-axis')
+  //   .selectAll('.tick:first-of-type text')
+  //   .remove()
+
+  // svg.select('.x-axis')
+  //   .selectAll('.tick:last-of-type text')
+  //   .remove();
 
   // y axis
   svg.append('g')
     .classed('y-axis', true)
     .attr('transform', `translate(${margin.left}, 0)`)
     .call(yAxis);
+
+  // svg.append('g')
+  //   .classed('y-axis', true)
+  //   .attr('transform', `translate(${margin.left}, 0)`)
+  //   .call(yAxis1);
 
   svg.selectAll('.y-axis')
     .select('.domain')

@@ -65,20 +65,10 @@ module.exports = (data) => {
       .replace('up', ' up'),
     value: entry[1]
   }));
-  
-  casesByAgeArray = [
-    { age: 'Zero', value: 0 },
-    ...casesByAgeArray
-  ];
-
-  casesByHospitalisedArray = [
-    { age: 'Zero', value: 0 },
-    ...casesByHospitalisedArray
-  ];
 
   const w = 800;
   const h = 300;
-  const margin = ({ top: 20, right: 30, bottom: 30, left: 40 });
+  const margin = ({ top: 20, right: 30, bottom: 40, left: 40 });
 
   // Set up scales
   const xScale = d3.scaleBand()
@@ -86,58 +76,28 @@ module.exports = (data) => {
     .range([margin.left, w - margin.right]);
 
   // Scale for cases by age
-  const yScale0 = d3.scaleLinear()
+  const yScale = d3.scaleLinear()
     .domain([0, d3.max(casesByAgeArray, d => d.value)])
-    .range([(h * 0.8) - margin.bottom, margin.top]);
+    .range([h - margin.bottom, margin.top]);
 
-  // Scale for hospitalised by age
-  const yScale1 = d3.scaleLinear()
-    .domain([0, d3.max(casesByAgeArray, d => d.value)])
-    .range([(h * 0.8) - margin.bottom, (h * 1.2) - margin.bottom]);
-
-  // // Draw containing svg
+  // Draw containing svg
   const svg = d3.select(d3n.document.querySelector('#byage'))
     .append('svg')
     .attr('viewBox', `0 0 ${w} ${h}`);
 
-  // // Draw axes
+  // Draw axes
   const xAxis = d3.axisBottom(xScale)
+    .tickPadding(10)
     .tickSize(0);
 
   // Axis for cases by age
   const maxCaseValue = d3.max(casesByAgeArray, d => d.value);
-  const yAxis0 = d3.axisLeft(yScale0)
-    .tickValues([0, maxCaseValue])
-    .tickPadding(5)
-    .tickSize(0 - (w - margin.left - margin.right));
-    //.tickSize(0);
-
-  // Axis for hospitalised age
   const maxHospitalisedValue = d3.max(casesByHospitalisedArray, d => d.value);
-  const yAxis1 = d3.axisLeft(yScale1)
-    .tickValues([0, maxHospitalisedValue])
+
+  const yAxis = d3.axisLeft(yScale)
+    .tickValues([0, maxHospitalisedValue, maxCaseValue])
     .tickPadding(5)
     .tickSize(0 - (w - margin.left - margin.right));
-    //.tickSize(0);
-
-  // const getTicksDistance = (scale) => {
-  //   const ticks = scale.ticks();
-  //   const spaces = []
-  //   for(let i=0; i < ticks.length - 1; i++){
-  //     spaces.push(scale(ticks[i+1]) - scale(ticks[i]))
-  //   }
-  //   return spaces;
-  // };
-
-  // const xTickDistance = getTicksDistance(xScale)[0];
-
-  // svg.append('clipPath')
-  //   .attr('id', 'chart-area')
-  //   .append('rect')
-  //   .attr('x', margin.left)
-  //   .attr('y', margin.top)
-  //   .attr('width', w - margin.left - margin.right)
-  //   .attr('height', h - margin.top - margin.bottom);
 
   // x axis
   svg.append('g')
@@ -145,32 +105,15 @@ module.exports = (data) => {
     .attr('transform', `translate(0, ${h - margin.bottom})`)
     .call(xAxis);
 
-  // svg.select('.x-axis')
-  //   .selectAll('text')
-  //   .attr('transform', `translate(-${xScale.bandwidth() * 0.5}, 0)`)
-
   svg.select('.x-axis')
     .select('.domain')
     .remove();
-
-  svg.select('.x-axis')
-    .selectAll('.tick:first-of-type text')
-    .remove()
-
-  // svg.select('.x-axis')
-  //   .selectAll('.tick:last-of-type text')
-  //   .remove();
 
   // y axis
   svg.append('g')
     .classed('y-axis', true)
     .attr('transform', `translate(${margin.left}, 0)`)
-    .call(yAxis0);
-
-  svg.append('g')
-    .classed('y-axis', true)
-    .attr('transform', `translate(${margin.left}, 0)`)
-    .call(yAxis1);
+    .call(yAxis);
 
   svg.selectAll('.y-axis')
     .select('.domain')
@@ -192,28 +135,28 @@ module.exports = (data) => {
   const casesByAgeArea = d3.area()
     //.curve(d3.curveBasis)
     .x(d => (xScale(d.age) + xScale.bandwidth() / 2))
-    .y0(() => yScale0.range()[0])
-    .y1(d => yScale0(d.value));
+    .y0(() => yScale.range()[0])
+    .y1(d => yScale(d.value));
 
   // Draw cases by age area
   svg.append('path')
     .datum(casesByAgeArray)
     .attr('class', 'cases-by-age')
-    .attr('fill', '#ddd')
+    .attr('fill', 'rgba(0,0,0,0.25)')
     .attr('d', casesByAgeArea);
 
   // Define hospitalised by age as area
   const hospitalisedByAgeArea = d3.area()
     //.curve(d3.curveBasis)
     .x(d => xScale(d.age) + xScale.bandwidth() / 2)
-    .y0(() => yScale1.range()[0])
-    .y1(d => yScale1(d.value));
+    .y0(() => yScale.range()[0])
+    .y1(d => yScale(d.value));
 
-  // Draw cases by age area
+  // Draw cases by hospitalised area
   svg.append('path')
     .datum(casesByHospitalisedArray)
     .attr('class', 'cases-by-age')
-    .attr('fill', '#999')
+    .attr('fill', 'rgba(0,0,0,0.5)')
     .attr('d', hospitalisedByAgeArea);
 
   d3n.html()

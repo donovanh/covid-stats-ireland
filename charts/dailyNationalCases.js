@@ -17,6 +17,39 @@ module.exports = (data) => {
   const h = 300;
   const margin = ({ top: 20, right: 30, bottom: 30, left: 40 });
 
+  // Generate rolling 7-day average cases from today back
+  // Put data into 7-day groups
+  let cohort = [];
+  const groups = data.national.reverse().reduce((acc, d, i) => {
+    if (cohort.length === 0) {
+      cohort.date = d.date;
+    }
+    if (cohort.length < 7) {
+      cohort.push(d.ConfirmedCovidCases);
+
+      if (i === data.national.length - 1) {
+        acc.push(cohort);
+      }
+    } else {
+      acc.push(cohort);
+      cohort = [];
+    }
+    return acc;
+  }, []);
+
+  const sevenDayAverageNumbers = groups.reverse().map(group => {
+    const sum = group.reduce((a, b) => a + b, 0);
+    return sum / group.length;
+  });
+
+  // Add dates to the averages
+  const sevenDayAverages = sevenDayAverageNumbers.map((d, i) => {
+    return {
+      date: new Date(groups[i].date),
+      value: d
+    }
+  });
+
   // Set up scales
   const xScale = d3.scaleTime()
     .domain([
@@ -25,22 +58,17 @@ module.exports = (data) => {
     ])
     .range([margin.left, w - margin.right]);
 
+  const sevenDayAvgXScale = d3.scaleTime()
+    .domain([
+      d3.min(sevenDayAverages, d => d.date),
+      d3.max(sevenDayAverages, d => d.date)
+    ])
+    .range([margin.left, w - margin.right]);
+
+  // Scale Y to the weekly average line
   const yScale = d3.scaleLinear()
-    .domain([0, d3.max(dataset, d => d.ConfirmedCovidCases)])
+    .domain([0, d3.max(sevenDayAverages, d => d.value) * 1.2])
     .range([h - margin.bottom - 10, margin.top]);
-
-  // Define line
-  const cases = d3.line()
-    .curve(d3.curveBasis)
-    .x(d => xScale(d.date))
-    .y(d => yScale(d.ConfirmedCovidCases));
-
-  // Define hospitalised as an area
-  const hospitalised = d3.area()
-    .curve(d3.curveBasis)
-    .x(d => xScale(d.date))
-    .y0(() => yScale.range()[0])
-    .y1(d => yScale(d.dailyHospitalisedCovidCases))
 
   // Draw containing svg
   const svg = d3.select(d3n.document.querySelector('#cases'))
@@ -115,19 +143,61 @@ module.exports = (data) => {
   svg.selectAll('.tick text')
     .attr('fill', '#666')
 
+  // Define daily cases line
+  const casesLine = d3.line()
+    .curve(d3.curveBasis)
+    .x(d => xScale(d.date))
+    .y(d => yScale(d.ConfirmedCovidCases));
+
   // Draw total cases line
   svg.append('path')
     .datum(dataset)
     .attr('class', 'cases')
     .attr('fill', 'none')
-    .attr('stroke', '#000')
-    .attr('d', cases);
+    .attr('stroke-dasharray', '1')
+    .attr('stroke', '#aaa')
+    .attr('d', casesLine);
 
-  // Draw hospitalised area
+  // Define weekly average line
+  const sevendayAvgLine = d3.line()
+    .curve(d3.curveBasis)
+    .x(d => sevenDayAvgXScale(d.date))
+    .y(d => yScale(d.value));
+  
   svg.append('path')
-    .datum(dataset)
-      .attr('class', 'hospitalised')
-      .attr('d', hospitalised);
+    .datum(sevenDayAverages)
+    .attr('class', 'seven-day-avg')
+    .attr('fill', 'none')
+    .attr('stroke', '#333')
+    .attr('d', sevendayAvgLine);
+
+  // Add a fade-out for the top larger values
+  const gradient = svg.append('linearGradient')
+    .attr('id', 'fadeGradient')
+    .attr('x1', 0)
+    .attr('x2', 0)
+    .attr('y1', 0)
+    .attr('y2', 1);
+
+  gradient.append('stop')
+    .attr('offset', '0')
+    .attr('stop-color', 'rgba(255,255,255,1)');
+
+  // gradient.append('stop')
+  //   .attr('offset', '20%')
+  //   .attr('stop-color', 'rgba(255,255,255,1)');
+
+  gradient.append('stop')
+    .attr('offset', '100%')
+    .attr('stop-color', 'rgba(255,255,255,0)');
+
+  svg.append('rect')
+    .classed('fade-out', true)
+    .attr('x', margin.left)
+    .attr('y', 0)
+    .attr('height', 40)
+    .attr('width', w - margin.right - margin.left)
+    .attr('fill', 'url(#fadeGradient)')
 
   d3n.html()
   const html = `

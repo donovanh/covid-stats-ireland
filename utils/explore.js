@@ -3,7 +3,7 @@ const fsPromises = require('fs').promises;
 async function fetchData() {
   let data;
   try {
-    return fsPromises.readFile('cached.json', 'utf-8');
+    return fsPromises.readFile('../cached.json', 'utf-8');
     data = JSON.parse(filecontent);
     console.log('Read data file');
   } catch (err) {
@@ -20,68 +20,40 @@ function doStuff(data) {
   const national = data.national;
   const county = data.county;
 
-  const agedTotals = (({
-    Aged1,
-    Aged5to14,
-    Aged15to24,
-    Aged25to34,
-    Aged35to44,
-    Aged45to54,
-    Aged55to64,
-    Aged65up
-  }) => ({
-    Aged1,
-    Aged5to14,
-    Aged15to24,
-    Aged25to34,
-    Aged35to44,
-    Aged45to54,
-    Aged55to64,
-    Aged65up
-  }))(national[national.length - 1]);
+  // Generate rolling 7-day average cases from today back
+  // Put data into 7-day groups
+  let cohort = [];
+  const groups = data.national.reverse().reduce((acc, d, i) => {
+    if (cohort.length === 0) {
+      cohort.date = d.date;
+    }
+    if (cohort.length < 7) {
+      cohort.push(d.ConfirmedCovidCases);
 
-  const casesByAgeArray = Object.entries(agedTotals).map((entry) => ({
-    age: entry[0]
-      .replace('to', ' to ')
-      .replace('Aged1', 'Under 5')
-      .replace('Aged', '')
-      .replace('1 to 55 to 24', '15 to 24')
-      .replace('65up', '65 up')
-      .replace('Under 55 to 24', '15 to 24'),
-    value: entry[1]
-  }));
+      if (i === data.national.length - 1) {
+        acc.push(cohort);
+      }
+    } else {
+      acc.push(cohort);
+      cohort = [];
+    }
+    return acc;
+  }, []);
 
-  const hospitalTotals = (({
-    HospitalisedAged5,
-    HospitalisedAged5to14,
-    HospitalisedAged15to24,
-    HospitalisedAged25to34,
-    HospitalisedAged35to44,
-    HospitalisedAged45to54,
-    HospitalisedAged55to64,
-    HospitalisedAged65up
-  }) => ({
-    HospitalisedAged5,
-    HospitalisedAged5to14,
-    HospitalisedAged15to24,
-    HospitalisedAged25to34,
-    HospitalisedAged35to44,
-    HospitalisedAged45to54,
-    HospitalisedAged55to64,
-    HospitalisedAged65up
-  }))(national[national.length - 1]);
+  const sevenDayAverageNumbers = groups.reverse().map(group => {
+    const sum = group.reduce((a, b) => a + b, 0);
+    return sum / group.length;
+  });
 
-  const casesByHospitalisedArray = Object.entries(hospitalTotals).map((entry) => ({
-    age: entry[0]
-      .replace('HospitalisedAged5', 'Under 5')
-      .replace('Under 5to14', '5to14')
-      .replace('Under 55to64', '55to64')
-      .replace('HospitalisedAged', '')
-      .replace('to', ' to ')
-      .replace('up', ' up'),
-    value: entry[1]
-  }));
+  // Add dates to the averages
+  const sevenDayAverages = sevenDayAverageNumbers.map((d, i) => {
+    return {
+      date: groups[i].date,
+      value: d
+    }
+  });
 
-  console.log(casesByAgeArray)
-  console.log(casesByHospitalisedArray)
+  // console.log(groups)
+  console.log(sevenDayAverages)
+
 };

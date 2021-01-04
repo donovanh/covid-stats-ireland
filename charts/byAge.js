@@ -9,13 +9,7 @@ module.exports = (data) => {
   const d3 = d3n.d3;
 
   // Set up dimensions and options
-  let sourceData = { date: 0 };
-  
-  for (const d of data.national) {
-    if (new Date(d.date) > sourceData.date) {
-      sourceData = d;
-    }
-  }
+  let sourceData = data.national[data.national.length - 1];
 
   const getProps = (source, props) => {
     const res = {};

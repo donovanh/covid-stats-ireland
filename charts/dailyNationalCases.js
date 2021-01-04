@@ -201,7 +201,8 @@ module.exports = (data) => {
 
   d3n.html()
   const html = `
-    <h2>Daily cases and daily hospital cases</h2>
+    <h2>Confirmed cases</h2>
+    <h3>Daily confirmed cases and 7-day average</h3>
     <div style="max-width: ${w}px">
       ${d3n.chartHTML()}
     </div>

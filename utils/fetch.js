@@ -109,19 +109,67 @@ const processCountyData = (countyResponses) => {
   return rows;
 };
 
+const processHospitalData = (data) => {
+
+  return data.features.map((feat, i) => {
+    const d = feat.attributes;
+    return {
+      date: new Date(d.Date),
+      hospitalisedCases: d.SUM_number_of_confirmed_covid_1,
+      newAdmissions: d.SUM_no_new_admissions_covid19_p,
+      newDischarges: d.SUM_no_discharges_covid19_posit
+    }
+  });
+};
+
+const processICUData = (data) => {
+
+  return data.features.map((feat, i) => {
+    const d = feat.attributes;
+    return {
+      date: new Date(d.Date),
+      icuCases: d.ncovidconf
+    }
+  });
+};
+
+const processTestingData = (data) => {
+
+  return data.features.map((feat, i) => {
+    const d = feat.attributes;
+    return {
+      date: new Date(d.Date_HPSC),
+      positiveRate: d.PRate,
+      positiveRate7Day: d.PosR7,
+      tests: d.Test24,
+      tests7Day: d.Test7
+    }
+  });
+};
+
 const getData = async () => {
 
   const nationalDataUrl = 'https://services1.arcgis.com/eNO7HHeQ3rUcBllm/arcgis/rest/services/CovidStatisticsProfileHPSCIrelandOpenData/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&outSR=4326&f=json';
+  const hospitalDataUrl = 'https://services-eu1.arcgis.com/z6bHNio59iTqqSUY/arcgis/rest/services/Covid19AcuteHospitalHistoricSummaryOpenData/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&outSR=4326&f=json';
+  const icuDataUrl = 'https://services-eu1.arcgis.com/z6bHNio59iTqqSUY/arcgis/rest/services/ICUBISHistoricTimelinePublicView/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&outSR=4326&f=json';
+  const testingDataUrl = 'https://services-eu1.arcgis.com/z6bHNio59iTqqSUY/arcgis/rest/services/LaboratoryLocalTimeSeriesHistoricView/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&outSR=4326&f=json';
 
   const nationalResponse = await fetch(nationalDataUrl);
   const countyResponses = await getCountyData();
+  const hospitalResponse = await fetch(hospitalDataUrl);
+  const icuResponse = await fetch(icuDataUrl);
+  const testingResponse = await fetch(testingDataUrl);
 
   const data = {
     national: processNationalData(await nationalResponse.json()),
-    county: processCountyData(countyResponses)
+    county: processCountyData(countyResponses),
+    hospital: processHospitalData(await hospitalResponse.json()),
+    icu: processICUData(await icuResponse.json()),
+    testing: processTestingData(await testingResponse.json())
   }
 
-  console.log(`Requesting ${data.national.length} national records and ${data.county.length} counties records`)
+  console.log(`Requesting new data records (${data.national.length} records)`);
+
   return data;
 }
 

@@ -2,6 +2,7 @@ const fetchData = require('../utils/fetch');
 const dailyNationalCases = require('../charts/dailyNationalCases');
 const dailyHospitalised = require('../charts/dailyHospitalised');
 const byAge = require('../charts/byAge');
+const summary = require('../charts/summary');
 
 module.exports = async function() {
 
@@ -18,6 +19,7 @@ module.exports = async function() {
     dailyNationalCases: dailyNationalCases(data),
     dailyHospitalised: dailyHospitalised(data),
     byAge: byAge(data),
+    summary: summary(data),
     lastUpdated,
     lastRun: new Date()
   };

@@ -2,19 +2,37 @@
 <html lang="en">
     <head>
       <meta charset="utf-8">
-      <title>Covid Stats Ireland - Hop.ie</title>
+      <title>COVID-19 Numbers Ireland - Hop.ie</title>
     </head>
     <body>
-      <h1>Covid Stats Ireland</h1>
+      <!-- Last deploy: {{charts.lastRun}} -->
+      <h1>COVID-19 Numbers Ireland</h1>
+      <style>
+        .summary {
+          background: #eee;
+        }
+      </style>
+      <div class="summary">
+        <h2>Latest</h2>
+        <ul>
+          <li class="daily-cases">{{ charts.summary.ConfirmedCovidCases }} <span>Daily cases</span></li>
+          <li class="avg-cases">{{ charts.summary.avgCases }} <span>7 day average</span></li>
+          <li class="prev-average-cases">{{ charts.summary.previousAvgCases }} <span>Previous 7 day average</span></li>
+          <li class="in-hospital">{{ charts.summary.hospitalised }} <span>In hospital</span></li>
+          <li class="in-icu">{{ charts.summary.latestICU }} <span>In ICU</span></li>
+          <li class="testing-weekly">{{ charts.summary.testing.tests7Day }} <span>Tests over last 7 days</span></li>
+          <li class="testing-positive">{{ charts.summary.testing.positiveRate7Day }} <span>Positive test rate</span></li>
+        </ul>
+      </div>
       {{ charts.dailyNationalCases }}
       {{ charts.dailyHospitalised }}
       {{ charts.byAge }}
       <hr />
       <h2>Credits</h2>
-      <p>Case data sourced from <a href="https://data.gov.ie/">data.gov.ie</a> using the <a href="https://covid19ireland-geohive.hub.arcgis.com/datasets/d8eb52d56273413b84b0187a4e9117be_0">arcgis API</a>.</p>
-      <p>Designed and built by <a href="https://hop.ie">Donovan Hutchinson</a>.</p>
-      <p>Daily case data updated as of {{charts.lastUpdated.national}}.</p>
-      <p>County case data updated as of {{charts.lastUpdated.county}}.</p>
-      <!-- Last run: {{charts.lastRun}} -->
+      <p>All data sourced from <a href="https://data.gov.ie/">data.gov.ie</a> using <a href="https://covid19ireland-geohive.hub.arcgis.com/datasets/d8eb52d56273413b84b0187a4e9117be_0">ARCGIS</a>.
+      <br>Designed and built by <a href="https://hop.ie">Donovan Hutchinson</a>.</p>
+      <h3>Last Updated</h3>
+      <p>Daily case data updated as of {{charts.lastUpdated.national}}.
+      <br>County case data updated as of {{charts.lastUpdated.county}}.</p>
     </body>
 </html>

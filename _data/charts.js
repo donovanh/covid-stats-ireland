@@ -3,7 +3,7 @@ const summary = require('../charts/summary');
 const dailyNationalCases = require('../charts/dailyNationalCases');
 const dailyHospitalised = require('../charts/dailyHospitalised');
 const byAge = require('../charts/byAge');
-//const countyMap = require('../charts/countyMap');
+const countyMap = require('../charts/countyMap');
 
 module.exports = async function() {
 
@@ -21,7 +21,7 @@ module.exports = async function() {
     dailyNationalCases: dailyNationalCases(data),
     dailyHospitalised: dailyHospitalised(data),
     byAge: byAge(data),
-    //countyMap: countyMap(data),
+    countyMap: countyMap(data),
     lastUpdated,
     lastRun: new Date()
   };

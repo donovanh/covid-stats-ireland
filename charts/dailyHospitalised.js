@@ -6,7 +6,7 @@ module.exports = (data) => {
 
   const options = { selector: '#hospitalised', container: '<div id="container"><div id="hospitalised"></div></div>' }
   const d3n = new D3Node(options) // initializes D3 with container element
-  const d3 = d3n.d3
+  const d3 = d3n.d3;
 
   // Set up dimensions and options
   const dataset = data.national.map(d => ({

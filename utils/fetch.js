@@ -50,63 +50,77 @@ const processNationalData = (data) => {
 }
 
 const getCountyData = async () => {
-  const counties = ["Carlow", "Cavan", "Clare", "Cork", "Donegal", "Dublin", "Galway", "Kerry", "Kildare", "Kilkenny", "Laois", "Leitrim", "Limerick", "Longford", "Louth", "Mayo", "Meath", "Monaghan", "Offaly", "Roscommon", "Sligo", "Tipperary", "Waterford", "Westmeath", "Wexford", "Wicklow"];
-  const requests = [];
-  for (const county of counties) {
-    const url = `https://services1.arcgis.com/eNO7HHeQ3rUcBllm/arcgis/rest/services/Covid19CountyStatisticsHPSCIreland/FeatureServer/0/query?where=CountyName%20%3D%20%27${county}%27&outFields=CountyName,PopulationCensus16,TimeStamp,ConfirmedCovidCases,PopulationProportionCovidCases,ConfirmedCovidDeaths,ConfirmedCovidRecovered&returnGeometry=false&outSR=4326&f=json`
-    requests.push(fetch(url))
-  }
-  const responses = await Promise.all(requests);
-  const processedResponses = responses.map(async (response) => await response.json());
-  return await Promise.all(processedResponses);
+  // const counties = ["Carlow", "Cavan", "Clare", "Cork", "Donegal", "Dublin", "Galway", "Kerry", "Kildare", "Kilkenny", "Laois", "Leitrim", "Limerick", "Longford", "Louth", "Mayo", "Meath", "Monaghan", "Offaly", "Roscommon", "Sligo", "Tipperary", "Waterford", "Westmeath", "Wexford", "Wicklow"];
+  // const requests = [];
+  // for (const county of counties) {
+  //   const url = `https://services1.arcgis.com/eNO7HHeQ3rUcBllm/arcgis/rest/services/Covid19CountyStatisticsHPSCIreland/FeatureServer/0/query?where=CountyName%20%3D%20%27${county}%27&outFields=CountyName,PopulationCensus16,TimeStamp,ConfirmedCovidCases,PopulationProportionCovidCases,ConfirmedCovidDeaths,ConfirmedCovidRecovered&returnGeometry=false&outSR=4326&f=json`
+  //   requests.push(fetch(url))
+  // }
+  // const responses = await Promise.all(requests);
+  // const processedResponses = responses.map(async (response) => await response.json());
+  // return await Promise.all(processedResponses);
 }
 
-const processCountyData = (countyResponses) => {
+const processCountyData = (data) => {
 
-  const rows = [];
-  const keys = {};
+  return data.features.map((feat, i) => {
+    const d = feat.attributes;
+    return {
+      date: new Date(d.TimeStampDate),
+      CountyName: d.CountyName,
+      PopulationCensus16: d.PopulationCensus16,
+      ConfirmedCovidCases: d.ConfirmedCovidCases,
+      PopulationProportionCovidCases: d.PopulationProportionCovidCases,
+      ConfirmedCovidDeaths: d.ConfirmedCovidDeaths,
+      ConfirmedCovidRecovered: d.ConfirmedCovidRecovered
 
-  for (const county of countyResponses) {
-    for (const [i, feature] of county.features.entries()) {
-      const d = feature.attributes;
-      const prevData = i > 0 ? county.features[i - 1].attributes : {};
-
-      const existingRow = rows.find(i => i.date === d.TimeStamp);
-      let row = { date: d.TimeStamp };
-      keys[d.CountyName] = true;
-
-      const statsToTrack = [
-        'ConfirmedCovidCases',
-        'PopulationProportionCovidCases',
-        'ConfirmedCovidDeaths',
-        'ConfirmedCovidRecovered'
-      ]
-      const generatedDailyTotals = {};
-      statsToTrack.forEach(stat => {
-        generatedDailyTotals[`daily${stat}`] = (d[stat] - prevData[stat]) > 0 ? d[stat] - prevData[stat] : 0;
-      });
-
-      // Add in the needed data to row
-      row[d.CountyName] = {
-        ...d,
-        ...generatedDailyTotals
-      }
-      if (existingRow) {
-        // Assign the existing row data
-        Object.assign(existingRow, row);
-      } else {
-        // Start new row
-        rows.push(row)
-      }
     }
-  }
+  });
 
-  for (const row of rows) {
-    row.date = new Date(row.date);
-  }
+  // const rows = [];
+  // const keys = {};
 
-  rows.columns = Object.keys(keys);
-  return rows;
+  // for (const county of countyResponses) {
+  //   for (const [i, feature] of county.features.entries()) {
+  //     const d = feature.attributes;
+  //     const prevData = i > 0 ? county.features[i - 1].attributes : {};
+
+  //     const existingRow = rows.find(i => i.date === d.TimeStamp);
+  //     let row = { date: d.TimeStamp };
+  //     keys[d.CountyName] = true;
+
+  //     const statsToTrack = [
+  //       'ConfirmedCovidCases',
+  //       'PopulationProportionCovidCases',
+  //       'ConfirmedCovidDeaths',
+  //       'ConfirmedCovidRecovered'
+  //     ]
+  //     const generatedDailyTotals = {};
+  //     statsToTrack.forEach(stat => {
+  //       generatedDailyTotals[`daily${stat}`] = (d[stat] - prevData[stat]) > 0 ? d[stat] - prevData[stat] : 0;
+  //     });
+
+  //     // Add in the needed data to row
+  //     row[d.CountyName] = {
+  //       ...d,
+  //       ...generatedDailyTotals
+  //     }
+  //     if (existingRow) {
+  //       // Assign the existing row data
+  //       Object.assign(existingRow, row);
+  //     } else {
+  //       // Start new row
+  //       rows.push(row)
+  //     }
+  //   }
+  // }
+
+  // for (const row of rows) {
+  //   row.date = new Date(row.date);
+  // }
+
+  // rows.columns = Object.keys(keys);
+  // return rows;
 };
 
 const processHospitalData = (data) => {
@@ -153,16 +167,17 @@ const getData = async () => {
   const hospitalDataUrl = 'https://services-eu1.arcgis.com/z6bHNio59iTqqSUY/arcgis/rest/services/Covid19AcuteHospitalHistoricSummaryOpenData/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&outSR=4326&f=json';
   const icuDataUrl = 'https://services-eu1.arcgis.com/z6bHNio59iTqqSUY/arcgis/rest/services/ICUBISHistoricTimelinePublicView/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&outSR=4326&f=json';
   const testingDataUrl = 'https://services-eu1.arcgis.com/z6bHNio59iTqqSUY/arcgis/rest/services/LaboratoryLocalTimeSeriesHistoricView/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&outSR=4326&f=json';
+  const countyDataUrl = 'https://services1.arcgis.com/eNO7HHeQ3rUcBllm/arcgis/rest/services/Covid19CountyStatisticsHPSCIrelandOpenData/FeatureServer/0/query?where=1%3D1&outFields=CountyName,PopulationCensus16,IGEasting,IGNorthing,ConfirmedCovidCases,PopulationProportionCovidCases,ConfirmedCovidDeaths,ConfirmedCovidRecovered,x,y,FID,TimeStampDate&returnGeometry=false&outSR=4326&f=json';
 
   const nationalResponse = await fetch(nationalDataUrl);
-  const countyResponses = await getCountyData();
+  const countyResponses = await fetch(countyDataUrl);
   const hospitalResponse = await fetch(hospitalDataUrl);
   const icuResponse = await fetch(icuDataUrl);
   const testingResponse = await fetch(testingDataUrl);
 
   const data = {
     national: processNationalData(await nationalResponse.json()),
-    county: processCountyData(countyResponses),
+    county: processCountyData(await countyResponses.json()),
     hospital: processHospitalData(await hospitalResponse.json()),
     icu: processICUData(await icuResponse.json()),
     testing: processTestingData(await testingResponse.json())

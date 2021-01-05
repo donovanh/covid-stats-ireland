@@ -25,6 +25,6 @@ function doStuff(data) {
     testing
   } = data;
 
-  
+  console.log(JSON.stringify(county))
 
 };

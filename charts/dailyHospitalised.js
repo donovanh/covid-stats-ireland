@@ -13,6 +13,15 @@ module.exports = (data) => {
     ...d,
     date: new Date(d.date)
   }));
+
+  const icuArrayLengthDiff = data.hospital.length - data.icu.length;
+  
+  const hospitalData = data.hospital.map((d, i) => ({
+    ...d,
+    date: new Date(d.date),
+    icuCases: data.icu[i - icuArrayLengthDiff] ? data.icu[i - icuArrayLengthDiff].icuCases : 0
+  }));
+
   const w = 800;
   const h = 300;
   const margin = ({ top: 20, right: 30, bottom: 30, left: 40 });
@@ -20,13 +29,13 @@ module.exports = (data) => {
   // Set up scales
   const xScale = d3.scaleTime()
     .domain([
-      d3.min(dataset, d => d.date),
-      d3.max(dataset, d => d.date)
+      d3.min(hospitalData, d => d.date),
+      d3.max(hospitalData, d => d.date)
     ])
     .range([margin.left, w - margin.right]);
 
   const yScale = d3.scaleLinear()
-    .domain([0, d3.max(dataset, d => d.dailyHospitalisedCovidCases)])
+    .domain([0, d3.max(hospitalData, d => d.hospitalisedCases)])
     .range([h - margin.bottom - 10, margin.top]);
 
   // Draw containing svg
@@ -107,14 +116,28 @@ module.exports = (data) => {
     .curve(d3.curveBasis)
     .x(d => xScale(d.date))
     .y0(() => yScale.range()[0])
-    .y1(d => yScale(d.dailyHospitalisedCovidCases))
+    .y1(d => yScale(d.hospitalisedCases))
 
   // Draw hospitalised area
   svg.append('path')
-    .datum(dataset)
+    .datum(hospitalData)
       .attr('class', 'hospitalised')
-      .attr('fill', '#ddd')
+      .attr('fill', '#ccc')
       .attr('d', hospitalised);
+
+  // Define icu as an area
+  const icu = d3.area()
+    .curve(d3.curveBasis)
+    .x(d => xScale(d.date))
+    .y0(() => yScale.range()[0])
+    .y1(d => yScale(d.icuCases))
+
+  // Draw icu area
+  svg.append('path')
+    .datum(hospitalData)
+      .attr('class', 'deaths')
+      .attr('fill', '#999')
+      .attr('d', icu);
 
   // Define deaths as an area
   const deaths = d3.area()
@@ -123,11 +146,11 @@ module.exports = (data) => {
     .y0(() => yScale.range()[0])
     .y1(d => yScale(d.ConfirmedCovidDeaths))
 
-  // Draw hospitalised area
+  // Draw deaths area
   svg.append('path')
     .datum(dataset)
       .attr('class', 'deaths')
-      .attr('fill', 'rgba(0, 0, 0, 0.5)')
+      .attr('fill', '#333')
       .attr('d', deaths);
 
   d3n.html()

@@ -1,12 +1,17 @@
 TODO:
-* Male / female chart
 * Ireland map with per-county numbers
-* Total Ireland deaths year on year
-* Vaccination progress
-* Transmission types
+* Male / female chart (bars - maybe one horizontal stacked bar)
 * Hover to see specific stats
 * Draggable slider on the above showing map updating
 * Better colour scheme
 * Sparklines in summary
 * Font
 * Layout
+* Responsive
+  * Small screen
+  * Large screen
+* Add bespoke events: school close, national lockdowns etc
+* Deploy to Netlify (perhaps)
+* Total Ireland deaths year on year
+* Vaccination progress
+* Transmission types

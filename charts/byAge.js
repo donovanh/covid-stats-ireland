@@ -80,11 +80,6 @@ module.exports = (data) => {
     .domain([0, d3.max(casesByAgeArray, d => d.value)])
     .range([h - margin.bottom, margin.top]);
 
-  // Scale for hospitalised by age
-  // const yScale1 = d3.scaleLinear()
-  //   .domain([0, d3.max(casesByAgeArray, d => d.value)])
-  //   .range([(h * 0.8) - margin.bottom, h - margin.bottom]);
-
   // // Draw containing svg
   const svg = d3.select(d3n.document.querySelector('#byage'))
     .append('svg')

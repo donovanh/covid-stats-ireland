@@ -1,11 +1,18 @@
 TODO:
-* Ireland map with per-county numbers
+* Convert daily numbers to bars for easier reading
+* Make cases / hospital by age overlapping bars
 * Male / female chart (bars - maybe one horizontal stacked bar)
-* Hover to see specific stats
-* Draggable slider on the above showing map updating
+* Legends
+  * On national graph
+  * On hospital graph
+  * On hospital/ICU by age graph
+* Hover to see specific stats:
+  * On national graph
+  * On hospital graph
 * Better colour scheme
 * Sparklines in summary
 * Font
+* Last updated date on top right corner
 * Layout
 * Responsive
   * Small screen

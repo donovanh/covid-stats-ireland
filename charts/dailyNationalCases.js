@@ -1,4 +1,5 @@
 const D3Node = require('d3-node');
+const { colours } = require('./theme');
 
 module.exports = (data) => {
 
@@ -41,6 +42,11 @@ module.exports = (data) => {
     ])
     .range([margin.left, w - margin.right]);
 
+  const xBarScale = d3.scaleBand()
+    .domain(dataset.map(d => `${d.date}`))
+    .range([margin.left, w - margin.right])
+    .paddingInner(0.05);
+
   const sevenDayAvgXScale = d3.scaleTime()
     .domain([
       d3.min(sevenDayAverages, d => d.date),
@@ -60,6 +66,7 @@ module.exports = (data) => {
 
   // Draw axes
   const xAxis = d3.axisBottom(xScale)
+    .tickPadding(10)
     .tickSize(0);
 
   const yAxis = d3.axisLeft(yScale)
@@ -120,25 +127,27 @@ module.exports = (data) => {
 
   // Both axes 
   svg.selectAll('.tick line')
-    .attr('stroke','#eee')
+    .attr('stroke', colours.lightGrey)
     .attr('stroke-dasharray','4')
 
   svg.selectAll('.tick text')
-    .attr('fill', '#666')
+    .attr('fill', colours.darkGrey)
 
-  // Define daily cases line
-  const casesLine = d3.line()
-    .curve(d3.curveBasis)
-    .x(d => xScale(d.date))
-    .y(d => yScale(d.ConfirmedCovidCases));
-
-  // Draw total cases line
-  svg.append('path')
-    .datum(dataset)
-    .attr('class', 'cases')
-    .attr('fill', 'none')
-    .attr('stroke', '#ccc')
-    .attr('d', casesLine);
+    // Draw daily stat bars
+  svg
+    .append('g')
+    .attr('id', 'bars')
+    .selectAll('.bar')
+    .data(dataset, (d) => d.date)
+    .enter()
+    .append('rect')
+    .attr('class', 'bar')
+    .attr('data-key', (d) => d.date)
+    .attr('x', (d) => xBarScale(d.date))
+    .attr('y', (d) => yScale(d.ConfirmedCovidCases))
+    .attr('width', xBarScale.bandwidth() / 2)
+    .attr('height', (d) => h - yScale(d.ConfirmedCovidCases) - margin.bottom)
+    .attr('fill', colours.light);
 
   // Define weekly average line
   const sevendayAvgLine = d3.line()
@@ -152,7 +161,7 @@ module.exports = (data) => {
     .attr('fill', 'none')
     .attr('stroke-dasharray', 2)
     .attr('stroke-width', 2)
-    .attr('stroke', '#444')
+    .attr('stroke', colours.darkGrey)
     .attr('d', sevendayAvgLine);
 
   // Add a fade-out for the top larger values

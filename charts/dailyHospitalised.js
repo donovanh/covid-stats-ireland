@@ -1,4 +1,5 @@
 const D3Node = require('d3-node');
+const { colours } = require('./theme');
 
 module.exports = (data) => {
 
@@ -109,7 +110,7 @@ module.exports = (data) => {
     .attr('stroke-dasharray','4')
 
   svg.selectAll('.tick text')
-    .attr('fill', '#666')
+    .attr('fill', colours.darkGrey)
 
   // Define hospitalised as an area
   const hospitalised = d3.area()
@@ -122,7 +123,7 @@ module.exports = (data) => {
   svg.append('path')
     .datum(hospitalData)
       .attr('class', 'hospitalised')
-      .attr('fill', '#ccc')
+      .attr('fill', colours.light)
       .attr('d', hospitalised);
 
   // Define icu as an area
@@ -136,7 +137,7 @@ module.exports = (data) => {
   svg.append('path')
     .datum(hospitalData)
       .attr('class', 'deaths')
-      .attr('fill', '#999')
+      .attr('fill', colours.medium)
       .attr('d', icu);
 
   // Define deaths as an area
@@ -150,12 +151,12 @@ module.exports = (data) => {
   svg.append('path')
     .datum(dataset)
       .attr('class', 'deaths')
-      .attr('fill', '#333')
+      .attr('fill', colours.dark)
       .attr('d', deaths);
 
   d3n.html()
   const html = `
-    <h2>Hospitalised cases and deaths</h2>
+    <h2>Hospitalised, ICU and deaths</h2>
     <div style="max-width: ${w}px">
       ${d3n.chartHTML()}
     </div>

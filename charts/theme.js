@@ -4,9 +4,12 @@ module.exports = {
   colours: {
     lightGrey: '#eee',
     darkGrey: '#666',
+    veryDarkGrey: '#333',
+    black: '#000',
     light: allReds[Math.ceil(allReds.length / 8)],
     medium: allReds[Math.ceil(allReds.length / 2)],
     dark: allReds[Math.ceil(allReds.length / 1.2)],
+    veryDark: allReds[Math.ceil(allReds.length)],
     reds: allReds
   }
 }

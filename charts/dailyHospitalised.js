@@ -151,7 +151,7 @@ module.exports = (data) => {
   svg.append('path')
     .datum(dataset)
       .attr('class', 'deaths')
-      .attr('fill', colours.dark)
+      .attr('fill', colours.veryDark)
       .attr('d', deaths);
 
   d3n.html()

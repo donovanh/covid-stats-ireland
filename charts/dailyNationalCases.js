@@ -57,7 +57,7 @@ module.exports = (data) => {
   // Scale Y to the weekly average line
   const yScale = d3.scaleLinear()
     .domain([0, d3.max(sevenDayAverages, d => d.value) * 1.2])
-    .range([h - margin.bottom - 10, margin.top]);
+    .range([h - margin.bottom, margin.top]);
 
   // Draw containing svg
   const svg = d3.select(d3n.document.querySelector('#cases'))
@@ -70,7 +70,7 @@ module.exports = (data) => {
     .tickSize(0);
 
   const yAxis = d3.axisLeft(yScale)
-    .ticks(4)
+    .ticks(3)
     .tickPadding(5)
     .tickSize(0 - (w - margin.left - margin.right));
 
@@ -122,7 +122,7 @@ module.exports = (data) => {
     .remove();
 
   svg.select('.y-axis')
-    .selectAll('.tick:first-of-type text')
+    .select('.tick:first-of-type')
     .remove();
 
   // Both axes 

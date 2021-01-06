@@ -1,7 +1,7 @@
 name: Eleventy Build
 on:
   schedule:
-  - cron: "15 * * * *"
+  - cron: '15/45 * * * *'
 
 jobs:
   build_deploy:

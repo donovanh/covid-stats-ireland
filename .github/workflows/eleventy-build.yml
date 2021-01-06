@@ -14,7 +14,7 @@ jobs:
           install_dependencies: true
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
-        env:
+        with:
           PUBLISH_DIR: _site 
           PUBLISH_BRANCH: gh-pages
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

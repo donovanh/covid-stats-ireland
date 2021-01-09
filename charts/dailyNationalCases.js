@@ -16,7 +16,7 @@ module.exports = (data) => {
   }));
   const w = 800;
   const h = 300;
-  const margin = ({ top: 20, right: 30, bottom: 30, left: 40 });
+  const margin = ({ top: 10, right: 20, bottom: 30, left: 40 });
 
   // Generate rolling 7-day average cases from today back
   const sevenDayAverages = dataset.map((d, i) => {
@@ -66,8 +66,8 @@ module.exports = (data) => {
 
   // Draw axes
   const xAxis = d3.axisBottom(xScale)
-    .tickPadding(10)
-    .tickSize(0);
+    .tickPadding(5)
+    .tickSize(5);
 
   const yAxis = d3.axisLeft(yScale)
     .ticks(3)
@@ -99,17 +99,17 @@ module.exports = (data) => {
     .attr('transform', `translate(0, ${h - margin.bottom})`)
     .call(xAxis);
 
-  svg.select('.x-axis')
-    .selectAll('text')
-    .attr('transform', `translate(${xTickDistance / 2}, 0)`)
+  // svg.select('.x-axis')
+  //   .selectAll('text')
+  //   .attr('transform', `translate(${xTickDistance / 2}, 0)`)
 
   svg.select('.x-axis')
     .select('.domain')
     .remove();
 
-  svg.select('.x-axis')
-    .selectAll('.tick:last-of-type text')
-    .remove();
+  // svg.select('.x-axis')
+  //   .selectAll('.tick:last-of-type text')
+  //   .remove();
 
   // y axis
   svg.append('g')
@@ -125,10 +125,14 @@ module.exports = (data) => {
     .select('.tick:first-of-type')
     .remove();
 
-  // Both axes 
-  svg.selectAll('.tick line')
+  // Y axis 
+  svg.selectAll('.y-axis .tick line')
     .attr('stroke', colours.lightGrey)
     .attr('stroke-dasharray','4')
+
+  // X axis 
+  svg.selectAll('.x-axis .tick line')
+    .attr('stroke', colours.darkGrey)
 
   svg.selectAll('.tick text')
     .attr('fill', colours.darkGrey)
@@ -161,7 +165,7 @@ module.exports = (data) => {
     .attr('fill', 'none')
     .attr('stroke-dasharray', 2)
     .attr('stroke-width', 2)
-    .attr('stroke', colours.darkGrey)
+    .attr('stroke', colours.darkerGrey)
     .attr('d', sevendayAvgLine);
 
   // Add a fade-out for the top larger values

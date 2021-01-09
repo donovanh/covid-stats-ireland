@@ -8,43 +8,43 @@ const processNationalData = (data) => {
   return data.features.map((feat, i) => {
     const d = feat.attributes;
 
-    const prevDay = i > 0 ? data.features[i - 1].attributes : {};
+    //const prevDay = i > 0 ? data.features[i - 1].attributes : {};
 
     // Generate daily totals by subtracting previous day total
-    const statsToTrack = [
-      'HospitalisedCovidCases',
-      'RequiringICUCovidCases',
-      'HealthcareWorkersCovidCases',
-      'HospitalisedAged5',
-      'HospitalisedAged5to14',
-      'HospitalisedAged15to24',
-      'HospitalisedAged25to34',
-      'HospitalisedAged35to44',
-      'HospitalisedAged45to54',
-      'HospitalisedAged55to64',
-      'HospitalisedAged65up',
-      'Male',
-      'Female',
-      'Unknown',
-      'Aged1',
-      'Aged1to4',
-      'Aged5to14',
-      'Aged15to24',
-      'Aged25to34',
-      'Aged35to44',
-      'Aged45to54',
-      'Aged55to64',
-      'Aged65up'
-    ]
-    const generatedDailyTotals = {};
-    statsToTrack.forEach(stat => {
-      generatedDailyTotals[`daily${stat}`] = (d[stat] - prevDay[stat]) > 0 ? d[stat] - prevDay[stat] : 0;
-    });
+    // const statsToTrack = [
+    //   'HospitalisedCovidCases',
+    //   'RequiringICUCovidCases',
+    //   'HealthcareWorkersCovidCases',
+    //   'HospitalisedAged5',
+    //   'HospitalisedAged5to14',
+    //   'HospitalisedAged15to24',
+    //   'HospitalisedAged25to34',
+    //   'HospitalisedAged35to44',
+    //   'HospitalisedAged45to54',
+    //   'HospitalisedAged55to64',
+    //   'HospitalisedAged65up',
+    //   'Male',
+    //   'Female',
+    //   'Unknown',
+    //   'Aged1',
+    //   'Aged1to4',
+    //   'Aged5to14',
+    //   'Aged15to24',
+    //   'Aged25to34',
+    //   'Aged35to44',
+    //   'Aged45to54',
+    //   'Aged55to64',
+    //   'Aged65up'
+    // ]
+    // const generatedDailyTotals = {};
+    // statsToTrack.forEach(stat => {
+    //   generatedDailyTotals[`daily${stat}`] = (d[stat] - prevDay[stat]) > 0 ? d[stat] - prevDay[stat] : 0;
+    // });
 
     return {
       date: new Date(d.Date),
       ...d,
-      ...generatedDailyTotals
+      //...generatedDailyTotals
     }
   });
 }
@@ -159,8 +159,6 @@ const getData = async () => {
     testing: processTestingData(await testingResponse.json()),
     vaccination: processVaccinationData(await vaccinationResponse.text())
   }
-
-  console.log(data.vaccination)
 
   console.log(`Requesting new data records (${data.national.length} records)`);
 

@@ -1,6 +1,6 @@
 TODO:
-* Fix issues with x axes
-* Tidy hospitalisations graph
+* Add in county bars data
+* Adjust position in layout beside map
 * Hover states on the two time graphs
 * Link hover states to updating the summary for that day
 * Legends on time graphs

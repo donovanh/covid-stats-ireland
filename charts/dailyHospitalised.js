@@ -25,7 +25,7 @@ module.exports = (data) => {
 
   const w = 800;
   const h = 300;
-  const margin = ({ top: 20, right: 30, bottom: 30, left: 40 });
+  const margin = ({ top: 10, right: 20, bottom: 30, left: 40 });
 
   // Set up scales
   const xScale = d3.scaleTime()
@@ -37,7 +37,7 @@ module.exports = (data) => {
 
   const yScale = d3.scaleLinear()
     .domain([0, d3.max(hospitalData, d => d.hospitalisedCases)])
-    .range([h - margin.bottom - 10, margin.top]);
+    .range([h - margin.bottom, margin.top]);
 
   // Draw containing svg
   const svg = d3.select(d3n.document.querySelector('#hospitalised'))
@@ -46,23 +46,13 @@ module.exports = (data) => {
 
   // Draw axes
   const xAxis = d3.axisBottom(xScale)
-    .tickSize(0);
+    .tickPadding(5)
+    .tickSize(5);
 
   const yAxis = d3.axisLeft(yScale)
     .ticks(4)
     .tickPadding(5)
     .tickSize(0 - (w - margin.left - margin.right));
-
-  const getTicksDistance = (scale) => {
-    const ticks = scale.ticks();
-    const spaces = []
-    for(let i=0; i < ticks.length - 1; i++){
-      spaces.push(scale(ticks[i+1]) - scale(ticks[i]))
-    }
-    return spaces;
-  };
-
-  const xTickDistance = getTicksDistance(xScale)[0];
 
   svg.append('clipPath')
     .attr('id', 'chart-area')
@@ -79,15 +69,7 @@ module.exports = (data) => {
     .call(xAxis);
 
   svg.select('.x-axis')
-    .selectAll('text')
-    .attr('transform', `translate(${xTickDistance / 2}, 0)`)
-
-  svg.select('.x-axis')
     .select('.domain')
-    .remove();
-
-  svg.select('.x-axis')
-    .selectAll('.tick:last-of-type text')
     .remove();
 
   // y axis
@@ -101,13 +83,17 @@ module.exports = (data) => {
     .remove();
 
   svg.select('.y-axis')
-    .selectAll('.tick:first-of-type text')
+    .select('.tick:first-of-type')
     .remove();
 
-  // Both axes 
-  svg.selectAll('.tick line')
+  // Y axis 
+  svg.selectAll('.y-axis .tick line')
     .attr('stroke','#eee')
     .attr('stroke-dasharray','4')
+
+  // X axis 
+  svg.selectAll('.x-axis .tick line')
+    .attr('stroke', colours.darkGrey)
 
   svg.selectAll('.tick text')
     .attr('fill', colours.darkGrey)
@@ -126,6 +112,7 @@ module.exports = (data) => {
       .attr('fill', colours.light)
       .attr('d', hospitalised);
 
+      console.log(hospitalData[hospitalData.length - 1])
   // Define icu as an area
   const icu = d3.area()
     .curve(d3.curveBasis)

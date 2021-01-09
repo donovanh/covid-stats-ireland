@@ -1,0 +1,19 @@
+name: Eleventy Build
+on:
+  workflow_dispatch
+
+jobs:
+  build_deploy:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@main
+      - name: Build
+        uses: TartanLlama/actions-eleventy@master
+        with: 
+          install_dependencies: true
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          PUBLISH_DIR: _site 
+          PUBLISH_BRANCH: gh-pages
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,26 +1,27 @@
 TODO:
+* Add deaths and vaccination numbers to stats
+* Style stats like Zero app
+* Hover states on the two time graphs
+* Link hover states to updating the summary for that day
+* Legends on time graphs
+
+* Bring in excess mortality data from
+: https://github.com/owid/covid-19-data/blob/master/public/data/excess_mortality/excess_mortality.csv
+
 * Page structure
 - Case numbers / average / previously weekly average
-- Add deaths total
-  - Styling like Zero app
 - Then case numbers graph
 - Secondary stats (number in hospital / ICU / test positivity)
 - Then hospitalisations graph 
 - Then 3 smaller graphs - cases by age, male / female, transmission types
 - Then county map, and list of counties beside (hover highlighting both)
 (Not sure if map and previous line should be swapped)
+
 * Make cases / hospital by age overlapping bars
 * Remove white gradient and use dashed lines for cutoff bars
 * Male / female chart (bars - maybe one horizontal stacked bar)
 * Make a recent testing chart
-* Legends
-  * On national graph
-  * On hospital graph
-  * On hospital/ICU by age graph
 * Mark cities on map
-* Hover to see specific stats:
-  * On national graph
-  * On hospital graph
 * Better colour scheme
 * Font
 * Last updated date on top right corner

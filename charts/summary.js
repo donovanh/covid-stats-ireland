@@ -8,6 +8,7 @@ module.exports = (data) => {
   const hospital = [...data.hospital];
   const icu = [...data.icu];
   const testing = [...data.testing];
+  const vaccination = [...data.vaccination];
 
   const rolling7DayAvgCases = national.map((d, i) => {
     // For each day take the preceeding 6 days and produce average
@@ -24,13 +25,17 @@ module.exports = (data) => {
     }
   });
 
+  const format = (number) => Intl.NumberFormat('en-UK').format(number);
+
   return {
-    ...national[national.length - 1],
-    previousConfirmedCovidCases: national[national.length - 2].ConfirmedCovidCases,
-    avgCases: rolling7DayAvgCases[rolling7DayAvgCases.length - 1].value,
-    previousAvgCases: rolling7DayAvgCases[rolling7DayAvgCases.length - 8].value,
-    hospitalised: hospital[hospital.length - 1].hospitalisedCases,
-    latestICU: icu[icu.length - 1].icuCases,
-    testing: testing[testing.length - 1]
+    ConfirmedCovidCases: format(national[national.length - 1].ConfirmedCovidCases),
+    ConfirmedCovidDeaths: format(national[national.length - 1].ConfirmedCovidDeaths),
+    previousConfirmedCovidCases: format(national[national.length - 2].ConfirmedCovidCases),
+    avgCases: format(rolling7DayAvgCases[rolling7DayAvgCases.length - 1].value),
+    previousAvgCases: format(rolling7DayAvgCases[rolling7DayAvgCases.length - 8].value),
+    hospitalised: format(hospital[hospital.length - 1].hospitalisedCases),
+    latestICU: format(icu[icu.length - 1].icuCases),
+    testing: testing[testing.length - 1],
+    vaccinations: format(vaccination[vaccination.length - 1].doses)
   };
 };

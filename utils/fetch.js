@@ -76,51 +76,6 @@ const processCountyData = (data) => {
 
     }
   });
-
-  // const rows = [];
-  // const keys = {};
-
-  // for (const county of countyResponses) {
-  //   for (const [i, feature] of county.features.entries()) {
-  //     const d = feature.attributes;
-  //     const prevData = i > 0 ? county.features[i - 1].attributes : {};
-
-  //     const existingRow = rows.find(i => i.date === d.TimeStamp);
-  //     let row = { date: d.TimeStamp };
-  //     keys[d.CountyName] = true;
-
-  //     const statsToTrack = [
-  //       'ConfirmedCovidCases',
-  //       'PopulationProportionCovidCases',
-  //       'ConfirmedCovidDeaths',
-  //       'ConfirmedCovidRecovered'
-  //     ]
-  //     const generatedDailyTotals = {};
-  //     statsToTrack.forEach(stat => {
-  //       generatedDailyTotals[`daily${stat}`] = (d[stat] - prevData[stat]) > 0 ? d[stat] - prevData[stat] : 0;
-  //     });
-
-  //     // Add in the needed data to row
-  //     row[d.CountyName] = {
-  //       ...d,
-  //       ...generatedDailyTotals
-  //     }
-  //     if (existingRow) {
-  //       // Assign the existing row data
-  //       Object.assign(existingRow, row);
-  //     } else {
-  //       // Start new row
-  //       rows.push(row)
-  //     }
-  //   }
-  // }
-
-  // for (const row of rows) {
-  //   row.date = new Date(row.date);
-  // }
-
-  // rows.columns = Object.keys(keys);
-  // return rows;
 };
 
 const processHospitalData = (data) => {
@@ -161,6 +116,25 @@ const processTestingData = (data) => {
   });
 };
 
+const processVaccinationData = (data) => {
+  const result = [];
+  const rows = data.split('\n');
+  for ([index, row] of rows.entries()) {
+    if (index === 0) {
+      continue;
+    }
+    const rowData = row.split(",");
+    if (rowData.length > 1) {
+      result.push({
+        date: new Date(rowData[1]),
+        vaccineType: rowData[2],
+        doses: +(rowData[3])
+      });
+    }
+  }
+  return result;
+};
+
 const getData = async () => {
 
   const nationalDataUrl = 'https://services1.arcgis.com/eNO7HHeQ3rUcBllm/arcgis/rest/services/CovidStatisticsProfileHPSCIrelandOpenData/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&outSR=4326&f=json';
@@ -168,20 +142,25 @@ const getData = async () => {
   const icuDataUrl = 'https://services-eu1.arcgis.com/z6bHNio59iTqqSUY/arcgis/rest/services/ICUBISHistoricTimelinePublicView/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&outSR=4326&f=json';
   const testingDataUrl = 'https://services-eu1.arcgis.com/z6bHNio59iTqqSUY/arcgis/rest/services/LaboratoryLocalTimeSeriesHistoricView/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&outSR=4326&f=json';
   const countyDataUrl = 'https://services1.arcgis.com/eNO7HHeQ3rUcBllm/arcgis/rest/services/Covid19CountyStatisticsHPSCIrelandOpenData/FeatureServer/0/query?where=1%3D1&outFields=CountyName,PopulationCensus16,IGEasting,IGNorthing,ConfirmedCovidCases,PopulationProportionCovidCases,ConfirmedCovidDeaths,ConfirmedCovidRecovered,x,y,FID,TimeStampDate&returnGeometry=false&outSR=4326&f=json';
+  const vaccinationCSV = 'https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/country_data/Ireland.csv';
 
   const nationalResponse = await fetch(nationalDataUrl);
   const countyResponses = await fetch(countyDataUrl);
   const hospitalResponse = await fetch(hospitalDataUrl);
   const icuResponse = await fetch(icuDataUrl);
   const testingResponse = await fetch(testingDataUrl);
+  const vaccinationResponse = await fetch(vaccinationCSV);
 
   const data = {
     national: processNationalData(await nationalResponse.json()),
     county: processCountyData(await countyResponses.json()),
     hospital: processHospitalData(await hospitalResponse.json()),
     icu: processICUData(await icuResponse.json()),
-    testing: processTestingData(await testingResponse.json())
+    testing: processTestingData(await testingResponse.json()),
+    vaccination: processVaccinationData(await vaccinationResponse.text())
   }
+
+  console.log(data.vaccination)
 
   console.log(`Requesting new data records (${data.national.length} records)`);
 

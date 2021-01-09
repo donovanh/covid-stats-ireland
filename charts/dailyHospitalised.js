@@ -30,7 +30,7 @@ module.exports = (data) => {
   // Set up scales
   const xScale = d3.scaleTime()
     .domain([
-      d3.min(hospitalData, d => d.date),
+      d3.min(dataset, d => d.date),
       d3.max(hospitalData, d => d.date)
     ])
     .range([margin.left, w - margin.right]);

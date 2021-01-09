@@ -157,7 +157,7 @@ module.exports = (data) => {
   d3n.html()
   const html = `
     <h2>Hospitalised, ICU and deaths</h2>
-    <div style="max-width: ${w}px">
+    <div>
       ${d3n.chartHTML()}
     </div>
   `;

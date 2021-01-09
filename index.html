@@ -13,63 +13,93 @@
           display: flex;
           align-items: center;
           justify-content: space-between;
+          margin-bottom: 20px;
         }
         .last-updated {
           color: #999;
+          margin: 0;
+        }
+        main {
+          max-width: 1280px;
+          margin: 0 auto;
+        }
+        @media only screen and (max-width: 1320px) {
+          main {
+            padding: 0 20px;
+          }
+        }
+        @media only screen and (max-width: 600px) {
+          header {
+            flex-wrap: wrap;
+          }
+          main {
+            padding: 0 10px;
+          }
         }
       </style>
     </head>
     <body>
       <!-- Last deploy: {{charts.lastRun}} -->
-      <header>
-        <h1>COVID-19 Numbers Ireland</h1>
-        <p class="last-updated">Updated: {{charts.lastUpdated.national}}</p>
-      </header>
-      <style>
-        .summary ul {
-          margin: 0;
-          padding: 10px 20px;
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: space-between;
-        }
-        .summary li {
-          display: inline-block;
-          list-style: none;
-          font-size: 24px;
-        }
+      <main>
+        <header>
+          <h1>COVID-19 Numbers Ireland</h1>
+          <p class="last-updated">Updated: {{charts.lastUpdated.national}}</p>
+        </header>
+        <style>
+          .summary ul {
+            margin: 0;
+            padding: 10px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+          }
+          .summary li {
+            display: inline-block;
+            list-style: none;
+            font-size: 24px;
+          }
+          .summary li span {
+            display: block;
+            font-size: 12px;
+            color: #999;
+          }
+          @media only screen and (max-width: 600px) {
+            .summary ul {
+              padding: 0 10px;
+            }
+            .summary li {
+              width: 33%;
+              padding: 10px 0;
+            }
+          }
+        </style>
+        <div class="summary">
+          <h2>Latest</h2>
+          <ul>
+            <li class="daily-cases">{{ charts.summary.ConfirmedCovidCases }} <span>New cases</span></li>
+            <!-- <li class="avg-cases">{{ charts.summary.avgCases }} <span>7 day average</span></li>
+            <li class="prev-average-cases">{{ charts.summary.previousAvgCases }} <span>Previous 7 day average</span></li> -->
+            <li class="daily-deaths">{{ charts.summary.ConfirmedCovidDeaths }} <span>Deaths</span></li>
+            <li class="in-hospital">{{ charts.summary.hospitalised }} <span>In hospital</span></li>
+            <li class="in-icu">{{ charts.summary.latestICU }} <span>In ICU</span></li>
+            <!-- <li class="testing-weekly">{{ charts.summary.testing.tests7Day }} <span>Tests over last 7 days</span></li> -->
+            <li class="testing-positive">{{ charts.summary.testing.positiveRate7Day }}% <span>Positive test rate</span></li>
+            <li class="vaccinations-total">{{ charts.summary.vaccinations }} <span>Vaccinations</span></li>
+          </ul>
+        </div>
+        {{ charts.dailyNationalCases }}
+        {{ charts.dailyHospitalised }}
+        {{ charts.countyMap }}
 
-        .summary li span {
-          display: block;
-          font-size: 14px;
-        }
-      </style>
-      <div class="summary">
-        <h2>Latest</h2>
-        <ul>
-          <li class="daily-cases">{{ charts.summary.ConfirmedCovidCases }} <span>New cases</span></li>
-          <!-- <li class="avg-cases">{{ charts.summary.avgCases }} <span>7 day average</span></li>
-          <li class="prev-average-cases">{{ charts.summary.previousAvgCases }} <span>Previous 7 day average</span></li> -->
-          <li class="daily-deaths">{{ charts.summary.ConfirmedCovidDeaths }} <span>Deaths</span></li>
-          <li class="in-hospital">{{ charts.summary.hospitalised }} <span>In hospital</span></li>
-          <li class="in-icu">{{ charts.summary.latestICU }} <span>In ICU</span></li>
-          <!-- <li class="testing-weekly">{{ charts.summary.testing.tests7Day }} <span>Tests over last 7 days</span></li> -->
-          <li class="testing-positive">{{ charts.summary.testing.positiveRate7Day }}% <span>Positive test rate</span></li>
-          <li class="vaccinations-total">{{ charts.summary.vaccinations }} <span>Vaccinations</span></li>
-        </ul>
-      </div>
-      {{ charts.dailyNationalCases }}
-      {{ charts.dailyHospitalised }}
-      {{ charts.byAge }}
-      {{ charts.countyMap }}
-      <hr />
-      <h3>Sources</h3>
-      <p>Case data sourced from <a href="https://data.gov.ie/">data.gov.ie</a> using <a href="https://covid19ireland-geohive.hub.arcgis.com/datasets/d8eb52d56273413b84b0187a4e9117be_0">ARCGIS</a>.
-      <p>Vaccination numbers sourced from <a href="https://github.com/owid/covid-19-data/tree/master/public/data">Our World In Data</a>.</p>
-      <h3>About this site</h3>
-      <p>Designed and built by <a href="https://hop.ie">Donovan Hutchinson</a>.</p>
-      <h3>Last Updated</h3>
-      <p>Daily case data updated as of {{charts.lastUpdated.national}}.
-      <br>County case data updated as of {{charts.lastUpdated.county}}.</p>
-    </body>
+        <hr />
+        <h3>Sources</h3>
+        <p>Case data sourced from <a href="https://data.gov.ie/">data.gov.ie</a> using <a href="https://covid19ireland-geohive.hub.arcgis.com/datasets/d8eb52d56273413b84b0187a4e9117be_0">ARCGIS</a>.
+        <br />Vaccination numbers sourced from <a href="https://github.com/owid/covid-19-data/tree/master/public/data">Our World In Data</a>.</p>
+        <h3>About this site</h3>
+        <p>Designed and built by <a href="https://hop.ie">Donovan Hutchinson</a>.</p>
+        <h3>Last Updated</h3>
+        <p>Daily case data updated as of {{charts.lastUpdated.national}}.
+        <br>County case data updated as of {{charts.lastUpdated.county}}.</p>
+      </main>
+  </body>
 </html>

@@ -22,10 +22,7 @@ module.exports = ({ county: dataset }) => {
   const max = Math.ceil(d3.max(dataset, d => d.PopulationProportionCovidCases / 1000));
 
   const colScale = d3.scaleLinear()
-    .domain([
-      0,
-      max
-    ])
+    .domain([0, max])
     .rangeRound([0, colours.reds.length - 1]);
 
   for (const county of countyPaths) {
@@ -79,8 +76,8 @@ module.exports = ({ county: dataset }) => {
   const legendHeight = 140;
 
   legendGroup.append('rect')
-    .attr('x', margin.left)
-    .attr('y', margin.top)
+    .attr('x', margin.left + 50)
+    .attr('y', margin.top + 10)
     .attr('stroke', '#eee')
     .attr('width', 20)
     .attr('height', legendHeight)
@@ -88,24 +85,24 @@ module.exports = ({ county: dataset }) => {
 
     const legendAxisScale = d3.scaleLinear()
     .domain([max, 0])
-    .range([4, legendHeight - 4]);
+    .range([0, legendHeight]);
 
   const legendAxis = d3.axisRight()
     .scale(legendAxisScale)
-    .tickSize(0)
+    .tickSize(4)
     .tickPadding(4)
     .ticks(2)
     .tickFormat(d => `${d}%`);
 
   legendGroup.append('g')
     .classed('legend-axis', true)
-    .attr('transform', `translate(${margin.left + 20}, ${margin.top})`)
+    .attr('transform', `translate(${margin.left + 70}, ${margin.top + 10})`)
     .call(legendAxis);
 
   legendGroup.select('.domain')
     .remove();
 
-  d3n.html()
+  d3n.html();
   const html = `
     <style>
       .map-wrapper {
@@ -146,7 +143,7 @@ module.exports = ({ county: dataset }) => {
         opacity: 1;
       }
     </style>
-    <h2>Cases percent by county</h2>
+    <h2>Case percent by county</h2>
     <div class="map-wrapper" style="max-width: ${w}px">
       ${d3n.chartHTML()}
       <div class="map-tooltip">

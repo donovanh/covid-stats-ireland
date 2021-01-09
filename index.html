@@ -28,6 +28,9 @@
             padding: 0 20px;
           }
         }
+        svg text {
+          shape-rendering: crispEdges;
+        }
 
         h2 {
           color: #666;
@@ -40,6 +43,12 @@
           }
           main {
             padding: 0 10px;
+          }
+        }
+
+        @media only screen and (max-width: 800px) {
+          svg * {
+            shape-rendering: crispEdges;
           }
         }
       </style>
@@ -96,17 +105,48 @@
         </div>
         {{ charts.dailyNationalCases }}
         {{ charts.dailyHospitalised }}
-        {{ charts.countyMap }}
-
-        <hr />
-        <h3>Sources</h3>
-        <p>Case data sourced from <a href="https://data.gov.ie/">data.gov.ie</a> using <a href="https://covid19ireland-geohive.hub.arcgis.com/datasets/d8eb52d56273413b84b0187a4e9117be_0">ARCGIS</a>.
-        <br />Vaccination numbers sourced from <a href="https://github.com/owid/covid-19-data/tree/master/public/data">Our World In Data</a>.</p>
-        <h3>About this site</h3>
-        <p>Designed and built by <a href="https://hop.ie">Donovan Hutchinson</a>.</p>
-        <h3>Last Updated</h3>
-        <p>Daily case data updated as of {{charts.lastUpdated.national}}.
-        <br>County case data updated as of {{charts.lastUpdated.county}}.</p>
+        <style>
+          .counties {
+            display: flex;
+          }
+          .counties .map {
+            width: 50%;
+          }
+          .counties .list {
+            width: 50%;
+          }
+          @media only screen and (max-width: 800px) {
+            .counties {
+              flex-wrap: wrap;
+            }
+            .counties .map,
+            .counties .list {
+              width: 100%;
+            }
+          }
+        </style>
+        <section class="counties">
+          <div class="map">{{ charts.countyMap }}</div>
+          <div class="list">{{ charts.countyList }}</div>
+        </section>
+        <style>
+          footer {
+            border-top: 3px dashed #eee;
+            color: #666;
+            margin: 40px 0;
+            padding: 10px 0;
+          }
+        </style>
+        <footer>
+          <h3>Sources</h3>
+          <p>Case data sourced from <a href="https://data.gov.ie/">data.gov.ie</a> using <a href="https://covid19ireland-geohive.hub.arcgis.com/datasets/d8eb52d56273413b84b0187a4e9117be_0">ARCGIS</a>.
+          Vaccination numbers sourced from <a href="https://github.com/owid/covid-19-data/tree/master/public/data">Our World In Data</a>.</p>
+          <h3>About this site</h3>
+          <p>Designed and built by <a href="https://hop.ie">Donovan Hutchinson</a>.</p>
+          <h3>Last Updated</h3>
+          <p>Daily case data: <strong>{{charts.lastUpdated.national}}</strong>.
+          <br>County case data: <strong>{{charts.lastUpdated.county}}</strong>.</p>
+        </footer>
       </main>
   </body>
 </html>

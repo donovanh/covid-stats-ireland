@@ -112,7 +112,6 @@ module.exports = (data) => {
       .attr('fill', colours.light)
       .attr('d', hospitalised);
 
-      console.log(hospitalData[hospitalData.length - 1])
   // Define icu as an area
   const icu = d3.area()
     .curve(d3.curveBasis)

@@ -71,16 +71,29 @@
           margin-top: 0;
         }
 
-
         .tooltip.active {
           opacity: 1;
         }
+
         @media only screen and (max-width: 600px) {
           header {
             flex-wrap: wrap;
           }
           main {
             padding: 0 10px;
+          }
+          .tooltip {
+            border-radius: 15px;
+            padding: 12px;
+          }
+          .tooltip p.date {
+            font-size: 10px;
+          }
+          .tooltip p.large {
+            font-size: 14px;
+          }
+          .tooltip p.small {
+            font-size: 10px;
           }
         }
 

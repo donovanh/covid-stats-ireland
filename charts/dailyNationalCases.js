@@ -244,15 +244,27 @@ module.exports = (data) => {
           casesDateEl.innerText = date;
           casesCasesEl.innerText = cases + casesText;
           casesAvgEl.innerText = average +' (7-day average)';
+          // Highlight the bar
           const parentGroup = e.target.parentElement;
           const bar = parentGroup.querySelector('.bar');
           bar.classList.add('active');
           e.target.classList.add('active');
           dailyCasesTooltip.classList.add('active');
+          // Position the tooltip
           const x = e.clientX - dailyCasesRect.x;
           const y = e.clientY - dailyCasesRect.y;
-          dailyCasesTooltip.style.left = x + 'px';
-          dailyCasesTooltip.style.top = y + 'px';
+          // Check width of the tooltip
+          // If it's more than the distance to the right side, set the X accordingly
+          // console.log(dailyCasesTooltip.getBoundingClientRect())
+          const tooltipWidth = dailyCasesTooltip.getBoundingClientRect().width;
+          const tooltipHeight = dailyCasesTooltip.getBoundingClientRect().height;
+          const rightSide = x + tooltipWidth + 20;
+          if (rightSide > dailyCasesRect.width) {
+            dailyCasesTooltip.style.left = x - 10 - tooltipWidth + 'px';
+          } else {
+            dailyCasesTooltip.style.left = x + 10 + 'px';
+          }
+          dailyCasesTooltip.style.top = y - (tooltipHeight) + 'px';
         }
       }
       dailyCasesBars.addEventListener('mouseover', function(e) {

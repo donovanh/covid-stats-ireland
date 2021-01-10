@@ -108,37 +108,12 @@ module.exports = ({ county: dataset }) => {
       .map-wrapper {
         position: relative;
       }
-
-      .map-tooltip {
-        pointer-events: none;
-        position: absolute;
-        top: 0;
-        left: 0;
-        background: rgba(255,255,255,0.8);
-        border-radius: 10px;
-        box-shadow: 0 0 30px rgba(0,0,0,0.5);
-        opacity: 0;
-        transition: opacity 0.2s ease-out;
-        padding: 10px;
-        min-width: 150px;
-      }
-
-      .map-tooltip p {
-        margin: 0;
-      }
-
       .county {
         transition: opacity 0.2s ease-out;
       }
-
-      .map-tooltip.active {
-        opacity: 1;
-      }
-
       #map.is-active .county:not(.active) {
         opacity: 0.75;
       }
-
       #map.is-active .county.active {
         opacity: 1;
       }
@@ -146,20 +121,22 @@ module.exports = ({ county: dataset }) => {
     <h2>Case percent by county</h2>
     <div class="map-wrapper" style="max-width: ${w}px">
       ${d3n.chartHTML()}
-      <div class="map-tooltip">
-        <p class="county-name"></p>
-        <p class="county-stat"></p>
+      <div class="tooltip">
+        <p class="county-name date"></p>
+        <p class="county-stat large"></p>
+        <p class="county-cases small"></p>
       </div>
     </div>
     <script>
       const counties = [...document.querySelectorAll('.county')];
       const map = document.querySelector('#map');
-      const mapTooltip = document.querySelector('.map-tooltip');
-      const mapCountyName = document.querySelector('.map-tooltip .county-name');
-      const mapCountyStat = document.querySelector('.map-tooltip .county-stat');
+      const mapTooltip = document.querySelector('.map-wrapper .tooltip');
+      const mapCountyName = document.querySelector('.map-wrapper .tooltip .county-name');
+      const mapCountyStat = document.querySelector('.map-wrapper .tooltip .county-stat');
+      const mapCountyCases = document.querySelector('.map-wrapper .tooltip .county-cases');
       let mapListenerTimeout;
       // Mouse functions
-      const showTooltip = (e) => {
+      function showTooltip(e) {
         e.target.classList.add('active');
         mapTooltip.classList.add('active');
         map.classList.add('is-active');
@@ -167,9 +144,10 @@ module.exports = ({ county: dataset }) => {
         document.addEventListener('mousemove', moveMouse);
         // Set the tooltip content
         mapCountyName.innerText = e.target.getAttribute('name');
-        mapCountyStat.innerText = e.target.getAttribute('data-case-percent') + ' (' + e.target.getAttribute('data-cases') + ' cases)';
+        mapCountyStat.innerText = e.target.getAttribute('data-case-percent');
+        mapCountyCases.innerText = e.target.getAttribute('data-cases') + ' cases';
       }
-      const hideTooltip = (e) => {
+      function hideTooltip(e) {
         e.target.classList.remove('active');
         mapTooltip.classList.remove('active');
         map.classList.remove('is-active');
@@ -183,7 +161,7 @@ module.exports = ({ county: dataset }) => {
           }
         }, 150);
       }
-      const moveMouse = (e) => {
+      function moveMouse(e) {
         const mapRect = map.getBoundingClientRect();
         const x = e.clientX - mapRect.x;
         const y = e.clientY - mapRect.y;

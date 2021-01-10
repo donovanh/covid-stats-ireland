@@ -25,6 +25,11 @@ function doStuff(data) {
     testing
   } = data;
 
-  console.log(JSON.stringify(county))
+  const nationalProcessed = national.map((d, i) => {
+    const prevDate = i > 1 ? national[i - 1] : national[i];
+    console.log(d.date);
+  });
+
+  //console.log(nationalProcessed)
 
 };

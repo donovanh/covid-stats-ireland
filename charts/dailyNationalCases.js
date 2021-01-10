@@ -5,15 +5,17 @@ module.exports = (data) => {
 
   console.log('Generating national chart');
 
-  const options = { selector: '#cases', container: '<div id="container"><div id="cases"></div></div>' }
-  const d3n = new D3Node(options) // initializes D3 with container element
-  const d3 = d3n.d3
+  const options = { selector: '#cases', container: '<div id="container"><div id="cases"></div></div>' };
+  const d3n = new D3Node(options); // initializes D3 with container element
+  const d3 = d3n.d3;
 
   // Set up dimensions and options
   const dataset = data.national.map(d => ({
     ...d,
     date: new Date(d.date)
   }));
+  dataset.shift(); // Remove the first day as there's a gap after it
+
   const w = 800;
   const h = 300;
   const margin = ({ top: 10, right: 20, bottom: 30, left: 40 });
@@ -56,7 +58,7 @@ module.exports = (data) => {
 
   // Scale Y to the weekly average line
   const yScale = d3.scaleLinear()
-    .domain([0, d3.max(sevenDayAverages, d => d.value) * 1.2])
+    .domain([0, d3.max(dataset, d => d.ConfirmedCovidCases)])
     .range([h - margin.bottom, margin.top]);
 
   // Draw containing svg
@@ -137,17 +139,31 @@ module.exports = (data) => {
   svg.selectAll('.tick text')
     .attr('fill', colours.darkGrey)
 
-    // Draw daily stat bars
-  svg
+  const bars = svg
     .append('g')
-    .attr('id', 'bars')
-    .selectAll('.bar')
+    .attr('id', 'bars');
+
+  const barGroups = bars.selectAll('.bar-group')
     .data(dataset, (d) => d.date)
     .enter()
+    .append('g')
+    .classed('bar-group', true);
+
+  barGroups
     .append('rect')
-    .attr('class', 'bar')
-    .attr('data-key', (d) => d.date)
+    .classed('hover-bar', true)
     .attr('x', (d) => xBarScale(d.date))
+    .attr('y', margin.top)
+    .attr('data-key', d => d.date)
+    .attr('data-cases', d => d.ConfirmedCovidCases)
+    .attr('data-avg', (d, i) => sevenDayAverages[i].value)
+    .attr('height', h - margin.bottom - margin.top)
+    .attr('width', xBarScale.bandwidth())
+    .attr('fill', 'transparent');
+
+  barGroups.append('rect')
+    .attr('class', 'bar')
+    .attr('x', (d) => xBarScale(d.date) + xBarScale.bandwidth() / 4)
     .attr('y', (d) => yScale(d.ConfirmedCovidCases))
     .attr('width', xBarScale.bandwidth() / 2)
     .attr('height', (d) => h - yScale(d.ConfirmedCovidCases) - margin.bottom)
@@ -168,36 +184,90 @@ module.exports = (data) => {
     .attr('stroke', colours.darkerGrey)
     .attr('d', sevendayAvgLine);
 
-  // Add a fade-out for the top larger values
-  const gradient = svg.append('linearGradient')
-    .attr('id', 'fadeGradient')
-    .attr('x1', 0)
-    .attr('x2', 0)
-    .attr('y1', 0)
-    .attr('y2', 1);
-
-  gradient.append('stop')
-    .attr('offset', '0')
-    .attr('stop-color', 'rgba(255,255,255,1)');
-
-  gradient.append('stop')
-    .attr('offset', '100%')
-    .attr('stop-color', 'rgba(255,255,255,0)');
-
-  svg.append('rect')
-    .classed('fade-out', true)
-    .attr('x', margin.left)
-    .attr('y', 0)
-    .attr('height', 40)
-    .attr('width', w - margin.right - margin.left)
-    .attr('fill', 'url(#fadeGradient)')
-
   d3n.html()
   const html = `
     <h2>Daily cases</h2>
-    <div>
+    <style>
+      .daily-cases {
+        position: relative;
+      }
+      .daily-cases .bar,
+      .daily-cases .seven-day-avg,
+      .fade-out,
+      .daily-cases .tick {
+        pointer-events: none;
+      }
+      .daily-cases .hover-bar.active {
+        fill: #eee;
+      }
+      #bars .bar {
+        transition: opacity 0.2s ease-out;
+      }
+      #bars.active .bar {
+        opacity: 0.5;
+      }
+      #bars .bar.active {
+        opacity: 1;
+      }
+    </style>
+    <div class="daily-cases">
       ${d3n.chartHTML()}
+      <div class="tooltip">
+        <p class="date">ok</p>
+        <p class="cases large"></p>
+        <p class="average small"></p>
+      </div>
     </div>
+    <script>
+      const dailyCasesBars = document.querySelector('#cases #bars');
+      const dailyCasesTooltip = document.querySelector('.daily-cases .tooltip')
+      const casesDateEl = document.querySelector('.daily-cases .tooltip .date');
+      const casesCasesEl = document.querySelector('.daily-cases .tooltip .cases');
+      const casesAvgEl = document.querySelector('.daily-cases .tooltip .average');
+      let dailyCasesRect;
+      function clearCasesBars() {
+        const allHoverBars = document.querySelectorAll('#cases .hover-bar');
+        const allBars = document.querySelectorAll('#cases .bar');
+        for (let i = 0; i < allHoverBars.length; ++i) {
+          allHoverBars[i].classList.remove('active');
+          allBars[i].classList.remove('active');
+        }
+      }
+      function dailyCasesBarsMove(e) {
+        clearCasesBars();
+        if (e.target.matches(".hover-bar")) {
+          // Set tooltip content
+          const cases = formatNumber(+(e.target.getAttribute('data-cases')));
+          const average = formatNumber(Math.round(+(e.target.getAttribute('data-avg'))));
+          const date = formatDate(e.target.getAttribute('data-key'));
+          const casesText = cases === '1' ? ' case' : ' cases';
+          casesDateEl.innerText = date;
+          casesCasesEl.innerText = cases + casesText;
+          casesAvgEl.innerText = average +' (7-day average)';
+          const parentGroup = e.target.parentElement;
+          const bar = parentGroup.querySelector('.bar');
+          bar.classList.add('active');
+          e.target.classList.add('active');
+          dailyCasesTooltip.classList.add('active');
+          const x = e.clientX - dailyCasesRect.x;
+          const y = e.clientY - dailyCasesRect.y;
+          dailyCasesTooltip.style.left = x + 'px';
+          dailyCasesTooltip.style.top = y + 'px';
+        }
+      }
+      dailyCasesBars.addEventListener('mouseover', function(e) {
+        dailyCasesBars.classList.add('active');
+        dailyCasesRect = document.querySelector('#cases').getBoundingClientRect();
+        dailyCasesBars.addEventListener('mousemove', dailyCasesBarsMove);
+      });
+      dailyCasesBars.addEventListener('mouseleave', function() {
+        // Remove mousemove listener from dailyCasesBars
+        clearCasesBars();
+        dailyCasesBars.classList.remove('active');
+        dailyCasesTooltip.classList.remove('active');
+        dailyCasesBars.removeEventListener('mousemove', dailyCasesBarsMove);
+      });
+    </script>
   `;
 
   return html;

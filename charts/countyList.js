@@ -38,10 +38,7 @@ module.exports = ({ county: dataset }) => {
     .paddingInner(0);
 
   const colScale = d3.scaleLinear()
-    .domain([
-      0,
-      max
-    ])
+    .domain([0, max])
     .rangeRound([0, colours.reds.length - 1]);
 
   // Set up axes

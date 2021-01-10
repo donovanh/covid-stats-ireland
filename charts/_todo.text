@@ -1,9 +1,12 @@
 TODO:
-* Add in county bars data
-* Adjust position in layout beside map
 * Hover states on the two time graphs
+* Hover states for county line graph, connect with map hover
+* Rewrite map listeners to one single listener on map
+* Consistent styling of tooltips
 * Link hover states to updating the summary for that day
 * Legends on time graphs
+* Vaccination goal amount (70%) on main graph
+* Vaccination progress area on main graph
 * Favicon
 
 * Bring in excess mortality data from
@@ -24,12 +27,6 @@ TODO:
 * Make a recent testing chart
 * Mark cities on map
 * Better colour scheme
-* Font
-* Last updated date on top right corner
-* Layout
-* Responsive
-  * Small screen
-  * Large screen
 * Add bespoke events: school close, national lockdowns etc
 * Sparklines in summary
 * Total Ireland deaths year on year

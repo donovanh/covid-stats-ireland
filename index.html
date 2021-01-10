@@ -37,6 +37,43 @@
           margin: 40px 0 0;
           font-weight: normal;
         }
+        .tooltip {
+          pointer-events: none;
+          position: absolute;
+          top: 0;
+          left: 0;
+          background: rgba(255,255,255,0.9);
+          border-radius: 15px;
+          box-shadow: 0 0 20px -5px rgba(0,0,0,0.5);
+          opacity: 0;
+          transition: opacity 0.2s ease-out;
+          padding: 10px;
+          min-width: 150px;
+        }
+
+        .tooltip p {
+          margin: 0;
+          white-space: nowrap;
+        }
+
+        .tooltip p.date {
+          font-size: 12px;
+          font-weight: bold;
+        }
+
+        .tooltip p.large {
+          font-size: 24px;
+        }
+
+        .tooltip p.small {
+          font-size: 12px;
+          margin-top: 0;
+        }
+
+
+        .tooltip.active {
+          opacity: 1;
+        }
         @media only screen and (max-width: 600px) {
           header {
             flex-wrap: wrap;
@@ -52,6 +89,11 @@
           }
         }
       </style>
+      <script>
+        const formatNumber = (number) => Intl.NumberFormat('en-UK').format(number);
+        const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const formatDate = (date) => new Date(date).toLocaleDateString("en-US", dateOptions);
+      </script>
     </head>
     <body>
       <!-- Last deploy: {{charts.lastRun}} -->

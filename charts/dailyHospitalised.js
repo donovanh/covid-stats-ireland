@@ -14,7 +14,8 @@ module.exports = (data) => {
     ...d,
     date: new Date(d.date)
   }));
-
+  dataset.shift(); // Remove the first day as there's a gap after it
+  
   const icuArrayLengthDiff = data.hospital.length - data.icu.length;
   
   const hospitalData = data.hospital.map((d, i) => ({

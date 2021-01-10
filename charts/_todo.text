@@ -1,4 +1,5 @@
 TODO:
+* Make hover state pop up on left of line near end of graph
 * Hover states on the two time graphs
 * Hover states for county line graph, connect with map hover
 * Rewrite map listeners to one single listener on map

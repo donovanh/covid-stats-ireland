@@ -165,8 +165,9 @@ module.exports = ({ county: dataset }) => {
         const mapRect = map.getBoundingClientRect();
         const x = e.clientX - mapRect.x;
         const y = e.clientY - mapRect.y;
-        mapTooltip.style.left = x + 'px';
-        mapTooltip.style.top = y + 'px';
+        const tooltipHeight = mapTooltip.getBoundingClientRect().height;
+        mapTooltip.style.left = x + 3 + 'px';
+        mapTooltip.style.top = y - tooltipHeight - 3 + 'px';
       };
       for (let i = 0; i < counties.length; i++) {
         const county = counties[i];

@@ -12,8 +12,8 @@ module.exports = ({ county: dataset }) => {
   dataset.sort((a, b) => d3.descending(a.ConfirmedCovidCases, b.ConfirmedCovidCases));
 
   const w = 600;
-  const h = 700;
-  const margin = ({ top: 30, right: 30, bottom: 30, left: 70 });
+  const h = 900;
+  const margin = ({ top: 30, right: 30, bottom: 30, left: 90 });
 
   const svg = d3.select(d3n.document.querySelector('#county-list'))
     .append('svg')
@@ -115,6 +115,12 @@ module.exports = ({ county: dataset }) => {
 
   d3n.html();
   const html = `
+    <style>
+      .list-wrapper .tick text {
+        font-size: 14px;
+        fill: #999;
+      }
+    </style>
     <h2>Total cases by county</h2>
     <div class="list-wrapper" style="max-width: ${w}px">
       ${d3n.chartHTML()}

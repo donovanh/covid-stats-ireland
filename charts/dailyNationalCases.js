@@ -47,7 +47,7 @@ module.exports = (data) => {
   const xBarScale = d3.scaleBand()
     .domain(dataset.map(d => `${d.date}`))
     .range([margin.left, w - margin.right])
-    .paddingInner(0.05);
+    .paddingInner(0);
 
   const sevenDayAvgXScale = d3.scaleTime()
     .domain([
@@ -208,12 +208,13 @@ module.exports = (data) => {
       }
       #bars .bar.active {
         opacity: 1;
+        fill: ${colours.medium};
       }
     </style>
     <div class="daily-cases">
       ${d3n.chartHTML()}
       <div class="tooltip">
-        <p class="date">ok</p>
+        <p class="date"></p>
         <p class="cases large"></p>
         <p class="average small"></p>
       </div>

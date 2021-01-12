@@ -1,9 +1,7 @@
 TODO:
-* Make hover state pop up on left of line near end of graph
-* Hover states on the two time graphs
 * Hover states for county line graph, connect with map hover
+* Hover state on hospitalisations graph
 * Rewrite map listeners to one single listener on map
-* Consistent styling of tooltips
 * Link hover states to updating the summary for that day
 * Legends on time graphs
 * Vaccination goal amount (70%) on main graph

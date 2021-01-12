@@ -15,7 +15,7 @@ module.exports = (data) => {
     date: new Date(d.date)
   }));
   dataset.shift(); // Remove the first day as there's a gap after it
-  
+
   const icuArrayLengthDiff = data.hospital.length - data.icu.length;
   
   const hospitalData = data.hospital.map((d, i) => ({
@@ -141,12 +141,127 @@ module.exports = (data) => {
       .attr('fill', colours.veryDark)
       .attr('d', deaths);
 
+  // Bar for catching hover
+  svg.append('rect')
+    .classed('hover-area', true)
+    .attr('x', margin.left)
+    .attr('y', margin.top)
+    .attr('width', w - margin.left - margin.right)
+    .attr('height', h - margin.top - margin.bottom)
+    .attr('fill', 'transparent');
+
+  // Prepare data to put inline
+  const findByDate = (date, dataset) => dataset.find(d => {
+    const dateObj = new Date(date);
+    const compare1 = `${dateObj.getUTCFullYear()} ${dateObj.getUTCMonth()} ${dateObj.getUTCDate()}`;
+    const dateObj2 = new Date(d.date);
+    const compare2 = `${dateObj2.getUTCFullYear()} ${dateObj2.getUTCMonth()} ${dateObj2.getUTCDate()}`;
+    return compare1 === compare2;
+  });
+
+  const tidiedData = dataset.map((d, i) => {
+    const hospitalDataForDate = findByDate(d.date, hospitalData);
+    return {
+      date: d.date,
+      h: hospitalDataForDate ? hospitalDataForDate.hospitalisedCases : null,
+      i: hospitalDataForDate ? hospitalDataForDate.icuCases : null,
+      d: d.ConfirmedCovidDeaths
+    };
+  });
+
   d3n.html()
   const html = `
     <h2>Hospitalised, ICU and deaths</h2>
-    <div>
+    <style>
+      .hospitalised-chart {
+        position: relative;
+      }
+      .hospitalised-chart .hover-bar {
+        opacity: 0;
+        transition: opacity 0.2s ease-out;
+        position: absolute;
+        bottom: ${margin.bottom + 5}px;
+        width: 2px;
+        top: ${margin.top}px;
+        left: ${margin.left}px;
+        background: rgba(0,0,0,.05);
+        pointer-events: none;
+      }
+      .hospitalised-chart .hover-bar.active {
+        opacity: 1;
+      }
+    </style>
+    <div class="hospitalised-chart">
       ${d3n.chartHTML()}
+      <div class="hover-bar"></div>
+      <div class="tooltip">
+        <p class="date"></p>
+        <p class="hosp"></p>
+        <p class="icu"></p>
+        <p class="deaths"></p>
+      </div>
     </div>
+    <script>
+      (function () {
+        const area = document.querySelector('#hospitalised .hover-area');
+        const tooltip = document.querySelector('.hospitalised-chart .tooltip');
+        const hoverBar = document.querySelector('.hospitalised-chart .hover-bar');
+        let rect;
+        // Linear interpolation
+        function convertRange( value, r1, r2 ) { 
+          return ( value - r1[ 0 ] ) * ( r2[ 1 ] - r2[ 0 ] ) / ( r1[ 1 ] - r1[ 0 ] ) + r2[ 0 ];
+        }
+        const dataLength = ${dataset.length};
+        const data = ${JSON.stringify(tidiedData)};
+        function mouseMove(e) {
+          const day = Math.round(
+            convertRange(
+              e.clientX - rect.x,
+              [0, rect.width],
+              [0, dataLength]
+            )
+          ) - 1;
+          // Put data inside tooltip
+          if (data[day]) {
+            tooltip.classList.add('active');
+            tooltip.querySelector('.date').innerText = formatDate(data[day].date);
+            tooltip.querySelector('.hosp').innerText = formatNumber(+(data[day].h)) + ' hospitalised';
+            tooltip.querySelector('.icu').innerText = formatNumber(+(data[day].i)) + ' ICU';
+            tooltip.querySelector('.deaths').innerText = formatNumber(+(data[day].d)) + ' deaths';
+          } else {
+            tooltip.classList.remove('active');
+            console.log('removed as data day empty')
+          }
+          // Place tooltip near cursor
+          const x = e.clientX - rect.x + ${margin.left};
+          const y = e.clientY - rect.y + ${margin.top};
+          // Check width of the tooltip
+          // If it's more than the distance to the right side, set the X accordingly
+          const tooltipWidth = tooltip.getBoundingClientRect().width;
+          const tooltipHeight = tooltip.getBoundingClientRect().height;
+          const rightSide = x + tooltipWidth + 20;
+          if (rightSide > rect.width) {
+            tooltip.style.left = x - 10 - tooltipWidth + 'px';
+          } else {
+            tooltip.style.left = x + 10 + 'px';
+          }
+          tooltip.style.top = y - (tooltipHeight) + 'px';
+          // Place hover bar
+          hoverBar.style.left = x + 'px';
+        }
+        area.addEventListener('mouseenter', function() {
+          rect = area.getBoundingClientRect();
+          tooltip.classList.add('active');
+          hoverBar.classList.add('active');
+          area.addEventListener('mousemove', mouseMove);
+        });
+        area.addEventListener('mouseleave', function() {
+          tooltip.classList.remove('active');
+          hoverBar.classList.remove('active');
+          area.removeEventListener('mousemove', mouseMove);
+        });
+      })();
+    </script>
   `;
 
   return html;

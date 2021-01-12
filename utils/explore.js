@@ -22,14 +22,10 @@ function doStuff(data) {
     county,
     hospital,
     icu,
-    testing
+    testing,
+    vaccination
   } = data;
 
-  const nationalProcessed = national.map((d, i) => {
-    const prevDate = i > 1 ? national[i - 1] : national[i];
-    console.log(d.date);
-  });
-
-  //console.log(nationalProcessed)
+  console.log(data)
 
 };

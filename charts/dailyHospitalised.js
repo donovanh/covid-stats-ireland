@@ -24,6 +24,25 @@ module.exports = (data) => {
     icuCases: data.icu[i - icuArrayLengthDiff] ? data.icu[i - icuArrayLengthDiff].icuCases : 0
   }));
 
+  // Prepare data to put inline
+  const findByDate = (date, dataset) => dataset.find(d => {
+    const dateObj = new Date(date);
+    const compare1 = `${dateObj.getUTCFullYear()} ${dateObj.getUTCMonth()} ${dateObj.getUTCDate()}`;
+    const dateObj2 = new Date(d.date);
+    const compare2 = `${dateObj2.getUTCFullYear()} ${dateObj2.getUTCMonth()} ${dateObj2.getUTCDate()}`;
+    return compare1 === compare2;
+  });
+
+  const tidiedData = dataset.map(d => {
+    const hospitalDataForDate = findByDate(d.date, hospitalData);
+    return {
+      date: new Date(d.date),
+      h: hospitalDataForDate ? hospitalDataForDate.hospitalisedCases : null,
+      i: hospitalDataForDate ? hospitalDataForDate.icuCases : null,
+      d: d.ConfirmedCovidDeaths
+    };
+  });
+
   const w = 800;
   const h = 300;
   const margin = ({ top: 10, right: 20, bottom: 30, left: 40 });
@@ -31,13 +50,13 @@ module.exports = (data) => {
   // Set up scales
   const xScale = d3.scaleTime()
     .domain([
-      d3.min(dataset, d => d.date),
-      d3.max(hospitalData, d => d.date)
+      d3.min(tidiedData, d => d.date),
+      d3.max(tidiedData, d => d.date)
     ])
     .range([margin.left, w - margin.right]);
 
   const yScale = d3.scaleLinear()
-    .domain([0, d3.max(hospitalData, d => d.hospitalisedCases)])
+    .domain([0, d3.max(tidiedData, d => d.h)])
     .range([h - margin.bottom, margin.top]);
 
   // Draw containing svg
@@ -104,11 +123,11 @@ module.exports = (data) => {
     .curve(d3.curveBasis)
     .x(d => xScale(d.date))
     .y0(() => yScale.range()[0])
-    .y1(d => yScale(d.hospitalisedCases))
+    .y1(d => yScale(d.h))
 
   // Draw hospitalised area
   svg.append('path')
-    .datum(hospitalData)
+    .datum(tidiedData)
       .attr('class', 'hospitalised')
       .attr('fill', colours.light)
       .attr('d', hospitalised);
@@ -118,11 +137,11 @@ module.exports = (data) => {
     .curve(d3.curveBasis)
     .x(d => xScale(d.date))
     .y0(() => yScale.range()[0])
-    .y1(d => yScale(d.icuCases))
+    .y1(d => yScale(d.i))
 
   // Draw icu area
   svg.append('path')
-    .datum(hospitalData)
+    .datum(tidiedData)
       .attr('class', 'deaths')
       .attr('fill', colours.medium)
       .attr('d', icu);
@@ -132,11 +151,11 @@ module.exports = (data) => {
     .curve(d3.curveBasis)
     .x(d => xScale(d.date))
     .y0(() => yScale.range()[0])
-    .y1(d => yScale(d.ConfirmedCovidDeaths))
+    .y1(d => yScale(d.d))
 
   // Draw deaths area
   svg.append('path')
-    .datum(dataset)
+    .datum(tidiedData)
       .attr('class', 'deaths')
       .attr('fill', colours.veryDark)
       .attr('d', deaths);
@@ -150,25 +169,6 @@ module.exports = (data) => {
     .attr('height', h - margin.top - margin.bottom)
     .attr('fill', 'transparent');
 
-  // Prepare data to put inline
-  const findByDate = (date, dataset) => dataset.find(d => {
-    const dateObj = new Date(date);
-    const compare1 = `${dateObj.getUTCFullYear()} ${dateObj.getUTCMonth()} ${dateObj.getUTCDate()}`;
-    const dateObj2 = new Date(d.date);
-    const compare2 = `${dateObj2.getUTCFullYear()} ${dateObj2.getUTCMonth()} ${dateObj2.getUTCDate()}`;
-    return compare1 === compare2;
-  });
-
-  const tidiedData = dataset.map((d, i) => {
-    const hospitalDataForDate = findByDate(d.date, hospitalData);
-    return {
-      date: d.date,
-      h: hospitalDataForDate ? hospitalDataForDate.hospitalisedCases : null,
-      i: hospitalDataForDate ? hospitalDataForDate.icuCases : null,
-      d: d.ConfirmedCovidDeaths
-    };
-  });
-
   d3n.html()
   const html = `
     <h2>Hospitalised, ICU and deaths</h2>
@@ -180,10 +180,7 @@ module.exports = (data) => {
         opacity: 0;
         transition: opacity 0.2s ease-out;
         position: absolute;
-        bottom: ${margin.bottom + 5}px;
         width: 2px;
-        top: ${margin.top}px;
-        left: ${margin.left}px;
         background: rgba(0,0,0,.05);
         pointer-events: none;
       }
@@ -207,6 +204,7 @@ module.exports = (data) => {
         const tooltip = document.querySelector('.hospitalised-chart .tooltip');
         const hoverBar = document.querySelector('.hospitalised-chart .hover-bar');
         let rect;
+        let areaRect;
         // Linear interpolation
         function convertRange( value, r1, r2 ) { 
           return ( value - r1[ 0 ] ) * ( r2[ 1 ] - r2[ 0 ] ) / ( r1[ 1 ] - r1[ 0 ] ) + r2[ 0 ];
@@ -216,8 +214,8 @@ module.exports = (data) => {
         function mouseMove(e) {
           const day = Math.round(
             convertRange(
-              e.clientX - rect.x,
-              [0, rect.width],
+              e.clientX - areaRect.x,
+              [0, areaRect.width],
               [0, dataLength]
             )
           ) - 1;
@@ -230,11 +228,10 @@ module.exports = (data) => {
             tooltip.querySelector('.deaths').innerText = formatNumber(+(data[day].d)) + ' deaths';
           } else {
             tooltip.classList.remove('active');
-            console.log('removed as data day empty')
           }
           // Place tooltip near cursor
-          const x = e.clientX - rect.x + ${margin.left};
-          const y = e.clientY - rect.y + ${margin.top};
+          const x = e.clientX - rect.x;
+          const y = e.clientY - rect.y;
           // Check width of the tooltip
           // If it's more than the distance to the right side, set the X accordingly
           const tooltipWidth = tooltip.getBoundingClientRect().width;
@@ -250,10 +247,14 @@ module.exports = (data) => {
           hoverBar.style.left = x + 'px';
         }
         area.addEventListener('mouseenter', function() {
-          rect = area.getBoundingClientRect();
+          rect = document.querySelector('#hospitalised').getBoundingClientRect();
+          areaRect = area.getBoundingClientRect();
           tooltip.classList.add('active');
           hoverBar.classList.add('active');
           area.addEventListener('mousemove', mouseMove);
+          // Set dimensions for .hospitalised-chart .hover-bar
+          hoverBar.style.height = areaRect.height + 'px';
+          hoverBar.style.top = areaRect.y - rect.y + 'px';
         });
         area.addEventListener('mouseleave', function() {
           tooltip.classList.remove('active');

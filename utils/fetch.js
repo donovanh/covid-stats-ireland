@@ -117,6 +117,7 @@ const processTestingData = (data) => {
 };
 
 const processVaccinationData = (data) => {
+  console.log(data)
   const result = [];
   const rows = data.split('\n');
   for ([index, row] of rows.entries()) {
@@ -128,7 +129,9 @@ const processVaccinationData = (data) => {
       result.push({
         date: new Date(rowData[1]),
         vaccineType: rowData[2],
-        doses: +(rowData[3])
+        doses: +(rowData[4]),
+        people: +(rowData[5]),
+        fullyVaccinated: +(rowData[6])
       });
     }
   }

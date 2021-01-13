@@ -14,7 +14,6 @@
           display: flex;
           align-items: center;
           justify-content: space-between;
-          margin-bottom: 20px;
         }
         .last-updated {
           color: #999;
@@ -117,6 +116,9 @@
           <p class="last-updated">Updated: {{charts.lastUpdated.national}}</p>
         </header>
         <style>
+          .summary h2 {
+            margin-top: 10px;
+          }
           .summary ul {
             display: flex;
             flex-wrap: wrap;
@@ -131,10 +133,45 @@
             list-style: none;
             font-size: 24px;
           }
-          .summary li span {
+          .summary li .label {
             display: block;
             font-size: 12px;
             color: #999;
+          }
+          .summary.fade-in li,
+          .summary.fade-in .summary-title,
+          .summary.fade-in ul {
+            animation: fade-in 1s cubic-bezier(0,1,.3,1) forwards;
+          }
+          .summary.fade-in li:nth-of-type(2) {
+            opacity: 0;
+            animation-delay: 0.025s;
+          }
+          .summary.fade-in li:nth-of-type(3) {
+            opacity: 0;
+            animation-delay: 0.05s;
+          }
+          .summary.fade-in li:nth-of-type(4) {
+            opacity: 0;
+            animation-delay: 0.075s;
+          }
+          .summary.fade-in li:nth-of-type(5) {
+            opacity: 0;
+            animation-delay: 0.1s;
+          }
+          .summary.fade-in li:nth-of-type(6) {
+            opacity: 0;
+            animation-delay: 0.125s;
+          }
+          @keyframes fade-in {
+            0% {
+              opacity: 0;
+              transform: translateY(10px);
+            }
+            100% {
+              opacity: 1;
+              transform: none;
+            }
           }
           @media only screen and (max-width: 600px) {
             .summary ul {
@@ -147,17 +184,111 @@
           }
         </style>
         <div class="summary">
+          <h2 class="summary-title">Latest numbers</h2>
           <ul>
-            <li class="daily-cases">{{ charts.summary.ConfirmedCovidCases }} <span>New cases</span></li>
-            <!-- <li class="avg-cases">{{ charts.summary.avgCases }} <span>7 day average</span></li>
-            <li class="prev-average-cases">{{ charts.summary.previousAvgCases }} <span>Previous 7 day average</span></li> -->
-            <li class="daily-deaths">{{ charts.summary.ConfirmedCovidDeaths }} <span>Deaths</span></li>
-            <li class="in-hospital">{{ charts.summary.hospitalised }} <span>In hospital</span></li>
-            <li class="in-icu">{{ charts.summary.latestICU }} <span>In ICU</span></li>
-            <!-- <li class="testing-weekly">{{ charts.summary.testing.tests7Day }} <span>Tests over last 7 days</span></li> -->
-            <li class="testing-positive">{{ charts.summary.testing.positiveRate7Day }}% <span>Positive test rate</span></li>
-            <li class="vaccinations-total">{{ charts.summary.vaccinations }} <span>Vaccinations</span></li>
+            <li class="daily-cases">
+              <span class="data">
+                {{ charts.summary.ConfirmedCovidCases }}
+              </span>
+              <span class="label">New cases</span></li>
+            <!-- <li class="avg-cases">{{ charts.summary.avgCases }} <span class="label">7 day average</span></li>
+            <li class="prev-average-cases">{{ charts.summary.previousAvgCases }} <span class="label">Previous 7 day average</span></li> -->
+            <li class="daily-deaths">
+              <span class="data">
+                {{ charts.summary.ConfirmedCovidDeaths }}
+              </span>
+              <span class="label">Deaths</span></li>
+            <li class="in-hospital">
+              <span class="data">
+                {{ charts.summary.hospitalised }}
+              </span>
+              <span class="label">In hospital</span></li>
+            <li class="in-icu">
+              <span class="data">
+                {{ charts.summary.latestICU }}
+              </span>
+              <span class="label">In ICU</span></li>
+            <!-- <li class="testing-weekly">{{ charts.summary.testing.tests7Day }} <span class="label">Tests over last 7 days</span></li> -->
+            <li class="testing-positive">
+              <span class="data">
+                {{ charts.summary.testing.positiveRate7Day }}%
+              </span>
+              <span class="label">Positive test rate</span></li>
+            <li class="vaccinations-total">
+              <span class="data">
+                {{ charts.summary.vaccinations }}
+              </span>
+              <span class="label">Vaccinations</span></li>
           </ul>
+          <script>
+            // Respond to show-date event
+            document.querySelector('body').addEventListener('show-date', summaryDateHandler);
+            const summary = document.querySelector('.summary');
+            const summaryTitle = document.querySelector('.summary-title');
+            const summaryData = {
+              cases: document.querySelector('.summary .daily-cases .data'),
+              deaths: document.querySelector('.summary .daily-deaths .data'),
+              hospitalised: document.querySelector('.summary .in-hospital .data'),
+              icu: document.querySelector('.summary .in-icu .data'),
+              testing: document.querySelector('.summary .testing-positive .data'),
+              vaccination: document.querySelector('.summary .vaccinations-total .data')
+            }
+            const todayData = {
+              c: summaryData.cases.innerText,
+              d: summaryData.deaths.innerText,
+              h: summaryData.hospitalised.innerText,
+              i: summaryData.icu.innerText,
+              t: summaryData.testing.innerText,
+              v: summaryData.vaccination.innerText,
+            }
+            function findByDate(date) {
+              if (!window.inlineData) {
+                return;
+              } 
+              return window.inlineData.find(function(d) {
+                const date1 = new Date(d.date);
+                const compare1 = `${date1.getUTCFullYear()} ${date1.getUTCMonth()} ${date1.getUTCDate()}`;
+                const date2 = new Date(date);
+                const compare2 = `${date2.getUTCFullYear()} ${date2.getUTCMonth()} ${date2.getUTCDate()}`;
+                return compare1 === compare2
+              });
+            }
+            function showSummaryData(data) {
+              if (data.date) {
+                summaryTitle.innerText = formatDate(data.date);
+                if (!summary.classList.contains('changing')) {
+                  summary.classList.remove('fade-in');
+                  setTimeout(function() {
+                    summary.classList.add('fade-in');
+                  }, 10);
+                }
+                summary.classList.add('changing');
+              } else {
+                summary.classList.remove('changing');
+                summary.classList.remove('fade-in');
+                setTimeout(function() {
+                  summary.classList.add('fade-in');
+                }, 10);
+                summaryTitle.innerText = 'Latest numbers';
+              }
+              
+              summaryData.cases.innerText = data.c || 0;
+              summaryData.deaths.innerText = data.d || 0;
+              summaryData.hospitalised.innerText = data.h || 0;
+              summaryData.icu.innerText = data.i || 0;
+              summaryData.testing.innerText = data.t || 0;
+              summaryData.vaccination.innerText = data.v;
+            }
+            function summaryDateHandler(e) {
+              const date = e.detail;
+              const data = findByDate(date);
+              if (data) {
+                showSummaryData(data);
+              } else {
+                showSummaryData(todayData);
+              }
+            }
+          </script>
         </div>
         {{ charts.dailyNationalCases }}
         {{ charts.dailyHospitalised }}
@@ -204,5 +335,6 @@
           <br>County case data: <strong>{{charts.lastUpdated.county}}</strong>.</p>
         </footer>
       </main>
+      {{ charts.inlineData }}
   </body>
 </html>

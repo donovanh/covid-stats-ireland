@@ -199,6 +199,7 @@ module.exports = (data) => {
       </div>
     </div>
     <script>
+      // Shared data to show in summary also
       (function () {
         const area = document.querySelector('#hospitalised .hover-area');
         const tooltip = document.querySelector('.hospitalised-chart .tooltip');
@@ -209,10 +210,10 @@ module.exports = (data) => {
         function convertRange( value, r1, r2 ) { 
           return ( value - r1[ 0 ] ) * ( r2[ 1 ] - r2[ 0 ] ) / ( r1[ 1 ] - r1[ 0 ] ) + r2[ 0 ];
         }
-        const dataLength = ${dataset.length};
-        const data = ${JSON.stringify(tidiedData)};
+        
         function mouseMove(e) {
-          const day = Math.round(
+          const dataLength = window.inlineData.length;
+          const day = Math.ceil(
             convertRange(
               e.clientX - areaRect.x,
               [0, areaRect.width],
@@ -220,12 +221,16 @@ module.exports = (data) => {
             )
           ) - 1;
           // Put data inside tooltip
-          if (data[day]) {
+          // Send event to the summary
+          const event = new CustomEvent('show-date', { bubbles: true, detail: window.inlineData[day].date });
+          document.querySelector('body').dispatchEvent(event);
+
+          if (window.inlineData[day]) {
             tooltip.classList.add('active');
-            tooltip.querySelector('.date').innerText = formatDate(data[day].date);
-            tooltip.querySelector('.hosp').innerText = formatNumber(+(data[day].h)) + ' hospitalised';
-            tooltip.querySelector('.icu').innerText = formatNumber(+(data[day].i)) + ' ICU';
-            tooltip.querySelector('.deaths').innerText = formatNumber(+(data[day].d)) + ' deaths';
+            tooltip.querySelector('.date').innerText = formatDate(window.inlineData[day].date);
+            tooltip.querySelector('.hosp').innerText = formatNumber(+(window.inlineData[day].h)) + ' hospitalised';
+            tooltip.querySelector('.icu').innerText = formatNumber(+(window.inlineData[day].i)) + ' ICU';
+            tooltip.querySelector('.deaths').innerText = formatNumber(+(window.inlineData[day].d)) + ' deaths';
           } else {
             tooltip.classList.remove('active');
           }
@@ -260,6 +265,9 @@ module.exports = (data) => {
           tooltip.classList.remove('active');
           hoverBar.classList.remove('active');
           area.removeEventListener('mousemove', mouseMove);
+          // Update summary
+          const event = new CustomEvent('show-date', { bubbles: true, detail: null });
+          document.querySelector('body').dispatchEvent(event);
         });
       })();
     </script>

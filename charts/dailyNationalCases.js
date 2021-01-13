@@ -237,6 +237,9 @@ module.exports = (data) => {
       function dailyCasesBarsMove(e) {
         clearCasesBars();
         if (e.target.matches(".hover-bar")) {
+          // Send event to the summary
+          const event = new CustomEvent('show-date', { bubbles: true, detail: e.target.getAttribute('data-key') });
+          document.querySelector('body').dispatchEvent(event);
           // Set tooltip content
           const cases = formatNumber(+(e.target.getAttribute('data-cases')));
           const average = formatNumber(Math.round(+(e.target.getAttribute('data-avg'))));
@@ -279,6 +282,9 @@ module.exports = (data) => {
         dailyCasesBars.classList.remove('active');
         dailyCasesTooltip.classList.remove('active');
         dailyCasesBars.removeEventListener('mousemove', dailyCasesBarsMove);
+        // Update summary
+        const event = new CustomEvent('show-date', { bubbles: true, detail: null });
+        document.querySelector('body').dispatchEvent(event);
       });
     </script>
   `;

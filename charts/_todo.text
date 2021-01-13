@@ -1,33 +1,18 @@
 TODO:
-* Link hover states to updating the summary for that day
+* Label to clarify percentage meaning
+* Blog post on Eleventy-rendered D3 using Github actions
+* Favicon
+* Night mode
+* Make into a proper PWA
+* Notification option for when it updates
+* Vaccination progress
+* Total Ireland deaths year on year (text?)
+* Transmission types
 * Hover states for county line graph, connect with map hover
  - Use custom event listeners to connect the two
-* Legends on time graphs
-* Vaccination goal amount (70%) on main graph
-* Vaccination progress area on main graph
-* Favicon
+* Add bespoke events: school close, national lockdowns etc
 
 * Bring in excess mortality data from
 : https://github.com/owid/covid-19-data/blob/master/public/data/excess_mortality/excess_mortality.csv
 * Rewrite map listeners to one single listener on map container
 
-* Page structure
-- Case numbers / average / previously weekly average
-- Then case numbers graph
-- Secondary stats (number in hospital / ICU / test positivity)
-- Then hospitalisations graph 
-- Then 3 smaller graphs - cases by age, male / female, transmission types
-- Then county map, and list of counties beside (hover highlighting both)
-(Not sure if map and previous line should be swapped)
-
-* Make cases / hospital by age overlapping bars
-* Remove white gradient and use dashed lines for cutoff bars
-* Male / female chart (bars - maybe one horizontal stacked bar)
-* Make a recent testing chart
-* Mark cities on map
-* Better colour scheme
-* Add bespoke events: school close, national lockdowns etc
-* Sparklines in summary
-* Total Ireland deaths year on year
-* Vaccination progress
-* Transmission types

@@ -282,7 +282,16 @@
               const date = e.detail;
               const data = findByDate(date);
               if (data) {
-                showSummaryData(data);
+                // Format the numbers first
+                const formatted = {
+                  ...data,
+                  c: formatNumber(data.c),
+                  d: formatNumber(data.d),
+                  h: formatNumber(data.h),
+                  i: formatNumber(data.i),
+                  v: formatNumber(data.v)
+                }
+                showSummaryData(formatted);
               } else {
                 showSummaryData(todayData);
               }

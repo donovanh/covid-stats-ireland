@@ -9,6 +9,9 @@
     "screenshot": "node node-screenshot",
     "deploy": "eleventy --serve && gh-pages -d _site"
   },
+  "engines": {
+    "node": ">=14.1.0"
+  },
   "author": "",
   "license": "ISC",
   "devDependencies": {

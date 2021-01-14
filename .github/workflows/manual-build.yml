@@ -11,6 +11,8 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '14.1.0'
+      - run: npm install
+      - run: npm test
       - name: Build
         uses: TartanLlama/actions-eleventy@master
         with: 

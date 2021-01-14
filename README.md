@@ -42,7 +42,7 @@ If you use this project or any of the graphs, please link back to [the source](h
 
 *Source: [Covid Stats Ireland](http://hop.ie/covid-stats-ireland/) by Donovan Hutchinson*
 
-## Errata
+## Questions and feedback
 
 Any issues, please let me know [by email](mailto:d@hop.ie) or [on Twitter](https://twitter.com/donovanh).
 

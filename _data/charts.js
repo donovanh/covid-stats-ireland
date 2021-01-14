@@ -13,6 +13,10 @@ module.exports = async function() {
 
   const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
+  const today = new Date();
+  const dateString = `${today.getUTCFullYear()}-${today.getUTCMonth()}-${today.getUTCDate()}`;
+  const screenshotFilename = 'covid-stats-ireland-' + dateString + '.png';
+
   const lastUpdated = {
     national: new Date(data.national[data.national.length - 1].date).toLocaleDateString("en-US", dateOptions),
     county: new Date(data.county[data.county.length - 1].date).toLocaleDateString("en-US", dateOptions)
@@ -27,6 +31,7 @@ module.exports = async function() {
     countyList: countyList(data),
     inlineData: inlineData(data),
     lastUpdated,
-    lastRun: new Date()
+    lastRun: new Date(),
+    screenshotFilename
   };
 };

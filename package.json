@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "NODE_ENV=development eleventy --serve",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "screenshot": "node node-screenshot",
-    "deploy": "eleventy --serve && gh-pages -d _site"
+    "screenshot": "node ./utils/screenshot",
+    "deploy": "eleventy build && gh-pages -d _site"
   },
   "engines": {
     "node": ">=12.0.0"

@@ -4,7 +4,7 @@ on:
 
 jobs:
   build_deploy:
-    runs-on: ubuntu-20.04
+    runs-on: macOS-11.0
     steps:
       - uses: actions/checkout@main
       - name: Build

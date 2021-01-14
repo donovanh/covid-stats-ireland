@@ -24,7 +24,7 @@ module.exports = ({ county: dataset }) => {
   // Set up scales
   const xScale = d3.scaleLinear()
     .domain([0, d3.max(dataset, (d) => d.ConfirmedCovidCases)])
-    .rangeRound([margin.left, w - margin.right])
+    .rangeRound([margin.left, w])
     .nice();
 
   const yScale = d3.scaleBand()

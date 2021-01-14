@@ -118,7 +118,7 @@ module.exports = ({ county: dataset }) => {
         opacity: 1;
       }
     </style>
-    <h2>Case percent by county</h2>
+    <h2>Percentage of population per county</h2>
     <div class="map-wrapper" style="max-width: ${w}px">
       ${d3n.chartHTML()}
       <div class="tooltip">

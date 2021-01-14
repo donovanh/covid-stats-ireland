@@ -117,7 +117,6 @@ const processTestingData = (data) => {
 };
 
 const processVaccinationData = (data) => {
-  console.log(data)
   const result = [];
   const rows = data.split('\n');
   for ([index, row] of rows.entries()) {

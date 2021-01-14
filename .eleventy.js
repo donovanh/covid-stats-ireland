@@ -16,7 +16,7 @@ module.exports = function(eleventyConfig) {
     await sleep(200);
     await page.goto('http://localhost:8080');
     const today = new Date();
-    const dateString = `${today.getUTCFullYear()}-${today.getUTCMonth()}-${today.getUTCDate()}`;
+    const dateString = `${today.getUTCFullYear()}-${today.getUTCMonth()}-${today.getUTCDate()}-${today.getUTCHours()}`;
     const path = './_site/covid-stats-ireland-' + dateString + '.png';
     await page.screenshot({
       path,

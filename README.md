@@ -2,6 +2,8 @@
 
 This is a Covid dashboard designed to provide an overview of the currently available stats for Ireland.
 
+View it here: [https://hop.ie/covid-stats-ireland/](https://hop.ie/covid-stats-ireland/)
+
 I've tried to make it easy to see the current state of Covid in the country, with case totals, hospital totals, testing percentages and vaccination numbers. It also offers a historical view by surfacing daily numbers when hovering over the two main time-based graphs.
 
 You can also dig into county-based data which has been illustrated as a percentage of each county's population along with corresponding county case numbers.

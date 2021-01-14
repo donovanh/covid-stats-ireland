@@ -20,6 +20,6 @@
     "gh-pages": "^3.1.0",
     "make-fetch-happen": "^8.0.12",
     "node-fetch": "^2.6.1",
-    "puppeteer": "^4.0.0"
+    "puppeteer": "^3.0.0"
   }
 }

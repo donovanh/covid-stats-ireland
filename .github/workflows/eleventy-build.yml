@@ -5,13 +5,11 @@ on:
 
 jobs:
   build_deploy:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@main
-      - name: Build
-        uses: TartanLlama/actions-eleventy@master
-        with: 
-          install_dependencies: true
+      - run: npm install
+      - run: npm run build-action
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:

@@ -198,7 +198,7 @@ module.exports = (data) => {
         pointer-events: none;
       }
       .daily-cases .hover-bar.active {
-        fill: #eee;
+        fill: rgba(100,100,100,0.15);
       }
       #bars .bar {
         transition: opacity 0.2s ease-out;

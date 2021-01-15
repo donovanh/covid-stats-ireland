@@ -31,7 +31,7 @@ module.exports = ({ county: dataset }) => {
         .attr('name', county.name)
         .attr('stroke', '#888')
         .attr('stroke-width', 0.25)
-        .attr('fill', '#fff')
+        .attr('fill', 'rgba(100,100,100,0.05)')
         .attr('d', county.d);
       continue;
     }

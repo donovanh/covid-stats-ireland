@@ -181,7 +181,7 @@ module.exports = (data) => {
         transition: opacity 0.2s ease-out;
         position: absolute;
         width: 2px;
-        background: rgba(0,0,0,.05);
+        background: rgba(100,100,100,0.15);
         pointer-events: none;
       }
       .hospitalised-chart .hover-bar.active {

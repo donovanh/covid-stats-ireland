@@ -15,10 +15,24 @@
       <meta name="twitter:description" content="Ireland's latest Covid-19 stats: {{ charts.summary.ConfirmedCovidCases }} cases, {{ charts.summary.ConfirmedCovidDeaths }} deaths, {{ charts.summary.vaccinations }} vaccinations">
       <meta name="twitter:image:alt" content="Latest: {{ charts.summary.ConfirmedCovidCases }} cases, {{ charts.summary.ConfirmedCovidDeaths }} deaths, {{ charts.summary.vaccinations }} vaccinations">
       <style>
+        :root {
+          --bg-color: white;
+          --text-color: #333;
+          --second-text-color: #666;
+          --third-text-color: #999;
+        }
+        @media (prefers-color-scheme: dark) {
+          :root {
+            --bg-color: #222;
+            --text-color: #ddd;
+            --second-text-color: #aaa;
+          }
+        }
         body {
+          background: var(--bg-color);
           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
           font-size: 14px;
-          color: #333;
+          color: var(--text-color);
         }
         header {
           display: flex;
@@ -26,7 +40,7 @@
           justify-content: space-between;
         }
         .last-updated {
-          color: #999;
+          color: var(--third-text-color);
           margin: 0;
         }
         main {
@@ -43,7 +57,7 @@
         }
 
         h2 {
-          color: #666;
+          color: var(--second-text-color);
           margin: 40px 0 10px;
           font-weight: normal;
         }
@@ -59,6 +73,11 @@
           transition: opacity 0.2s ease-out;
           padding: 12px;
           min-width: 120px;
+        }
+        @media (prefers-color-scheme: dark) {
+          .tooltip {
+            background: rgba(0,0,0,0.9);
+          }
         }
 
         .tooltip p {
@@ -117,6 +136,27 @@
             shape-rendering: crispEdges;
           }
         }
+        @media (prefers-color-scheme: dark) {
+          a {
+            color: #bbf;
+          }
+          a:hover {
+            color: #fff;
+          }
+          /* Global graph colour overrides for dark mode */
+          .tick line {
+            stroke: #666;
+          }
+          .tick text {
+            fill: #666;
+          }
+          #cases .seven-day-avg {
+            stroke: #eee;
+          }
+          #cases .bar {
+            fill: #f9684b;
+          }
+        }
       </style>
       <script>
         const formatNumber = (number) => Intl.NumberFormat('en-UK').format(number);
@@ -143,6 +183,12 @@
             padding: 30px 20px 30px;
             box-shadow: 0 0 30px -10px rgba(0,0,0,.1);
             margin: 20px 0;
+          }
+          @media (prefers-color-scheme: dark) {
+            .summary ul {
+              background: #282828;
+              box-shadow: none;
+            }
           }
           .summary li {
             display: inline-block;
@@ -343,9 +389,14 @@
         <style>
           footer {
             border-top: 3px dashed #eee;
-            color: #666;
+            color: var(--second-text-color);
             margin: 40px 0;
             padding: 10px 0;
+          }
+          @media (prefers-color-scheme: dark) {
+            footer {
+              border-top: 3px dashed #666;
+            }
           }
         </style>
         <footer>

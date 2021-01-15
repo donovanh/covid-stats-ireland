@@ -108,8 +108,7 @@ module.exports = (data) => {
 
   // Y axis 
   svg.selectAll('.y-axis .tick line')
-    .attr('stroke','#eee')
-    .attr('stroke-dasharray','4')
+    .attr('stroke',colours.lightGrey)
 
   // X axis 
   svg.selectAll('.x-axis .tick line')

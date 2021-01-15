@@ -2,7 +2,7 @@ const allReds = ['#fff5f0','#fff4ef','#fff4ee','#fff3ed','#fff2ec','#fff2eb','#f
 
 module.exports = {
   colours: {
-    lightGrey: '#eee',
+    lightGrey: '#f6f6f6',
     darkGrey: '#999',
     darkerGrey: '#666',
     veryDarkGrey: '#333',

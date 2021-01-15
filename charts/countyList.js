@@ -73,8 +73,7 @@ module.exports = ({ county: dataset }) => {
     .call(xAxis);
 
   svg.selectAll('.x-axis .tick line')
-    .attr('stroke','#eee')
-    .attr('stroke-dasharray','4')
+    .attr('stroke', colours.lightGrey)
 
   // Create Y axis
   svg.append('g')

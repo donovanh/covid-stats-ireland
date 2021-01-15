@@ -15,7 +15,7 @@ module.exports = async function() {
 
   const today = new Date();
   const dateString = `${today.getUTCFullYear()}-${today.getUTCMonth()}-${today.getUTCDate()}-${today.getUTCHours()}`;
-  const screenshotFilename = 'covid-stats-ireland-' + dateString + '.png';
+  const screenshotFilename = 'covid-stats-ireland.png';
 
   const lastUpdated = {
     national: new Date(data.national[data.national.length - 1].date).toLocaleDateString("en-US", dateOptions),

@@ -16,13 +16,18 @@ module.exports = function(eleventyConfig) {
       await sleep(200);
       await page.goto('http://localhost:8080');
       const path = './_site/covid-stats-ireland.png';
+      await page.setViewport({
+        width: 1200,
+        height: 900,
+        deviceScaleFactor: 1,
+      });
       await page.screenshot({
         path,
         clip: {
           x: 0,
-          y: 120,
-          width: 800,
-          height: 480
+          y: 70,
+          width: 1200,
+          height: 675
         }
       });
       console.log('Screenshot written');

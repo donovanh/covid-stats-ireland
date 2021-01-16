@@ -14,7 +14,6 @@ module.exports = async function() {
   const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
   const today = new Date();
-  const dateString = `${today.getUTCFullYear()}-${today.getUTCMonth()}-${today.getUTCDate()}-${today.getUTCHours()}`;
   const screenshotFilename = 'covid-stats-ireland.png';
 
   const lastUpdated = {

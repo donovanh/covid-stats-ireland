@@ -27,9 +27,7 @@ module.exports = ({ county: dataset, northernIreland }) => {
 
   for (const county of countyPaths) {
     if (county.name === 'Northern Ireland') {
-      // "northernIreland":{"totalCases":"92782","per100k":"4930"}}
       const { totalCases, per100k } = northernIreland;
-      console.log({ totalCases, per100k })
       svg.append('path')
         .attr('name', county.name)
         .attr('id', county.name)

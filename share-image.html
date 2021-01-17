@@ -46,6 +46,7 @@
           height: 628px;
           overflow: hidden;
           margin: 0 auto;
+          position: relative;
         }
         svg text {
           shape-rendering: crispEdges;
@@ -65,9 +66,12 @@
     <body>
       <style>
         h1 {
-          font-size: 64px;
-          margin: 0 0 0 30px;
+          font-size: 32px;
+          position: absolute;
           color: #999;
+          bottom: 20px;
+          left: 30px;
+          margin: 0;
         }
         .summary {
           width: 66%;
@@ -253,8 +257,10 @@
           .last-updated {
             font-size: 28px;
             color: #999;
-            margin: 20px -40px 0;
-            font-weight: bold;
+            position: absolute;
+            right: 60px;
+            bottom: 20px;
+            margin: 0;
           }
         </style>
         <div class="right-side">

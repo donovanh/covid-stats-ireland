@@ -38,7 +38,7 @@ module.exports = ({ county: dataset, northernIreland }) => {
         .attr('fill', colours.reds[colScale(per100k / 1000)])
         .attr('d', county.d)
         .attr('data-case-percent', Math.round(+(per100k) / 100) / 10 + '%')
-        .attr('data-cases', totalCases.toLocaleString())
+        .attr('data-cases', Intl.NumberFormat('en-UK').format(totalCases))
       continue;
     }
 

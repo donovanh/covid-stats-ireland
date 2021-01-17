@@ -2,7 +2,7 @@ const D3Node = require('d3-node');
 const countyPaths = require('./irelandMap.js');
 const { colours } = require('./theme');
 
-module.exports = ({ county: dataset }) => {
+module.exports = ({ county: dataset, northernIreland }) => {
 
   console.log('Generating county map');
 
@@ -27,12 +27,20 @@ module.exports = ({ county: dataset }) => {
 
   for (const county of countyPaths) {
     if (county.name === 'Northern Ireland') {
+      // "northernIreland":{"totalCases":"92782","per100k":"4930"}}
+      const { totalCases, per100k } = northernIreland;
+      console.log({ totalCases, per100k })
       svg.append('path')
         .attr('name', county.name)
+        .attr('id', county.name)
+        .attr('class', 'county')
         .attr('stroke', '#888')
         .attr('stroke-width', 0.25)
-        .attr('fill', 'rgba(100,100,100,0.05)')
-        .attr('d', county.d);
+        // .attr('fill', 'rgba(100,100,100,0.05)')
+        .attr('fill', colours.reds[colScale(per100k / 1000)])
+        .attr('d', county.d)
+        .attr('data-case-percent', Math.round(+(per100k) / 100) / 10 + '%')
+        .attr('data-cases', totalCases.toLocaleString())
       continue;
     }
 

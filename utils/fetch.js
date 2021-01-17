@@ -1,4 +1,5 @@
 const fsPromises = require('fs').promises;
+const puppeteer = require('puppeteer');
 const fetch = require('make-fetch-happen').defaults({
   cacheManager: './my-cache' // path where cache will be written (and read)
 });
@@ -137,6 +138,20 @@ const processVaccinationData = (data) => {
   return result;
 };
 
+const getNIData = async () => {
+  const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
+  const page = await browser.newPage();
+  await page.goto('https://nicovidtracker.org', { waitUntil: 'networkidle2' });
+  await page.waitForSelector('#nipositiveBox2 h3');
+  const totalCases = await page.evaluate(el => el.innerHTML, await page.$('#nipositiveBox1 h3'));
+  const per100k = await page.evaluate(el => el.innerHTML, await page.$('#nipositiveBox2 h3'));
+  await browser.close();
+  return {
+    totalCases,
+    per100k
+  };
+};
+
 const getData = async () => {
 
   const nationalDataUrl = 'https://services1.arcgis.com/eNO7HHeQ3rUcBllm/arcgis/rest/services/CovidStatisticsProfileHPSCIrelandOpenData/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&outSR=4326&f=json';
@@ -152,6 +167,7 @@ const getData = async () => {
   const icuResponse = await fetch(icuDataUrl);
   const testingResponse = await fetch(testingDataUrl);
   const vaccinationResponse = await fetch(vaccinationCSV);
+  const northernIreland = await getNIData();
 
   const data = {
     national: processNationalData(await nationalResponse.json()),
@@ -159,7 +175,8 @@ const getData = async () => {
     hospital: processHospitalData(await hospitalResponse.json()),
     icu: processICUData(await icuResponse.json()),
     testing: processTestingData(await testingResponse.json()),
-    vaccination: processVaccinationData(await vaccinationResponse.text())
+    vaccination: processVaccinationData(await vaccinationResponse.text()),
+    northernIreland
   }
 
   console.log(`Requesting new data records (${data.national.length} records)`);

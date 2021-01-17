@@ -10,7 +10,7 @@ You can also dig into county-based data which has been illustrated as a percenta
 
 ## Latest numbers
 
-![Latest Covid numbers](https://hop.ie/covid-stats-ireland.png)
+![Latest Covid numbers](https://hop.ie/covid-stats-ireland/covid-stats-ireland.png)
 
 ## How it was built
 

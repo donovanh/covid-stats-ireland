@@ -46,6 +46,7 @@
           height: 628px;
           overflow: hidden;
           margin: 0 auto;
+          position: relative;
         }
         svg text {
           shape-rendering: crispEdges;
@@ -64,11 +65,6 @@
     </head>
     <body>
       <style>
-        h1 {
-          font-size: 64px;
-          margin: 0 0 0 30px;
-          color: #999;
-        }
         .summary {
           width: 66%;
         }
@@ -95,6 +91,17 @@
           display: block;
           font-size: 32px;
           color: #999;
+        }
+        h1 {
+          display: flex;
+          justify-content: space-between;
+          font-size: 32px;
+          position: absolute;
+          color: #999;
+          bottom: 20px;
+          left: 30px;
+          right: 30px;
+          margin: 0;
         }
       </style>
       <main>
@@ -212,7 +219,7 @@
               }
             }
           </script>
-          <h1>CovidNumbers.ie</h1>
+          <h1><span>Saturday, January 16, 2021</span> <span>CovidNumbers.ie</span></h1>
         </div>
         <style>
           .right-side {
@@ -249,12 +256,6 @@
           }
           .tooltip {
             display: none !important;
-          }
-          .last-updated {
-            font-size: 28px;
-            color: #999;
-            margin: 20px -40px 0;
-            font-weight: bold;
           }
         </style>
         <div class="right-side">
@@ -332,7 +333,6 @@
       }
     </script>
   </div>
-          <p class="last-updated">Saturday, January 16, 2021</p>
           <!--
     <h2>Daily cases</h2>
     <style>

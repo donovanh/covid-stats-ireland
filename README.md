@@ -8,6 +8,10 @@ I've tried to make it easy to see the current state of Covid in the country, wit
 
 You can also dig into county-based data which has been illustrated as a percentage of each county's population along with corresponding county case numbers.
 
+## Latest numbers
+
+![https://hop.ie/covid-stats-ireland.png](Latest Covid numbers)
+
 ## How it was built
 
 The charts are put together from data provided by [data.gov.ie](https://data.gov.ie/) and [Our World In Data](https://github.com/owid/covid-19-data/tree/master/public/data).

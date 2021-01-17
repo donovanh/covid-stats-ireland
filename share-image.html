@@ -65,14 +65,6 @@
     </head>
     <body>
       <style>
-        h1 {
-          font-size: 32px;
-          position: absolute;
-          color: #999;
-          bottom: 20px;
-          left: 30px;
-          margin: 0;
-        }
         .summary {
           width: 66%;
         }
@@ -99,6 +91,17 @@
           display: block;
           font-size: 32px;
           color: #999;
+        }
+        h1 {
+          display: flex;
+          justify-content: space-between;
+          font-size: 32px;
+          position: absolute;
+          color: #999;
+          bottom: 20px;
+          left: 30px;
+          right: 30px;
+          margin: 0;
         }
       </style>
       <main>
@@ -216,7 +219,7 @@
               }
             }
           </script>
-          <h1>CovidNumbers.ie</h1>
+          <h1><span>{{charts.lastUpdated.national}}</span> <span>CovidNumbers.ie</span></h1>
         </div>
         <style>
           .right-side {
@@ -254,18 +257,9 @@
           .tooltip {
             display: none !important;
           }
-          .last-updated {
-            font-size: 28px;
-            color: #999;
-            position: absolute;
-            right: 60px;
-            bottom: 20px;
-            margin: 0;
-          }
         </style>
         <div class="right-side">
           <div class="map">{{ charts.countyMap }}</div>
-          <p class="last-updated">{{charts.lastUpdated.national}}</p>
           <!--{{ charts.dailyNationalCases }}-->
           <!--{{ charts.dailyHospitalised }}-->
         </div>

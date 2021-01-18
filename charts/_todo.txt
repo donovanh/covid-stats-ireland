@@ -1,13 +1,14 @@
 TODO:
-* Label to clarify percentage meaning
+* Fix county bar graph scaling
 * Blog post on Eleventy-rendered D3 using Github actions
 * Favicon
-* Night mode
-* Make into a proper PWA
-* Notification option for when it updates
-* Vaccination progress
-* Total Ireland deaths year on year (text?)
+* Vaccination progress on main chart
+* new charts for male/female, age etc
+* Lazy load everything after top graph
+* Total Ireland deaths year on year incl year on year
 * Transmission types
+* Set up automated twitter bot
+
 * Hover states for county line graph, connect with map hover
  - Use custom event listeners to connect the two
 * Add bespoke events: school close, national lockdowns etc

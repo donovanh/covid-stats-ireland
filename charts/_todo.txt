@@ -17,3 +17,7 @@ TODO:
 : https://github.com/owid/covid-19-data/blob/master/public/data/excess_mortality/excess_mortality.csv
 * Rewrite map listeners to one single listener on map container
 
+Next projects:
+* Big Timer alternative
+
+

@@ -1,7 +1,7 @@
 TODO:
 * Fix county bar graph scaling
-* Blog post on Eleventy-rendered D3 using Github actions
 * Favicon
+* Blog post on Eleventy-rendered D3 using Github actions
 * Vaccination progress on main chart
 * new charts for male/female, age etc
 * Lazy load everything after top graph

@@ -6,7 +6,8 @@ function sleep(ms) {
 
 module.exports = function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy("CNAME");
-
+  eleventyConfig.addPassthroughCopy("img");
+  
   eleventyConfig.on('afterBuild', async () => {
     if (process.env['NODE_ENV'] !== 'development') {
       const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});

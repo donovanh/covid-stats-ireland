@@ -89,7 +89,7 @@ module.exports = ({ county: dataset, northernIreland }) => {
     .attr('height', legendHeight)
     .attr('fill', 'url(#map-legend-gradient)');
 
-    const legendAxisScale = d3.scaleLinear()
+  const legendAxisScale = d3.scaleLinear()
     .domain([max, 0])
     .range([0, legendHeight]);
 

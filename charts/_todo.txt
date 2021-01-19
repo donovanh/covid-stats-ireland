@@ -1,5 +1,5 @@
 TODO:
-* Fix county bar graph scaling
+* Fix county list graph scaling
 * Blog post on Eleventy-rendered D3 using Github actions
 * Vaccination progress on main chart
 * New chart: for male/female

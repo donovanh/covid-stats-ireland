@@ -24,18 +24,12 @@ module.exports = ({ county: dataset }) => {
   // Set up scales
   const xScale = d3.scaleLinear()
     .domain([0, d3.max(dataset, (d) => d.ConfirmedCovidCases)])
-    .rangeRound([margin.left, w])
-    .nice();
+    .rangeRound([margin.left, w - margin.right]);
 
   const yScale = d3.scaleBand()
     .domain(dataset.map(d => `${d.CountyName}`))
     .rangeRound([margin.top, h - margin.bottom])
     .paddingInner(0.25);
-  
-  const yScaleZeroPad = d3.scaleBand()
-    .domain(dataset.map(d => `${d.CountyName}`))
-    .rangeRound([margin.top, h - margin.bottom])
-    .paddingInner(0);
 
   const colScale = d3.scaleLinear()
     .domain([0, max])

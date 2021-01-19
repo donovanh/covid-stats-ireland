@@ -12,10 +12,8 @@ module.exports = async function() {
   const data = await fetchData();
 
   const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-
   const today = new Date();
   const screenshotFilename = `covid-stats-ireland.png?${today.getTime()}`;
-
   const lastUpdated = {
     national: new Date(data.national[data.national.length - 1].date).toLocaleDateString("en-US", dateOptions),
     county: new Date(data.county[data.county.length - 1].date).toLocaleDateString("en-US", dateOptions)

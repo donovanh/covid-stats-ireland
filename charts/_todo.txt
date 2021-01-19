@@ -1,11 +1,11 @@
 TODO:
-* Fix county list graph scaling
-* Blog post on Eleventy-rendered D3 using Github actions
+* Legend on main chart
 * Vaccination progress on main chart
 * New chart: for male/female
 * New chart: transmission types
 * New chart: year on year overall mortality
-* New chart: Vaccine estimated timeline
+* New chart: Vaccine estimated timeline - inc per-manufacturer areas
+* Blog post on Eleventy-rendered D3 using Github actions
 * Year-on-year graph for time-based graphs (from March?)
 * Lazy load everything after top graph
 * Set up automated twitter update bot

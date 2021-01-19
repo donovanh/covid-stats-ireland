@@ -1,13 +1,14 @@
 TODO:
 * Fix county bar graph scaling
-* Favicon
 * Blog post on Eleventy-rendered D3 using Github actions
 * Vaccination progress on main chart
-* new charts for male/female, age etc
+* New chart: for male/female
+* New chart: transmission types
+* New chart: year on year overall mortality
+* New chart: Vaccine estimated timeline
+* Year-on-year graph for time-based graphs (from March?)
 * Lazy load everything after top graph
-* Total Ireland deaths year on year incl year on year
-* Transmission types
-* Set up automated twitter bot
+* Set up automated twitter update bot
 
 * Hover states for county line graph, connect with map hover
  - Use custom event listeners to connect the two

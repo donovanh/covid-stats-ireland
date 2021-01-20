@@ -340,7 +340,10 @@
               summaryData.deaths.innerText = data.d || 0;
               summaryData.hospitalised.innerText = data.h || 0;
               summaryData.icu.innerText = data.i || 0;
-              summaryData.testing.innerText = data.t || 0;
+              summaryData.testing.innerText = data.t ? data.t + '%' : '0%';
+              if (data.t.includes('%')) {
+                summaryData.testing.innerText = data.t;
+              }
               summaryData.vaccination.innerText = data.v;
             }
             function summaryDateHandler(e) {

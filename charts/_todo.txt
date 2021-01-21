@@ -1,9 +1,14 @@
 TODO:
-* Legend on main chart
-* New chart: for vaccine as total percent of population
+* New chart: Vaccine estimated timeline 1/2 wide
+* Vaccine totals by manufacturer 1/2 wide
+
+* Make hospitalisation chart half-wide
+* Create secondary hospitalisation data area
+* Maybe some info on bed availability?
+
 * New chart: transmission types
 * New chart: year on year overall mortality
-* New chart: Vaccine estimated timeline - inc per-manufacturer areas
+* Legend on main chart
 * Blog post on Eleventy-rendered D3 using Github actions
 * Year-on-year graph for time-based graphs (from March?)
 * Lazy load everything after top graph

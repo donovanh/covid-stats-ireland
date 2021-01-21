@@ -17,7 +17,7 @@ module.exports = function(eleventyConfig) {
       await page.setViewport({
         width: 1200,
         height: 900,
-        deviceScaleFactor: 1,
+        deviceScaleFactor: 2,
       });
       await page.screenshot({
         path: './_site/covid-stats-ireland.png',

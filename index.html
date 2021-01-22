@@ -341,7 +341,7 @@
               summaryData.hospitalised.innerText = data.h || 0;
               summaryData.icu.innerText = data.i || 0;
               summaryData.testing.innerText = data.t ? data.t + '%' : '0%';
-              if (data.t.includes('%')) {
+              if (typeof data.t === 'string' && data.t.includes('%')) {
                 summaryData.testing.innerText = data.t;
               }
               summaryData.vaccination.innerText = data.v;
@@ -357,7 +357,8 @@
                   d: formatNumber(data.d),
                   h: formatNumber(data.h),
                   i: formatNumber(data.i),
-                  v: formatNumber(data.v)
+                  v: formatNumber(data.v),
+                  vAvg: formatNumber(data.vAvg)
                 }
                 showSummaryData(formatted);
               } else {

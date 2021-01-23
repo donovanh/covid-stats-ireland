@@ -1,6 +1,8 @@
 TODO:
 * New chart: Vaccine estimated timeline 1/2 wide
 * Vaccine totals by manufacturer 1/2 wide
+* Total vaccinated as a percentage of population
+  with a goal line at ~70% (check sources)
 
 * Make hospitalisation chart half-wide
 * Create secondary hospitalisation data area

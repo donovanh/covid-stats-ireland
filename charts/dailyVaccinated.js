@@ -94,28 +94,6 @@ module.exports = (data) => {
   svg.selectAll('.y-axis .tick text')
     .attr('fill', colours.darkGrey);
 
-  // Set up bar containers
-  const bars = svg
-    .append('g')
-    .attr('id', 'bars');
-
-  // Hover bars
-  const barGroups = bars.selectAll('.bar-group')
-    .data(dataset, (d) => d.date)
-    .enter()
-    .append('g')
-    .classed('bar-group', true);
-
-  barGroups
-    .append('rect')
-    .classed('hover-bar', true)
-    .attr('x', (d) => xBarScale(new Date(d.date)))
-    .attr('y', margin.top)
-    .attr('data-key', d => d.date)
-    .attr('height', h - margin.bottom - margin.top)
-    .attr('width', xBarScale.bandwidth())
-    .attr('fill', 'transparent');
-
   // Total doses area
   const totalDosesArea = d3.area()
     .x(d => (xScale(new Date(d.date))))
@@ -154,6 +132,94 @@ module.exports = (data) => {
     .attr('stroke-dasharray', 2)
     .attr('stroke', colours.darkGrey)
     .attr('d', dailyVaccinationsLine);
+
+
+  // Set up bar containers
+  const bars = svg
+    .append('g')
+    .attr('id', 'bars');
+
+  // Hover bars
+  const barGroups = bars.selectAll('.bar-group')
+    .data(dataset, (d) => d.date)
+    .enter()
+    .append('g')
+    .classed('bar-group', true);
+
+  barGroups
+    .append('rect')
+    .classed('hover-bar', true)
+    .attr('x', (d) => xBarScale(new Date(d.date)))
+    .attr('y', margin.top)
+    .attr('data-key', d => d.date)
+    .attr('height', h - margin.bottom - margin.top)
+    .attr('width', xBarScale.bandwidth())
+    .attr('fill', 'transparent');
+
+
+  // Legend: Daily doses
+  svg.append('rect')
+    .attr('x', margin.left + 20)
+    .attr('y', margin.top + 8)
+    .style('fill', colours.green10)
+    .attr('width', 10)
+    .attr('height', 10);
+
+  svg.append('text')
+    .attr('x', margin.left + 35)
+    .attr('y', margin.top + 14)
+    .attr('alignment-baseline', 'middle')
+    .style('fill', colours.darkGrey)
+    .style('font-size', 10)
+    .text('Total doses');
+
+  // Legend: Fully vaccinated
+  svg.append('rect')
+    .attr('x', margin.left + 20)
+    .attr('y', margin.top + 28)
+    .style('fill', colours.green50)
+    .attr('width', 10)
+    .attr('height', 10);
+
+  svg.append('text')
+    .attr('x', margin.left + 35)
+    .attr('y', margin.top + 34)
+    .attr('alignment-baseline', 'middle')
+    .style('fill', colours.darkGrey)
+    .style('font-size', 10)
+    .text('Fully vaccinated');
+
+  // Legend: Daily average doses
+  const legendAvgLinePoints = [
+    {
+      x: margin.left + 20,
+      y: margin.top + 53
+    },
+    {
+      x: margin.left + 30,
+      y: margin.top + 53
+    }
+  ];
+  const legendAvgLine = d3.line()
+    .x(d => d.x)
+    .y(d => d.y);
+
+  svg.append('path')
+    .datum(legendAvgLinePoints)
+    .attr('class', 'daily-vaccinations-line')
+    .attr('fill', 'none')
+    .attr('stroke-width', 2)
+    .attr('stroke-dasharray', 2)
+    .attr('stroke', colours.darkGrey)
+    .attr('d', legendAvgLine);
+
+  svg.append('text')
+    .attr('x', margin.left + 35)
+    .attr('y', margin.top + 54)
+    .attr('alignment-baseline', 'middle')
+    .style('fill', colours.darkGrey)
+    .style('font-size', 10)
+    .text('Daily average doses');
 
   d3n.html()
   const html = `

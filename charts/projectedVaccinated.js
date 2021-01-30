@@ -188,18 +188,11 @@ module.exports = (data) => {
 
   svg.append('text')
     .text(formatDate(estimated95Date) + '*')
-    .attr('x', xScale(estimated95Date) - 150)
+    .attr('x', xScale(estimated95Date) - 10)
     .attr('y', yScale(estimatedGoalPop) + 3)
     .attr('dy', 0)
     .style('font-size', 10)
-    .style('fill', colours.darkGrey);
-
-  svg.append('text')
-    .text('95% (' + formatNumber(estimatedGoalPop) + ' people)')
-    .attr('x', xScale(estimated95Date) - 150)
-    .attr('y', yScale(estimatedGoalPop) + 3)
-    .attr('dy', 15)
-    .style('font-size', 10)
+    .attr('text-anchor', 'end')
     .style('fill', colours.darkGrey);
 
   svg.append('text')
@@ -210,6 +203,72 @@ module.exports = (data) => {
     .style('font-size', 10)
     .attr('text-anchor', 'end')
     .style('fill', colours.darkGrey);
+
+
+
+  // Legend: Total vaccinated 
+  svg.append('rect')
+    .attr('x', margin.left + 20)
+    .attr('y', margin.top + 8)
+    .style('fill', colours.green50)
+    .attr('width', 10)
+    .attr('height', 10);
+
+  svg.append('text')
+    .attr('x', margin.left + 35)
+    .attr('y', margin.top + 14)
+    .attr('alignment-baseline', 'middle')
+    .style('fill', colours.darkGrey)
+    .style('font-size', 10)
+    .text('Total vaccinated');
+
+  // Legend: Projected vaccination rate
+  const legendAvgLinePoints = [
+    {
+      x: margin.left + 20,
+      y: margin.top + 40
+    },
+    {
+      x: margin.left + 30,
+      y: margin.top + 30
+    }
+  ];
+  const legendAvgLine = d3.line()
+    .x(d => d.x)
+    .y(d => d.y);
+
+  svg.append('path')
+    .datum(legendAvgLinePoints)
+    .attr('class', 'daily-vaccinations-line')
+    .attr('fill', 'none')
+    .attr('stroke-width', 0.5)
+    .attr('stroke-dasharray', 2)
+    .attr('stroke', colours.darkGrey)
+    .attr('d', legendAvgLine);
+
+  svg.append('text')
+    .attr('x', margin.left + 35)
+    .attr('y', margin.top + 36)
+    .attr('alignment-baseline', 'middle')
+    .style('fill', colours.darkGrey)
+    .style('font-size', 10)
+    .text('Projected rate');
+
+  // Legend: 'Target: 95% (' + formatNumber(estimatedGoalPop) + ' people)'
+  svg.append('circle')
+    .style('fill', colours.darkGrey)
+    .attr('r', 2)
+    .attr('cx', margin.left + 24)
+    .attr('cy', margin.top + 53);
+
+  svg.append('text')
+    .attr('x', margin.left + 35)
+    .attr('y', margin.top + 55)
+    .attr('alignment-baseline', 'middle')
+    .style('fill', colours.darkGrey)
+    .style('font-size', 10)
+    .text('Target: 95% (' + formatNumber(estimatedGoalPop) + ' people)');
+
 
   d3n.html()
   const html = `

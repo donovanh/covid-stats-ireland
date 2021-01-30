@@ -220,30 +220,54 @@ module.exports = (data) => {
     .attr('stroke', colours.darkerGrey)
     .attr('d', sevendayAvgLine);
 
-  // // Add overlay for vaccines
-  // const vaccinationsArea = d3.area()
-  //   .x(d => (xScale(new Date(d.date))))
-  //   .y0(() => yScale2.range()[0])
-  //   .y1(d => yScale2(d.dailyAvgDoses));
+    
+  // Legend: Daily cases
+  svg.append('rect')
+    .attr('x', margin.left + 20)
+    .attr('y', margin.top + 8)
+    .style('fill', colours.light)
+    .attr('width', 10)
+    .attr('height', 10);
 
-  // // Draw cases by age area
-  // svg.append('path')
-  //   .datum(vaccinationDataset)
-  //   .attr('class', 'vaccinations')
-  //   .attr('fill', colours.green10)
-  //   .attr('d', vaccinationsArea);
+  svg.append('text')
+    .attr('x', margin.left + 35)
+    .attr('y', margin.top + 14)
+    .attr('alignment-baseline', 'middle')
+    .style('fill', colours.darkGrey)
+    .style('font-size', 10)
+    .text('Daily cases');
 
-  // const vaccinationsLine = d3.line()
-  //   .x(d => xScale(new Date(d.date)))
-  //   .y(d => yScale2(d.dailyAvgDoses));
+  // Legend: Daily average doses
+  const legendAvgLinePoints = [
+    {
+      x: margin.left + 20,
+      y: margin.top + 33
+    },
+    {
+      x: margin.left + 30,
+      y: margin.top + 33
+    }
+  ];
+  const legendAvgLine = d3.line()
+    .x(d => d.x)
+    .y(d => d.y);
 
-  // svg.append('path')
-  //   .datum(vaccinationDataset)
-  //   .attr('class', 'vaccinations-line')
-  //   .attr('fill', 'none')
-  //   .attr('stroke-width', 1)
-  //   .attr('stroke', colours.green50)
-  //   .attr('d', vaccinationsLine);
+  svg.append('path')
+    .datum(legendAvgLinePoints)
+    .attr('class', 'legend-daily-cases-line')
+    .attr('fill', 'none')
+    .attr('stroke-width', 2)
+    .attr('stroke-dasharray', 2)
+    .attr('stroke', colours.darkGrey)
+    .attr('d', legendAvgLine);
+
+  svg.append('text')
+    .attr('x', margin.left + 35)
+    .attr('y', margin.top + 34)
+    .attr('alignment-baseline', 'middle')
+    .style('fill', colours.darkGrey)
+    .style('font-size', 10)
+    .text('7-day average cases');
 
   d3n.html()
   const html = `
@@ -282,7 +306,6 @@ module.exports = (data) => {
         <p class="date"></p>
         <p class="cases large"></p>
         <p class="average small"></p>
-        <p class="vac-per-day small"></p>
       </div>
     </div>
     <script>
@@ -313,11 +336,9 @@ module.exports = (data) => {
           const average = formatNumber(Math.round(+(e.target.getAttribute('data-avg'))));
           const date = formatDate(e.target.getAttribute('data-key'));
           const casesText = cases === '1' ? ' case' : ' cases';
-          const vacPerDay = formatNumber(+(e.target.getAttribute('data-vac-doses-avg')));
           casesDateEl.innerText = date;
           casesCasesEl.innerText = cases + casesText;
           casesAvgEl.innerText = average +' (7-day average)';
-          vacPerDayEl.innerText = vacPerDay +' (vaccines per day)';
           // Highlight the bar
           const parentGroup = e.target.parentElement;
           const bar = parentGroup.querySelector('.bar');

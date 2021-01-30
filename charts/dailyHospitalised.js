@@ -168,6 +168,54 @@ module.exports = (data) => {
     .attr('height', h - margin.top - margin.bottom)
     .attr('fill', 'transparent');
 
+  // Legend: Hospitalised
+  svg.append('rect')
+    .attr('x', margin.left + 20)
+    .attr('y', margin.top + 8)
+    .style('fill', colours.light)
+    .attr('width', 10)
+    .attr('height', 10);
+
+  svg.append('text')
+    .attr('x', margin.left + 35)
+    .attr('y', margin.top + 14)
+    .attr('alignment-baseline', 'middle')
+    .style('fill', colours.darkGrey)
+    .style('font-size', 10)
+    .text('Hospitalised');
+
+  // Legend: ICU
+  svg.append('rect')
+    .attr('x', margin.left + 20)
+    .attr('y', margin.top + 28)
+    .style('fill', colours.medium)
+    .attr('width', 10)
+    .attr('height', 10);
+
+  svg.append('text')
+    .attr('x', margin.left + 35)
+    .attr('y', margin.top + 34)
+    .attr('alignment-baseline', 'middle')
+    .style('fill', colours.darkGrey)
+    .style('font-size', 10)
+    .text('ICU');
+
+  // Legend: Deaths
+  svg.append('rect')
+    .attr('x', margin.left + 20)
+    .attr('y', margin.top + 48)
+    .style('fill', colours.veryDark)
+    .attr('width', 10)
+    .attr('height', 10);
+
+  svg.append('text')
+    .attr('x', margin.left + 35)
+    .attr('y', margin.top + 54)
+    .attr('alignment-baseline', 'middle')
+    .style('fill', colours.darkGrey)
+    .style('font-size', 10)
+    .text('Deaths');
+
   d3n.html()
   const html = `
     <h2>Hospitalised, ICU and deaths</h2>

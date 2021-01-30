@@ -12,8 +12,8 @@ module.exports = {
     dark: allReds[Math.ceil(allReds.length / 1.2)],
     veryDark: allReds[Math.ceil(allReds.length)],
     reds: allReds,
-    green: 'rgba(50,210,0,1)',
-    green50: 'rgba(50,210,0,0.5)',
-    green10: 'rgba(50,210,0,0.1)'
+    green: '#69CE3D',
+    green50: '#ACE394',
+    green10: '#F0FAEB'
   }
 }

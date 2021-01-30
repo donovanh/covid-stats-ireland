@@ -1,4 +1,8 @@
 const fsPromises = require('fs').promises;
+const puppeteer = require('puppeteer');
+const fetch = require('make-fetch-happen').defaults({
+  cacheManager: './my-cache' // path where cache will be written (and read)
+});
 
 async function fetchData() {
   let data;
@@ -15,7 +19,7 @@ async function fetchData() {
 const data = fetchData().then(data => doStuff(JSON.parse(data)));
 
 // Do stuff to it!
-function doStuff(data) {
+async function doStuff(data) {
   // console.log('Got data', data)
   const {
     national,
@@ -26,49 +30,22 @@ function doStuff(data) {
     vaccination
   } = data;
 
-  // Prepare data to put inline
-  const findByDate = (date, dataset) => dataset.find(d => {
-    const dateObj = new Date(date);
-    const compare1 = `${dateObj.getUTCFullYear()} ${dateObj.getUTCMonth()} ${dateObj.getUTCDate()}`;
-    const dateObj2 = new Date(d.date);
-    const compare2 = `${dateObj2.getUTCFullYear()} ${dateObj2.getUTCMonth()} ${dateObj2.getUTCDate()}`;
-    return compare1 === compare2;
-  });
+  const getIrelandPop = async () => {
+    const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
+    const page = await browser.newPage();
+    await page.goto('https://www.worldometers.info/world-population/ireland-population/', { waitUntil: 'networkidle2' });
+    await page.waitForSelector('.maincounter-number');
+    const res = await page.evaluate(el => el.innerHTML, await page.$('.maincounter-number'));
+    const irelandPop = res
+      .replace(/<\/?[^>]+(>|$)/g, "")
+      .replace(/,/g, '')
+      .trim();
+    await browser.close();
+    return { irelandPop: parseInt(irelandPop) };
+  };
 
-  const icuArrayLengthDiff = data.hospital.length - data.icu.length;
-
-  const hospitalData = data.hospital.map((d, i) => ({
-    ...d,
-    date: new Date(d.date),
-    icuCases: icu[i - icuArrayLengthDiff] ? icu[i - icuArrayLengthDiff].icuCases : 0
-  }));
-
-  let prevVaccinationDataForDate = {};
-  const allData = national.map(d => {
-    const hospitalDataForDate = findByDate(d.date, hospitalData);
-    const testingDataForDate = findByDate(d.date, testing) || {};
-    let vaccinationDataForDate = findByDate(d.date, vaccination) || {};
-    console.log(vaccinationDataForDate)
-    if (!vaccinationDataForDate.doses) {
-      vaccinationDataForDate = prevVaccinationDataForDate
-    }
-    prevVaccinationDataForDate = vaccinationDataForDate;
-    return {
-      date: new Date(d.date),
-      c: d.ConfirmedCovidCases,
-      t: testingDataForDate.positiveRate7Day,
-      h: hospitalDataForDate ? hospitalDataForDate.hospitalisedCases : null,
-      i: hospitalDataForDate ? hospitalDataForDate.icuCases : null,
-      d: d.ConfirmedCovidDeaths,
-      v: vaccinationDataForDate.doses || 0,
-      vAvg: vaccinationDataForDate.dailyAvgDoses || 0
-    };
-  });
-
-
-  //console.log(vaccination)
-  
-  
+  const irelandPop = await getIrelandPop();
+  console.log(irelandPop)
 
 };
 

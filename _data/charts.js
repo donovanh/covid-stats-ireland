@@ -2,6 +2,8 @@ const fetchData = require('../utils/fetch');
 const summary = require('../charts/summary');
 const dailyNationalCases = require('../charts/dailyNationalCases');
 const dailyHospitalised = require('../charts/dailyHospitalised');
+const dailyVaccinated = require('../charts/dailyVaccinated');
+const projectedVaccinated = require('../charts/projectedVaccinated');
 const byAge = require('../charts/byAge');
 const countyMap = require('../charts/countyMap');
 const countyList = require('../charts/countyList');
@@ -23,6 +25,8 @@ module.exports = async function() {
     summary: summary(data),
     dailyNationalCases: dailyNationalCases(data),
     dailyHospitalised: dailyHospitalised(data),
+    dailyVaccinated: dailyVaccinated(data),
+    projectedVaccinated: projectedVaccinated(data),
     byAge: byAge(data),
     countyMap: countyMap(data),
     countyList: countyList(data),

@@ -165,9 +165,7 @@ const processVaccinationData = (data) => {
     const averages = {};
     const daysBetween = (new Date(d.date) - new Date(prevDay.date)) / (1000 * 3600 * 24) || 1;
     averages.dailyAvgDoses = Math.round((d.doses - prevDay.doses) / daysBetween);
-    averages.dailyAvgPeople = Math.round((d.people - prevDay.people) / daysBetween);
-    averages.dailyAvgFullyVaccinated = Math.round((d.fullyVaccinated - prevDay.fullyVaccinated) / daysBetween);
-    
+
     return {
       ...d,
       ...averages
@@ -203,15 +201,29 @@ const processVaccinationData = (data) => {
 
   let currentItem = dataset[dataset.length - 1];
 
-  return tempArray.reverse().map(d => {
+  const filledDates = tempArray.reverse().map(d => {
     if (getForDate(d.date, dataset).doses) {
       currentItem = getForDate(d.date, dataset);
     }
     return {
+      dailyAvgDoses: currentItem.dailyAvgDoses,
+      date: d.date
+    } 
+  }).reverse();
+
+  // Go through the filled dates and add in the current 
+  // reported values per day
+  currentItem = dataset[0];
+  return filledDates.map(d => {
+    if (getForDate(d.date, dataset).doses) {
+      currentItem = getForDate(d.date, dataset);
+    }
+    return {
+      ...d,
       ...currentItem,
       date: new Date(d.date)
     } 
-  }).reverse();
+  })
 };
 
 const getNIData = async () => {
@@ -226,6 +238,20 @@ const getNIData = async () => {
     totalCases,
     per100k
   };
+};
+
+const getIrelandPop = async () => {
+  const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
+  const page = await browser.newPage();
+  await page.goto('https://www.worldometers.info/world-population/ireland-population/', { waitUntil: 'networkidle2' });
+  await page.waitForSelector('.maincounter-number');
+  const res = await page.evaluate(el => el.innerHTML, await page.$('.maincounter-number'));
+  const irelandPop = res
+    .replace(/<\/?[^>]+(>|$)/g, "")
+    .replace(/,/g, '')
+    .trim();
+  await browser.close();
+  return parseInt(irelandPop);
 };
 
 const getData = async () => {
@@ -244,6 +270,7 @@ const getData = async () => {
   const testingResponse = await fetch(testingDataUrl);
   const vaccinationResponse = await fetch(vaccinationCSV);
   const northernIreland = await getNIData();
+  const irelandPop = await getIrelandPop();
 
   const data = {
     national: processNationalData(await nationalResponse.json()),
@@ -252,7 +279,8 @@ const getData = async () => {
     icu: processICUData(await icuResponse.json()),
     testing: processTestingData(await testingResponse.json()),
     vaccination: processVaccinationData(await vaccinationResponse.text()),
-    northernIreland
+    northernIreland,
+    irelandPop
   }
 
   console.log(`Requesting new data records (${data.national.length} records)`);

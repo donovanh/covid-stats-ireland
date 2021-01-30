@@ -160,6 +160,18 @@
             fill: #f9684b;
           }
         }
+
+        .chart-wrapper {
+          display: flex;
+        }
+        .chart-wrapper .chart {
+          width: 100%;
+        }
+        @media only screen and (max-width: 800px) {
+          .chart-wrapper {
+            flex-wrap: wrap;
+          }
+        }
       </style>
       <script>
         const formatNumber = (number) => Intl.NumberFormat('en-UK').format(number);
@@ -368,6 +380,14 @@
           </script>
         </div>
         {{ charts.dailyNationalCases }}
+        <div class="chart-wrapper">
+          <div class="chart">
+            {{ charts.dailyVaccinated }}
+          </div>
+          <div class="chart">
+            {{ charts.projectedVaccinated }}
+          </div>
+        </div>
         {{ charts.dailyHospitalised }}
         <style>
           .counties {

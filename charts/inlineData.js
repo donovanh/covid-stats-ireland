@@ -46,6 +46,7 @@ module.exports = (data) => {
       i: hospitalDataForDate ? hospitalDataForDate.icuCases : null,
       d: d.ConfirmedCovidDeaths,
       v: vaccinationDataForDate.doses || 0,
+      fv: vaccinationDataForDate.fullyVaccinated || 0,
       vAvg: vaccinationDataForDate.dailyAvgDoses || 0
     };
   });

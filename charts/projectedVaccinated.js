@@ -263,7 +263,7 @@ module.exports = (data) => {
 
   svg.append('text')
     .attr('x', margin.left + 35)
-    .attr('y', margin.top + 55)
+    .attr('y', margin.top + 54)
     .attr('alignment-baseline', 'middle')
     .style('fill', colours.darkGrey)
     .style('font-size', 10)

@@ -272,7 +272,7 @@ module.exports = (data) => {
 
   d3n.html()
   const html = `
-    <h2>Estimated herd immunity</h2>
+    <h2>Herd immunity</h2>
     <style>
       .vaccinations {
         position: relative;

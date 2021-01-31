@@ -222,15 +222,15 @@ module.exports = (data) => {
     .style('font-size', 10)
     .text('Total vaccinated');
 
-  // Legend: Projected vaccination rate
+  // Legend: Projected rate
   const legendAvgLinePoints = [
     {
       x: margin.left + 20,
-      y: margin.top + 40
+      y: margin.top + 38
     },
     {
       x: margin.left + 30,
-      y: margin.top + 30
+      y: margin.top + 28
     }
   ];
   const legendAvgLine = d3.line()
@@ -248,7 +248,7 @@ module.exports = (data) => {
 
   svg.append('text')
     .attr('x', margin.left + 35)
-    .attr('y', margin.top + 36)
+    .attr('y', margin.top + 34)
     .attr('alignment-baseline', 'middle')
     .style('fill', colours.darkGrey)
     .style('font-size', 10)

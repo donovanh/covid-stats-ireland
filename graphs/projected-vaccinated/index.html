@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Herd Immunity - Estimated date for Ireland vaccinations - CovidNumbers.ie</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Ireland's latest Covid-19 numbers: 1,247 cases, 15 deaths, 161,500 vaccinations">
+    <meta property="og:title" content="COVID-19 Ireland Numbers - CovidNumbers.ie">
+    <meta property="og:description" content="How long will it take until enough people in Ireland have been vaccinated to provide full herd immunity? This graph shows how long it could take.">
+    <meta property="og:image" content="https://covidnumbers.ie/covid-stats-ireland.png?1612114912026">
+    <meta property="og:url" content="https://covidnumbers.ie">
+    <meta property="og:site_name" content="Covid-19 Ireland">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://covidnumbers.ie/covid-stats-ireland.png?1612114912026">
+    <meta name="twitter:description" content="How long will it take until enough people in Ireland have been vaccinated to provide full herd immunity? This graph shows how long it could take.">
+    <meta name="twitter:image:alt" content="Latest: 1,247 cases, 15 deaths, 161,500 vaccinations">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <style>
+      :root {
+        --bg-color: white;
+        --text-color: #333;
+        --second-text-color: #666;
+        --third-text-color: #999;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg-color: #222;
+          --text-color: #ddd;
+          --second-text-color: #aaa;
+        }
+      }
+      body {
+        background: var(--bg-color);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        font-size: 14px;
+        color: var(--text-color);
+      }
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      header h1 a {
+        color: var(--text-color);
+        text-decoration: none;
+      }
+      .last-updated {
+        color: var(--third-text-color);
+        margin: 0;
+      }
+      main {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      @media only screen and (max-width: 1320px) {
+        main {
+          padding: 0 20px;
+        }
+      }
+      svg text {
+        shape-rendering: crispEdges;
+      }
+
+      h2 {
+        color: var(--second-text-color);
+        margin: 40px 0 10px;
+        font-weight: normal;
+      }
+      .tooltip {
+        pointer-events: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: rgba(255,255,255,0.9);
+        border-radius: 15px;
+        box-shadow: 0 0 30px -10px rgba(0,0,0,.3);
+        opacity: 0;
+        transition: opacity 0.2s ease-out;
+        padding: 12px;
+        min-width: 120px;
+      }
+      @media (prefers-color-scheme: dark) {
+        .tooltip {
+          background: rgba(0,0,0,0.9);
+        }
+      }
+
+      .tooltip p {
+        margin: 0;
+        white-space: nowrap;
+      }
+
+      .tooltip p.date {
+        font-size: 12px;
+        font-weight: bold;
+      }
+
+      .tooltip p.large {
+        font-size: 24px;
+      }
+
+      .tooltip p.small {
+        font-size: 12px;
+        margin-top: 0;
+      }
+
+      .tooltip.active {
+        opacity: 1;
+      }
+
+      @media only screen and (max-width: 600px) {
+        header {
+          flex-wrap: wrap;
+        }
+        header h1 {
+          margin: 10px 0 0;
+        }
+        .last-updated {
+          margin-bottom: 10px;
+        }
+        main {
+          padding: 0 10px;
+        }
+        .tooltip {
+          border-radius: 15px;
+          padding: 12px;
+        }
+        .tooltip p.date {
+          font-size: 10px;
+        }
+        .tooltip p.large {
+          font-size: 14px;
+        }
+        .tooltip p.small {
+          font-size: 10px;
+        }
+      }
+
+      @media only screen and (max-width: 800px) {
+        svg * {
+          shape-rendering: crispEdges;
+        }
+      }
+      @media (prefers-color-scheme: dark) {
+        a {
+          color: #bbf;
+        }
+        a:hover {
+          color: #fff;
+        }
+        /* Global graph colour overrides for dark mode */
+        .tick line {
+          stroke: #333;
+        }
+        .tick text {
+          fill: #666;
+        }
+      }
+
+      .chart-wrapper {
+        display: flex;
+      }
+      .chart-wrapper .chart {
+        width: 100%;
+      }
+      @media only screen and (max-width: 800px) {
+        .chart-wrapper {
+          flex-wrap: wrap;
+        }
+      }
+      .content p {
+        max-width: 550px;
+        line-height: 1.5;
+      }
+    </style>
+    <script>
+      const formatNumber = (number) => Intl.NumberFormat('en-UK').format(number);
+      const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const formatDate = (date) => new Date(date).toLocaleDateString("en-US", dateOptions);
+      function findByDate(date) {
+        if (!window.inlineData) {
+          return;
+        } 
+        return window.inlineData.find(function(d) {
+          const date1 = new Date(d.date);
+          const compare1 = `${date1.getUTCFullYear()} ${date1.getUTCMonth()} ${date1.getUTCDate()}`;
+          const date2 = new Date(date);
+          const compare2 = `${date2.getUTCFullYear()} ${date2.getUTCMonth()} ${date2.getUTCDate()}`;
+          return compare1 === compare2
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1><a href="/">COVID-19 Ireland</a></h1>
+        <p class="last-updated">Updated: Sunday, January 31, 2021</p>
+      </header>
+      <section class="content">
+        
+
+<h1>Herd Immunity</h1>
+<p>How long will it take until enough people in Ireland have been vaccinated to provide full herd immunity?</p>
+<p>For full immunity we should aim to vaccinate 95% of the population, though much of normal life should be able to resume earlier.</p>
+<p>We can calculate an estimated date as follows. The current population of Ireland is <strong>4,970,701</strong>, and we are vaccinating people at a rate of around <strong>6,167</strong> doses per day.</p>
+<p>This means it will take <strong>1,505</strong> days to vaccinate 95% of the population. The projected herd immunity date is <strong>Sunday, March 16, 2025</strong>.</p>
+<p>This estimate will be updated daily as more vaccination information is received.</p>
+<div class="chart small">
+  
+    <h2>Herd immunity</h2>
+    <style>
+      .vaccinations {
+        position: relative;
+      }
+      .vaccinations .tick {
+        pointer-events: none;
+      }
+      .vaccinations .hover-bar.active {
+        fill: rgba(100,100,100,0.15);
+      }
+      .vaccinations .total-doses,
+      .vaccinations .fully-vaccinated,
+      .vaccinations .daily-vaccinations-line {
+        pointer-events: none;
+      }
+    </style>
+    <div class="vaccinations">
+      <div id="projected-vaccinations"><svg viewBox="0 0 400 300"><clippath id="chart-area"><rect x="40" y="10" width="340" height="260"></rect></clippath><g class="x-axis" transform="translate(0, 270)" fill="none" font-size="10" font-family="sans-serif" text-anchor="middle"><g class="tick" opacity="1" transform="translate(41.162776716760284,0)"><line stroke="#999" y2="5"></line><text fill="#999" y="10" dy="0.71em">2021</text></g><g class="tick" opacity="1" transform="translate(121.8006105892616,0)"><line stroke="#999" y2="5"></line><text fill="#999" y="10" dy="0.71em">2022</text></g><g class="tick" opacity="1" transform="translate(202.4384444617629,0)"><line stroke="#999" y2="5"></line><text fill="#999" y="10" dy="0.71em">2023</text></g><g class="tick" opacity="1" transform="translate(283.0762783342642,0)"><line stroke="#999" y2="5"></line><text fill="#999" y="10" dy="0.71em">2024</text></g><g class="tick" opacity="1" transform="translate(363.93503777901896,0)"><line stroke="#999" y2="5"></line><text fill="#999" y="10" dy="0.71em">2025</text></g></g><g class="y-axis" transform="translate(40, 0)" fill="none" font-size="10" font-family="sans-serif" text-anchor="end"><g class="tick" opacity="1" transform="translate(0,140.5)"><line stroke="#f6f6f6" x2="340"></line><text fill="#999" x="-5" dy="0.32em">2.50M</text></g><g class="tick" opacity="1" transform="translate(0,10.5)"><line stroke="#f6f6f6" x2="340"></line><text fill="#999" x="-5" dy="0.32em">5.00M</text></g></g><g class="y-axis-2" transform="translate(40, 0)" fill="none" font-size="10" font-family="sans-serif" text-anchor="end"><g class="tick" opacity="1" transform="translate(0,266.301)"><line stroke="#999" x2="7.453457134785367"></line><text fill="#999" x="-5" dy="0.32em">80.8k</text></g></g><path class="total-doses" fill="#69CE3D" d="M40,270L40.22092557225343,270L40.441851144506856,269.95320000000004L40.662776716760284,269.95320000000004L40.88370228901371,269.95320000000004L41.10462786126715,269.95320000000004L41.32555343352057,269.896L41.546479005773996,269.896L41.767404578027424,269.896L41.98833015028085,269.601836L42.20925572253428,269.601836L42.43018129478771,269.601836L42.65110686704114,268.96000000000004L42.87203243929457,268.96000000000004L43.092958011548,268.96000000000004L43.31388358380143,267.990122L43.534809156054855,267.990122L43.75573472830828,267.990122L43.976660300561704,267.990122L44.19758587281513,267.556L44.41851144506856,267.556L44.639437017321995,267.556L44.86036258957542,266.83059999999995L45.08128816182885,266.83059999999995L45.30221373408228,266.83059999999995L45.52313930633571,266.83059999999995L45.744064878589136,266.282L45.96499045084256,266.282L46.185916023096,266.282L46.40684159534942,265.801L46.62776716760284,265.801L46.84869273985627,265.801L47.0696183121097,265.801L47.29054388436313,265.801L47.29054388436313,270L47.0696183121097,270L46.84869273985627,270L46.62776716760284,270L46.40684159534942,270L46.185916023096,270L45.96499045084256,270L45.744064878589136,270L45.52313930633571,270L45.30221373408228,270L45.08128816182885,270L44.86036258957542,270L44.639437017321995,270L44.41851144506856,270L44.19758587281513,270L43.976660300561704,270L43.75573472830828,270L43.534809156054855,270L43.31388358380143,270L43.092958011548,270L42.87203243929457,270L42.65110686704114,270L42.43018129478771,270L42.20925572253428,270L41.98833015028085,270L41.767404578027424,270L41.546479005773996,270L41.32555343352057,270L41.10462786126715,270L40.88370228901371,270L40.662776716760284,270L40.441851144506856,270L40.22092557225343,270L40,270Z"></path><path class="projected-vaccinations-line" fill="none" stroke-width="0.5" stroke-dasharray="6" stroke="#999" d="M47.45345715779845,265.801L380,24.447420000000008"></path><circle style="fill: #999;" r="2" cx="380" cy="24.447420000000008"></circle><text x="230" y="27.447420000000008" style="font-size: 10; fill: #999;"></text><text x="370" y="27.447420000000008" dy="0" style="font-size: 10; fill: #999;" text-anchor="end">March 16, 2025*</text><text x="380" y="260" dy="0" style="font-size: 10; fill: #999;" text-anchor="end">* based on current rate of 6,167 doses per day</text><rect x="60" y="18" style="fill: #ACE394;" width="10" height="10"></rect><text x="75" y="24" alignment-baseline="middle" style="fill: #999; font-size: 10;">Total vaccinated</text><path class="daily-vaccinations-line" fill="none" stroke-width="0.5" stroke-dasharray="2" stroke="#999" d="M60,48L70,38"></path><text x="75" y="44" alignment-baseline="middle" style="fill: #999; font-size: 10;">Projected rate</text><circle style="fill: #999;" r="2" cx="64" cy="63"></circle><text x="75" y="64" alignment-baseline="middle" style="fill: #999; font-size: 10;">Target: 95% (4,722,165 people)</text></svg></div>
+      <div class="tooltip">
+        <p class="date"></p>
+        <p class="fully-vaccinated large"></p>
+        <p class="doses small"></p>
+        <p class="avg-doses small"></p>
+      </div>
+    </div>
+    <script>
+      (function () {
+        const vaccinationBars = document.querySelector('#vaccinations #bars');
+        const vaccinationTooltip = document.querySelector('.vaccinations .tooltip')
+        const dateEl = document.querySelector('.vaccinations .tooltip .date');
+        const fullyVaccinatedEl = document.querySelector('.vaccinations .tooltip .fully-vaccinated');
+        const dosesEl = document.querySelector('.vaccinations .tooltip .doses');
+        const avgDosesEl = document.querySelector('.vaccinations .tooltip .avg-doses');
+
+        let dailyCasesRect;
+        function clearCasesBars() {
+          const allHoverBars = document.querySelectorAll('#vaccinations .hover-bar');
+          for (let i = 0; i < allHoverBars.length; ++i) {
+            allHoverBars[i].classList.remove('active');
+          }
+        }
+        function vaccinationBarsMove(e) {
+          clearCasesBars();
+          if (e.target.matches(".hover-bar")) {
+            
+            // Set tooltip content
+            const date = e.target.getAttribute('data-key');
+            const data = findByDate(date);
+            if (data) {
+              dateEl.innerText = formatDate(date);
+              fullyVaccinatedEl.innerText = formatNumber(data.fv) + ' vaccinated';
+              dosesEl.innerText = formatNumber(data.v) + ' total doses';
+              avgDosesEl.innerText = formatNumber(data.vAvg) + ' daily average';
+            }
+            // Highlight the bar
+            const parentGroup = e.target.parentElement;
+            e.target.classList.add('active');
+            vaccinationTooltip.classList.add('active');
+            // Position the tooltip
+            const x = e.clientX - dailyCasesRect.x;
+            const y = e.clientY - dailyCasesRect.y;
+            // Check width of the tooltip
+            const tooltipWidth = vaccinationTooltip.getBoundingClientRect().width;
+            const tooltipHeight = vaccinationTooltip.getBoundingClientRect().height;
+            const rightSide = x + tooltipWidth + 20;
+            if (rightSide > dailyCasesRect.width) {
+              vaccinationTooltip.style.left = x - 10 - tooltipWidth + 'px';
+            } else {
+              vaccinationTooltip.style.left = x + 10 + 'px';
+            }
+            vaccinationTooltip.style.top = y - (tooltipHeight) + 'px';
+          }
+        }
+        
+        vaccinationBars.addEventListener('mouseover', function(e) {
+          vaccinationBars.classList.add('active');
+          dailyCasesRect = document.querySelector('#vaccinations').getBoundingClientRect();
+          vaccinationBars.addEventListener('mousemove', vaccinationBarsMove);
+        });
+        vaccinationBars.addEventListener('mouseleave', function() {
+          // Remove mousemove listener from vaccinationBars
+          clearCasesBars();
+          vaccinationBars.classList.remove('active');
+          vaccinationTooltip.classList.remove('active');
+          vaccinationBars.removeEventListener('mousemove', vaccinationBarsMove);
+          // Update summary
+          const event = new CustomEvent('show-date', { bubbles: true, detail: null });
+          document.querySelector('body').dispatchEvent(event);
+        });
+      })();
+    </script>
+  
+</div>
+      </section>
+      <style>
+        footer {
+          border-top: 1px solid #f6f6f6;
+          color: var(--second-text-color);
+          margin: 40px 0;
+          padding: 10px 0;
+        }
+        @media (prefers-color-scheme: dark) {
+          footer {
+            border-top: 1px solid #333;
+          }
+        }
+      </style>
+      <footer>
+        <h3>More COVID-19 numbers</h3>
+        <p>As Ireland deals with the impact of the COVID-19 pandemic, we have been tracking the daily numbers on our <a href="https://covidnumbers.ie">Irish COVID-19 dashboard</a>. </p>
+        <p>Read more about <a href="/graphs/cases/">case numbers</a>, <a href="/graphs/hospital/">hospitalisation numbers</a>, <a href="/graphs/county/">county cases</a> <a href="/graphs/vaccinations/">vaccination progress</a> and an estimated date for <a href="/graphs/projected-vaccinated/">when we will achieve herd immunity</a>.</p>
+        <h3>Sources</h3>
+        <p>Case data sourced from <a href="https://data.gov.ie/">data.gov.ie</a> using <a href="https://covid19ireland-geohive.hub.arcgis.com/datasets/d8eb52d56273413b84b0187a4e9117be_0">ARCGIS</a>.
+        Vaccination numbers sourced from <a href="https://github.com/owid/covid-19-data/tree/master/public/data">Our World In Data</a>.</p>
+        <h3>About this site</h3>
+        <p>Designed and built by <a href="https://hop.ie">Donovan Hutchinson</a>.</p>
+        <p>Project <a href="https://github.com/donovanh/covid-stats-ireland">source code on Github</a>.</p>
+        <h3>Last Updated</h3>
+        <p>Daily case data: <strong>Sunday, January 31, 2021</strong>.
+        <br>County case data: <strong>Thursday, January 28, 2021</strong>.</p>
+      </footer>
+    </main>
+  </body>
+</html>

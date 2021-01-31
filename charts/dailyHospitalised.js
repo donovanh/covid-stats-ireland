@@ -259,6 +259,7 @@ module.exports = (data) => {
         }
         
         function mouseMove(e) {
+          if (!window.inlineData) return;
           const dataLength = window.inlineData.length;
           const day = Math.ceil(
             convertRange(

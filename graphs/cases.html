@@ -1,0 +1,16 @@
+---
+layout: page.html
+title: Daily cases and 7-day average
+description: How do today's COVID-19 case numbers in Ireland compare to the numbers over the last year?
+---
+{% assign firstCases = charts.data.national | first %}
+{% assign latestCases = charts.data.national | last %}
+<h1>Daily cases and 7-day average</h1>
+<p>How do today's COVID-19 case numbers compare to the numbers over the last year?</p>
+<p>This graph shows the daily cases since <strong>{{ firstCases.date | formatDate }}</strong>, with bars representing the number of COVID-19 cases for each day. The dotted line represents a rolling 7-day average.</p>
+<p>On <strong>{{ latestCases.date | formatDate }}</strong> there were <strong>{{ latestCases.ConfirmedCovidCases | formatNumber }}</strong> cases and <strong>{{ latestCases.ConfirmedCovidDeaths | formatNumber }}</strong> deaths.</p>
+<p>There have been a total of <strong>{{ latestCases.TotalConfirmedCovidCases | formatNumber }}</strong> cases in Ireland.</p>
+<p>This estimate will be updated daily as the COVID-19 numbers arrive.</p>
+<div class="chart">
+  {{ charts.dailyNationalCases }}
+</div>

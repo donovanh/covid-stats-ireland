@@ -1,0 +1,15 @@
+---
+layout: page.html
+title: Hospitalised, ICU and deaths
+description: How many people in Ireland are being admitted to hospital with COVID-19 symptoms?
+---
+{% assign latestNational = charts.data.national | last %}
+{% assign latestData = charts.inlineData.raw | last %}
+<h1>Hospitalised, ICU and deaths</h1>
+<p>How many people in Ireland are being admitted to hospital with COVID-19 symptoms?</p>
+<p>On <strong>{{ latestData.date | formatDate }}</strong>, there were <strong>{{ latestData.h | formatNumber }}</strong> people in hospital, <strong>{{ latestData.i | formatNumber }}</strong> people in ICU, and <strong>{{ latestData.d | formatNumber }}</strong> deaths were reported.</p>
+<p>A total of <strong>{{ latestNational.HospitalisedCovidCases | formatNumber }}</strong> people have been admitted to hospital, with <strong>{{ latestNational.RequiringICUCovidCases | formatNumber }}</strong> requiring ICU attention. A total of <strong>{{ latestNational.TotalCovidDeaths | formatNumber }}</strong> people have died from COVID-19 in Ireland.</p>
+<div class="chart">
+  {{ charts.dailyHospitalised }}
+</div>
+{{ charts.inlineData.html }}

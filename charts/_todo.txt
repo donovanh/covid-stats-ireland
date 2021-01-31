@@ -1,6 +1,6 @@
 TODO:
-* Check night mode
-* Add legends
+* Make landing pages for each graph
+* Link the landing pages
 
 * Make hospitalisation chart half-wide
 * Create secondary hospitalisation data area

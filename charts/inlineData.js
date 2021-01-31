@@ -51,7 +51,10 @@ module.exports = (data) => {
     };
   });
 
-  return `<script>
+  return {
+    html: `<script>
      window.inlineData = ${JSON.stringify(allData)};
-    </script>`;
+    </script>`,
+    raw: allData
+  }
 };

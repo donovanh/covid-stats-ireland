@@ -427,6 +427,9 @@
           }
         </style>
         <footer>
+          <h3>More COVID-19 numbers</h3>
+          <p>As Ireland deals with the impact of the COVID-19 pandemic, we have been tracking the daily numbers on our <a href="https://covidnumbers.ie">Irish COVID-19 dashboard</a>. </p>
+          <p>Read more about <a href="/graphs/cases/">case numbers</a>, <a href="/graphs/hospital/">hospitalisation numbers</a>, <a href="/graphs/county/">county cases</a> <a href="/graphs/vaccinations/">vaccination progress</a> and an estimated date for <a href="/graphs/projected-vaccinated/">when we will achieve herd immunity</a>.</p>
           <h3>Sources</h3>
           <p>Case data sourced from <a href="https://data.gov.ie/">data.gov.ie</a> using <a href="https://covid19ireland-geohive.hub.arcgis.com/datasets/d8eb52d56273413b84b0187a4e9117be_0">ARCGIS</a>.
           Vaccination numbers sourced from <a href="https://github.com/owid/covid-19-data/tree/master/public/data">Our World In Data</a>.</p>
@@ -438,6 +441,6 @@
           <br>County case data: <strong>{{charts.lastUpdated.county}}</strong>.</p>
         </footer>
       </main>
-      {{ charts.inlineData }}
+      {{ charts.inlineData.html }}
   </body>
 </html>

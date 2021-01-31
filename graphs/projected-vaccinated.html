@@ -1,0 +1,16 @@
+---
+layout: page.html
+title: Herd Immunity - Estimated date for Ireland vaccinations
+description: How long will it take until enough people in Ireland have been vaccinated to provide full herd immunity? This graph shows how long it could take.
+---
+
+{% assign last_vaccination = charts.data.vaccination | last %}
+<h1>Herd Immunity</h1>
+<p>How long will it take until enough people in Ireland have been vaccinated to provide full herd immunity?</p>
+<p>For full immunity we should aim to vaccinate 95% of the population, though much of normal life should be able to resume earlier.</p>
+<p>We can calculate an estimated date as follows. The current population of Ireland is <strong>{{ charts.data.irelandPop | formatNumber }}</strong>, and we are vaccinating people at a rate of around <strong>{{ last_vaccination.dailyAvgDoses | formatNumber }}</strong> doses per day.</p>
+<p>This means it will take <strong>{{ charts.estDuration | formatNumber }}</strong> days to vaccinate 95% of the population. The projected herd immunity date is <strong>{{ charts.estimated95Date | formatDate }}</strong>.</p>
+<p>This estimate will be updated daily as more vaccination information is received.</p>
+<div class="chart small">
+  {{ charts.projectedVaccinated }}
+</div>

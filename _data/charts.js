@@ -21,6 +21,18 @@ module.exports = async function() {
     county: new Date(data.county[data.county.length - 1].date).toLocaleDateString("en-US", dateOptions)
   };
 
+  // Calculate the estimated vaccination date
+  const pop = data.irelandPop || 4970499;
+  const estimatedGoalPop = Math.floor(pop * 0.95);// 95% of population
+
+  // Current rate per day
+  const ratePerDay = data.vaccination[data.vaccination.length - 1].dailyAvgDoses;
+  const totalDosesNeeded = estimatedGoalPop * 2;
+  const dosesNeeded = totalDosesNeeded - data.vaccination[data.vaccination.length - 1].doses;
+  const estDuration = dosesNeeded / ratePerDay;
+  const estDurationMS = estDuration * 24 * 60 * 60 * 1000;
+  const estimated95Date = new Date().getTime() + estDurationMS;
+
   return {
     summary: summary(data),
     dailyNationalCases: dailyNationalCases(data),
@@ -33,6 +45,9 @@ module.exports = async function() {
     inlineData: inlineData(data),
     lastUpdated,
     lastRun: new Date(),
-    screenshotFilename
+    screenshotFilename,
+    data,
+    estimated95Date,
+    estDuration: Math.round(estDuration)
   };
 };

@@ -1,0 +1,32 @@
+---
+layout: page.html
+title: Cases by county in Ireland
+description: How are Ireland's COVID-19 cases distributed by county?
+---
+<h1>Cases by county in Ireland</h1>
+<p>How are Ireland's COVID-19 cases distributed by county?</p>
+<p>These graphs show the total number of COVID-19 cases in each county in Ireland. The map uses shades of red to indicate number of people in each county as a percentage of the total population of that county.</p>
+<style>
+  .counties {
+    display: flex;
+  }
+  .counties .map {
+    width: 50%;
+  }
+  .counties .list {
+    width: 50%;
+  }
+  @media only screen and (max-width: 800px) {
+    .counties {
+      flex-wrap: wrap;
+    }
+    .counties .map,
+    .counties .list {
+      width: 100%;
+    }
+  }
+</style>
+<section class="counties">
+  <div class="map">{{ charts.countyMap }}</div>
+  <div class="list">{{ charts.countyList }}</div>
+</section>

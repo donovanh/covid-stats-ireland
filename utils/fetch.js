@@ -1,5 +1,6 @@
 const fsPromises = require('fs').promises;
 const puppeteer = require('puppeteer');
+const CSV = require('csv-string');
 const fetch = require('make-fetch-happen').defaults({
   cacheManager: './my-cache' // path where cache will be written (and read)
 });
@@ -129,20 +130,19 @@ const getForDate = (date, dataset) => {
 }
 
 const processVaccinationData = (data) => {
+  const parsedData = CSV.parse(data);
   const result = [];
-  const rows = data.split('\n');
-  for ([index, row] of rows.entries()) {
+  for ([index, row] of parsedData.entries()) {
     if (index === 0) {
       continue;
     }
-    const rowData = row.split(",");
-    if (rowData.length > 1) {
+    if (row.length > 1) {
       result.push({
-        date: new Date(rowData[1]),
-        vaccineType: rowData[2],
-        doses: +(rowData[4]),
-        people: +(rowData[5]),
-        fullyVaccinated: +(rowData[6])
+        date: new Date(row[1]),
+        vaccineType: row[2],
+        doses: +(row[4]),
+        people: +(row[5]),
+        fullyVaccinated: +(row[6])
       });
     }
   }

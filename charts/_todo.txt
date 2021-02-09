@@ -1,5 +1,4 @@
 TODO:
-* Make landing pages for each graph
 * Link the landing pages
 
 * Make hospitalisation chart half-wide

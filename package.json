@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "csv-string": "^4.0.1",
     "d3-node": "^2.2.2",
     "fs": "0.0.1-security",
     "gh-pages": "^3.1.0",

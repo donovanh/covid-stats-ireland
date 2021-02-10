@@ -165,6 +165,7 @@ const processVaccinationData = (data) => {
     const averages = {};
     const daysBetween = (new Date(d.date) - new Date(prevDay.date)) / (1000 * 3600 * 24) || 1;
     averages.dailyAvgDoses = Math.round((d.doses - prevDay.doses) / daysBetween);
+    averages.dailyFullyVaccinated = Math.round((d.fullyVaccinated - prevDay.fullyVaccinated) / daysBetween);
 
     return {
       ...d,
@@ -207,14 +208,33 @@ const processVaccinationData = (data) => {
     }
     return {
       dailyAvgDoses: currentItem.dailyAvgDoses,
+      dailyFullyVaccinated: currentItem.dailyFullyVaccinated,
       date: d.date
     } 
   }).reverse();
 
+  // Go through filled dates and add estimated
+  // fully vaccinated between each
+  const datesWithEstimate = [];
+  filledDates.forEach((d, i) => {
+    let estimatedFullyVaccinated = 0;
+    let estimatedDoses = 0;
+    if (i > 0) {
+      const prevDay = datesWithEstimate[i - 1];
+      estimatedFullyVaccinated = prevDay.estimatedFullyVaccinated + prevDay.dailyFullyVaccinated;
+      estimatedDoses = prevDay.estimatedDoses + prevDay.dailyAvgDoses;
+    }      
+    datesWithEstimate.push({
+      ...d,
+      estimatedFullyVaccinated,
+      estimatedDoses
+    });
+  });
+
   // Go through the filled dates and add in the current 
   // reported values per day
   currentItem = dataset[0];
-  return filledDates.map(d => {
+  return datesWithEstimate.map(d => {
     if (getForDate(d.date, dataset).doses) {
       currentItem = getForDate(d.date, dataset);
     }

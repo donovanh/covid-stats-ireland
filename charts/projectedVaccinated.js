@@ -20,14 +20,13 @@ module.exports = (data) => {
 
   // Current rate per day
   const ratePerDay = dataset[dataset.length - 1].dailyAvgDoses;
-  // Revisit this when no longer just double doses
-  const totalDosesNeeded = estimatedGoalPop * 2;
-  const dosesNeeded = totalDosesNeeded - dataset[dataset.length - 1].doses;
-  const estDuration = dosesNeeded / ratePerDay;
-  const estDurationMS = estDuration * 24 * 60 * 60 * 1000;
+
+  const peopleYetToVaccinate = estimatedGoalPop - dataset[dataset.length - 1].estimatedFullyVaccinated;
+  const estDuration95 = peopleYetToVaccinate / ratePerDay;
+  const estDuration95MS = estDuration95 * 24 * 60 * 60 * 1000;
 
   // Calculate target date
-  const estimated95Date = new Date(new Date().getTime() + estDurationMS);
+  const estimated95Date = new Date(new Date().getTime() + estDuration95MS);
 
   const w = 400;
   const h = 300;
@@ -66,7 +65,7 @@ module.exports = (data) => {
     .tickFormat(d3.format(".3s"));
 
   const yAxis2 = d3.axisLeft(yScale)
-    .tickValues([d3.max(dataset, d => d.doses / 2)])
+    .tickValues([d3.max(dataset, d => d.estimatedFullyVaccinated)])
     .tickPadding(5)
     .tickSize(0 - (xScale(new Date()) - margin.left))
     .tickFormat(d3.format(".3s"));
@@ -135,7 +134,7 @@ module.exports = (data) => {
   const totalDosesArea = d3.area()
     .x(d => (xScale(new Date(d.date))))
     .y0(() => yScale.range()[0])
-    .y1(d => yScale(d.doses / 2));
+    .y1(d => yScale(d.estimatedFullyVaccinated));
 
   svg.append('path')
     .datum(dataset)
@@ -206,7 +205,7 @@ module.exports = (data) => {
 
 
 
-  // Legend: Total vaccinated 
+  // Legend: Total fully vaccinated 
   svg.append('rect')
     .attr('x', margin.left + 20)
     .attr('y', margin.top + 8)
@@ -220,7 +219,7 @@ module.exports = (data) => {
     .attr('alignment-baseline', 'middle')
     .style('fill', colours.darkGrey)
     .style('font-size', 10)
-    .text('Total vaccinated');
+    .text('Total fully vaccinated');
 
   // Legend: Projected rate
   const legendAvgLinePoints = [

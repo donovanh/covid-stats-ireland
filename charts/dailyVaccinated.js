@@ -31,7 +31,7 @@ module.exports = (data) => {
 
   // Scale Y to the weekly average line
   const yScale = d3.scaleLinear()
-    .domain([0, d3.max(dataset, d => d.doses)])
+    .domain([0, d3.max(dataset, d => d.estimatedDoses)])
     .range([h - margin.bottom, margin.top]);
 
   // Draw containing svg
@@ -98,7 +98,7 @@ module.exports = (data) => {
   const totalDosesArea = d3.area()
     .x(d => (xScale(new Date(d.date))))
     .y0(() => yScale.range()[0])
-    .y1(d => yScale(d.doses));
+    .y1(d => yScale(d.estimatedDoses));
 
   svg.append('path')
     .datum(dataset)
@@ -110,7 +110,7 @@ module.exports = (data) => {
   const totalFullyVaccinatedArea = d3.area()
     .x(d => (xScale(new Date(d.date))))
     .y0(() => yScale.range()[0])
-    .y1(d => yScale(d.fullyVaccinated));
+    .y1(d => yScale(d.estimatedFullyVaccinated));
 
   svg.append('path')
     .datum(dataset)

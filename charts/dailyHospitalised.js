@@ -260,7 +260,7 @@ module.exports = (data) => {
         
         function mouseMove(e) {
           if (!window.inlineData) return;
-          const dataLength = window.inlineData.length;
+          const dataLength = window.inlineData.length - 1;
           const day = Math.ceil(
             convertRange(
               e.clientX - areaRect.x,

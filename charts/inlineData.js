@@ -51,6 +51,18 @@ module.exports = (data) => {
     };
   });
 
+  // Add in data for today if it's available (vaccinations particularly)
+  const today = new Date();
+  const todayVaccination = findByDate(today, data.vaccination);
+  if (todayVaccination) {
+    allData.push({
+      date: todayVaccination.date,
+      v: todayVaccination.estimatedDoses || 0,
+      fv: todayVaccination.estimatedFullyVaccinated || 0,
+      vAvg: todayVaccination.dailyAvgDoses || 0
+    });
+  }
+
   return {
     html: `<script>
      window.inlineData = ${JSON.stringify(allData)};

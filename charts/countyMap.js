@@ -34,7 +34,6 @@ module.exports = ({ county: dataset, northernIreland }) => {
         .attr('class', 'county')
         .attr('stroke', '#888')
         .attr('stroke-width', 0.25)
-        // .attr('fill', 'rgba(100,100,100,0.05)')
         .attr('fill', colours.reds[colScale(per100k / 1000)])
         .attr('d', county.d)
         .attr('data-case-percent', Math.round(+(per100k) / 100) / 10 + '%')
@@ -97,7 +96,7 @@ module.exports = ({ county: dataset, northernIreland }) => {
     .scale(legendAxisScale)
     .tickSize(4)
     .tickPadding(4)
-    .ticks(2)
+    .ticks(4)
     .tickFormat(d => `${d}%`);
 
   legendGroup.append('g')

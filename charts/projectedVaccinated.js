@@ -21,8 +21,10 @@ module.exports = (data) => {
   // Current rate per day
   const ratePerDay = dataset[dataset.length - 1].dailyAvgDoses;
 
-  const peopleYetToVaccinate = estimatedGoalPop - dataset[dataset.length - 1].estimatedFullyVaccinated;
-  const estDuration95 = peopleYetToVaccinate / ratePerDay;
+  const totalVaccinated = dataset[dataset.length - 1].estimatedFullyVaccinated;
+  const peopleYetToVaccinate = estimatedGoalPop - totalVaccinated;
+  const percentVaccinated = (totalVaccinated / estimatedGoalPop) * 100;
+  const estDuration95 = peopleYetToVaccinate / (ratePerDay / 2);
   const estDuration95MS = estDuration95 * 24 * 60 * 60 * 1000;
 
   // Calculate target date
@@ -203,8 +205,6 @@ module.exports = (data) => {
     .attr('text-anchor', 'end')
     .style('fill', colours.darkGrey);
 
-
-
   // Legend: Total fully vaccinated 
   svg.append('rect')
     .attr('x', margin.left + 20)
@@ -219,7 +219,7 @@ module.exports = (data) => {
     .attr('alignment-baseline', 'middle')
     .style('fill', colours.darkGrey)
     .style('font-size', 10)
-    .text('Total fully vaccinated');
+    .text('Total fully vaccinated (' + percentVaccinated.toFixed(2) + '%)');
 
   // Legend: Projected rate
   const legendAvgLinePoints = [
@@ -324,7 +324,7 @@ module.exports = (data) => {
               dateEl.innerText = formatDate(date);
               fullyVaccinatedEl.innerText = formatNumber(data.fv) + ' vaccinated';
               dosesEl.innerText = formatNumber(data.v) + ' total doses';
-              avgDosesEl.innerText = formatNumber(data.vAvg) + ' daily average';
+              avgDosesEl.innerText = formatNumber(data.vAvg) + ' daily average doses';
             }
             // Highlight the bar
             const parentGroup = e.target.parentElement;

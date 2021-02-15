@@ -1,4 +1,5 @@
 TODO:
+* Calculate vaccination rate based on multiple days data
 * Link the landing pages
 
 * Make hospitalisation chart half-wide

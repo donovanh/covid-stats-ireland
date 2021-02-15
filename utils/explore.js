@@ -82,23 +82,24 @@ const processVaccinationData = (data) => {
     };
   });
 
-  const lastDataPoint = {
-    ...dataset[dataset.length - 1],
-    date: new Date()
-  }
+  // const lastDataPoint = {
+  //   ...dataset[dataset.length - 1],
+  //   date: new Date()
+  // }
 
-  dataset = [
-    ...dataset,
-    lastDataPoint
-  ];
+  // dataset = [
+  //   ...dataset,
+  //   lastDataPoint
+  // ];
 
   let tempArray = [];
 
   // Loop through the dates covered and fill in the gaps
   let currentDate = new Date(dataset[0].date).getTime();
+  const lastDate = new Date(dataset[dataset.length - 1].date).getTime();
   const oneDay = 1000 * 60 * 60 * 24;
   let i = 0;
-  while(currentDate < new Date().getTime()) {
+  while(currentDate <= lastDate) {
     if (getForDate(currentDate, dataset) !== {}) {
       tempArray.push({
         date: currentDate

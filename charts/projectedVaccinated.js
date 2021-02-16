@@ -18,14 +18,14 @@ module.exports = (data) => {
   const pop = data.irelandPop || 4970499;
   const estimatedGoalPop = Math.floor(pop * 0.95);// 95% of population
 
-  // Current rate per day
-  const ratePerDay = dataset[dataset.length - 1].dailyAvgDoses;
+  // Current rate per day, based on the last 3 days
+  const dosesPerDay = dataset[dataset.length - 1].dailyAvgDoses;
 
-  const totalVaccinated = dataset[dataset.length - 1].estimatedFullyVaccinated;
+  const totalVaccinated = dataset[dataset.length - 1].fullyVaccinated;
   const peopleYetToVaccinate = estimatedGoalPop - totalVaccinated;
   const percentVaccinated = (totalVaccinated / estimatedGoalPop) * 100;
-  const estDuration95 = peopleYetToVaccinate / (ratePerDay / 2);
-  const estDuration95MS = estDuration95 * 24 * 60 * 60 * 1000;
+  const numberofDaysTo95 = peopleYetToVaccinate / (dosesPerDay / 2);
+  const estDuration95MS = numberofDaysTo95 * 24 * 60 * 60 * 1000;
 
   // Calculate target date
   const estimated95Date = new Date(new Date().getTime() + estDuration95MS);
@@ -67,7 +67,7 @@ module.exports = (data) => {
     .tickFormat(d3.format(".3s"));
 
   const yAxis2 = d3.axisLeft(yScale)
-    .tickValues([d3.max(dataset, d => d.estimatedFullyVaccinated)])
+    .tickValues([d3.max(dataset, d => d.fullyVaccinated)])
     .tickPadding(5)
     .tickSize(0 - (xScale(new Date()) - margin.left))
     .tickFormat(d3.format(".3s"));
@@ -197,7 +197,7 @@ module.exports = (data) => {
     .style('fill', colours.darkGrey);
 
   svg.append('text')
-    .text('* based on current rate of ' + formatNumber(ratePerDay) + ' doses per day')
+    .text('* based on current rate of ' + formatNumber(dosesPerDay) + ' doses per day')
     .attr('x', w - margin.right)
     .attr('y', h - margin.bottom - 10)
     .attr('dy', 0)

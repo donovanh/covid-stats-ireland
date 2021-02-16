@@ -45,23 +45,11 @@ module.exports = (data) => {
       h: hospitalDataForDate ? hospitalDataForDate.hospitalisedCases : null,
       i: hospitalDataForDate ? hospitalDataForDate.icuCases : null,
       d: d.ConfirmedCovidDeaths,
-      v: vaccinationDataForDate.estimatedDoses || 0,
-      fv: vaccinationDataForDate.estimatedFullyVaccinated || 0,
+      v: vaccinationDataForDate.doses || 0,
+      fv: vaccinationDataForDate.fullyVaccinated || 0,
       vAvg: vaccinationDataForDate.dailyAvgDoses || 0
     };
   });
-
-  // Add in data for today if it's available (vaccinations particularly)
-  const today = new Date();
-  const todayVaccination = findByDate(today, data.vaccination);
-  if (todayVaccination) {
-    allData.push({
-      date: todayVaccination.date,
-      v: todayVaccination.estimatedDoses || 0,
-      fv: todayVaccination.estimatedFullyVaccinated || 0,
-      vAvg: todayVaccination.dailyAvgDoses || 0
-    });
-  }
 
   return {
     html: `<script>

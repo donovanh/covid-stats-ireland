@@ -64,13 +64,13 @@ module.exports = (data) => {
     .tickValues([0, 2500000, 5000000])
     .tickPadding(5)
     .tickSize(0 - (w - margin.left - margin.right))
-    .tickFormat(d3.format(".3s"));
+    .tickFormat(d3.format(".2s"));
 
   const yAxis2 = d3.axisLeft(yScale)
     .tickValues([d3.max(dataset, d => d.fullyVaccinated)])
     .tickPadding(5)
     .tickSize(0 - (xScale(new Date()) - margin.left))
-    .tickFormat(d3.format(".3s"));
+    .tickFormat(d3.format(".2s"));
 
   svg.append('clipPath')
     .attr('id', 'chart-area')

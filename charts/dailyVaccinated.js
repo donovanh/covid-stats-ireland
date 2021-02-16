@@ -48,7 +48,8 @@ module.exports = (data) => {
   const yAxis = d3.axisLeft(yScale)
     .ticks(3)
     .tickPadding(5)
-    .tickSize(0 - (w - margin.left - margin.right));
+    .tickSize(0 - (w - margin.left - margin.right))
+    .tickFormat(d3.format(".3s"));
 
   svg.append('clipPath')
     .attr('id', 'chart-area')

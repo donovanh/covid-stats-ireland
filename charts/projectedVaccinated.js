@@ -15,7 +15,8 @@ module.exports = (data) => {
   // Establish target number of fully vaccinated
   // Establish vector
   // Is it (average daily doses / 2) per day?
-  const pop = data.irelandPop || 4970499;
+  //const pop = data.irelandPop || 4970499;
+  const pop = 3700000; // ADULTS estimated
   const estimatedGoalPop = Math.floor(pop * 0.95);// 95% of population
 
   // Current rate per day, based on the last 3 days
@@ -266,7 +267,7 @@ module.exports = (data) => {
     .attr('alignment-baseline', 'middle')
     .style('fill', colours.darkGrey)
     .style('font-size', 10)
-    .text('Target: 95% (' + formatNumber(estimatedGoalPop) + ' people)');
+    .text('Target: 95% (' + formatNumber(estimatedGoalPop) + ' adults)');
 
 
   d3n.html()

@@ -70,7 +70,7 @@ module.exports = (data) => {
   const yAxis2 = d3.axisLeft(yScale)
     .tickValues([d3.max(dataset, d => d.fullyVaccinated)])
     .tickPadding(5)
-    .tickSize(0 - (xScale(new Date()) - margin.left))
+    .tickSize(5 - (xScale(new Date()) - margin.left))
     .tickFormat(d3.format(".2s"));
 
   svg.append('clipPath')
@@ -128,6 +128,8 @@ module.exports = (data) => {
     .remove();
 
   svg.selectAll('.y-axis-2 .tick line')
+    .attr('stroke-width', 0.5)
+    .attr('stroke-dasharray', 1)
     .attr('stroke', colours.darkGrey);
 
   svg.selectAll('.y-axis-2 .tick text')

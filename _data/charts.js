@@ -22,16 +22,21 @@ module.exports = async function() {
   };
 
   // Calculate the estimated vaccination date
-  const pop = data.irelandPop || 4970499;
+  const pop = 3700000; // ADULTS estimated
   const estimatedGoalPop = Math.floor(pop * 0.95);// 95% of population
 
   // Current rate per day
-  const ratePerDay = data.vaccination[data.vaccination.length - 1].dailyAvgDoses;
-  const totalDosesNeeded = estimatedGoalPop * 2;
-  const dosesNeeded = totalDosesNeeded - data.vaccination[data.vaccination.length - 1].doses;
-  const estDuration = dosesNeeded / ratePerDay;
-  const estDurationMS = estDuration * 24 * 60 * 60 * 1000;
-  const estimated95Date = new Date().getTime() + estDurationMS;
+  let sevenDayTotalDoses = 0;
+  for (let i = 1; i < 8; i++) {
+    sevenDayTotalDoses += data.vaccination[data.vaccination.length - i].dailyAvgDoses;
+  }
+  const dosesPerDay = Math.floor(sevenDayTotalDoses / 7);
+
+  const totalVaccinated = data.vaccination[data.vaccination.length - 1].fullyVaccinated;
+  const peopleYetToVaccinate = estimatedGoalPop - totalVaccinated;
+  const numberofDaysTo95 = peopleYetToVaccinate / (dosesPerDay / 2);
+  const estDuration95MS = numberofDaysTo95 * 24 * 60 * 60 * 1000;
+  const estimated95Date = new Date().getTime() + estDuration95MS;
 
   return {
     summary: summary(data),
@@ -48,6 +53,7 @@ module.exports = async function() {
     screenshotFilename,
     data,
     estimated95Date,
-    estDuration: Math.round(estDuration)
+    estDuration: Math.round(numberofDaysTo95),
+    estDailyRate: dosesPerDay
   };
 };

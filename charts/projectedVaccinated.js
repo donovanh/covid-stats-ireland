@@ -19,8 +19,12 @@ module.exports = (data) => {
   const pop = 3700000; // ADULTS estimated
   const estimatedGoalPop = Math.floor(pop * 0.95);// 95% of population
 
-  // Current rate per day, based on the last 3 days
-  const dosesPerDay = dataset[dataset.length - 1].dailyAvgDoses;
+  // Current rate per day, calculate based on 7 day average
+  let sevenDayTotalDoses = 0;
+  for (let i = 1; i < 8; i++) {
+    sevenDayTotalDoses += dataset[dataset.length - i].dailyAvgDoses;
+  }
+  const dosesPerDay = Math.floor(sevenDayTotalDoses / 7);
 
   const totalVaccinated = dataset[dataset.length - 1].fullyVaccinated;
   const peopleYetToVaccinate = estimatedGoalPop - totalVaccinated;
@@ -200,7 +204,7 @@ module.exports = (data) => {
     .style('fill', colours.darkGrey);
 
   svg.append('text')
-    .text('* based on current rate of ' + formatNumber(dosesPerDay) + ' doses per day')
+    .text('* based on 7-day average rate of ' + formatNumber(dosesPerDay) + ' doses per day')
     .attr('x', w - margin.right)
     .attr('y', h - margin.bottom - 10)
     .attr('dy', 0)
@@ -222,7 +226,7 @@ module.exports = (data) => {
     .attr('alignment-baseline', 'middle')
     .style('fill', colours.darkGrey)
     .style('font-size', 10)
-    .text('Total fully vaccinated (' + percentVaccinated.toFixed(2) + '%)');
+    .text('Total adults vaccinated (' + percentVaccinated.toFixed(2) + '%)');
 
   // Legend: Projected rate
   const legendAvgLinePoints = [

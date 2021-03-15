@@ -155,7 +155,7 @@ module.exports = (data) => {
   const projectedDosesLineData = [
     {
       x: new Date(),
-      y: d3.max(dataset, d => d.doses / 2)
+      y: d3.max(dataset, d => d.estimatedFullyVaccinated)
     },
     {
       x: estimated95Date,

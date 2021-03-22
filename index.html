@@ -285,11 +285,12 @@
               </span>
               <span class="label">In ICU</span></li>
             <!-- <li class="testing-weekly">{{ charts.summary.testing.tests7Day }} <span class="label">Tests over last 7 days</span></li> -->
-            <li class="testing-positive">
+            <!--<li class="testing-positive">
               <span class="data">
                 {{ charts.summary.testing.positiveRate7Day }}%
               </span>
               <span class="label">Testing positive</span></li>
+            -->
             <li class="vaccinations-total">
               <span class="data">
                 {{ charts.summary.vaccinations }}
@@ -306,7 +307,7 @@
               deaths: document.querySelector('.summary .daily-deaths .data'),
               hospitalised: document.querySelector('.summary .in-hospital .data'),
               icu: document.querySelector('.summary .in-icu .data'),
-              testing: document.querySelector('.summary .testing-positive .data'),
+              //testing: document.querySelector('.summary .testing-positive .data'),
               vaccination: document.querySelector('.summary .vaccinations-total .data')
             }
             const todayData = {
@@ -314,7 +315,7 @@
               d: summaryData.deaths.innerText,
               h: summaryData.hospitalised.innerText,
               i: summaryData.icu.innerText,
-              t: summaryData.testing.innerText,
+              //t: summaryData.testing.innerText,
               v: summaryData.vaccination.innerText,
             }
             function findByDate(date) {
@@ -352,7 +353,7 @@
               summaryData.deaths.innerText = data.d || 0;
               summaryData.hospitalised.innerText = data.h || 0;
               summaryData.icu.innerText = data.i || 0;
-              summaryData.testing.innerText = data.t ? data.t + '%' : '0%';
+              //summaryData.testing.innerText = data.t ? data.t + '%' : '0%';
               if (typeof data.t === 'string' && data.t.includes('%')) {
                 summaryData.testing.innerText = data.t;
               }

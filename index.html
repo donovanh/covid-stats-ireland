@@ -267,8 +267,13 @@
                 {{ charts.summary.ConfirmedCovidCases }}
               </span>
               <span class="label">New cases</span></li>
-            <!-- <li class="avg-cases">{{ charts.summary.avgCases }} <span class="label">7 day average</span></li>
-            <li class="prev-average-cases">{{ charts.summary.previousAvgCases }} <span class="label">Previous 7 day average</span></li> -->
+            <li class="avg-cases">
+              <span class="data">
+                {{ charts.summary.avgCases }}
+              </span>
+              <span class="label">7 day average</span>
+            </li>
+            <!--<li class="prev-average-cases">{{ charts.summary.previousAvgCases }} <span class="label">Previous 7 day average</span></li> -->
             <li class="daily-deaths">
               <span class="data">
                 {{ charts.summary.ConfirmedCovidDeaths }}
@@ -284,13 +289,6 @@
                 {{ charts.summary.latestICU }}
               </span>
               <span class="label">In ICU</span></li>
-            <!-- <li class="testing-weekly">{{ charts.summary.testing.tests7Day }} <span class="label">Tests over last 7 days</span></li> -->
-            <!--<li class="testing-positive">
-              <span class="data">
-                {{ charts.summary.testing.positiveRate7Day }}%
-              </span>
-              <span class="label">Testing positive</span></li>
-            -->
             <li class="vaccinations-total">
               <span class="data">
                 {{ charts.summary.vaccinations }}
@@ -304,18 +302,20 @@
             const summaryTitle = document.querySelector('.summary-title');
             const summaryData = {
               cases: document.querySelector('.summary .daily-cases .data'),
+              avgCases: document.querySelector('.summary .avg-cases .data'),
               deaths: document.querySelector('.summary .daily-deaths .data'),
               hospitalised: document.querySelector('.summary .in-hospital .data'),
               icu: document.querySelector('.summary .in-icu .data'),
-              //testing: document.querySelector('.summary .testing-positive .data'),
+              testing: document.querySelector('.summary .testing-positive .data'),
               vaccination: document.querySelector('.summary .vaccinations-total .data')
             }
             const todayData = {
               c: summaryData.cases.innerText,
+              cAvg: summaryData.avgCases.innerText,
               d: summaryData.deaths.innerText,
               h: summaryData.hospitalised.innerText,
               i: summaryData.icu.innerText,
-              //t: summaryData.testing.innerText,
+              t: summaryData.testing.innerText,
               v: summaryData.vaccination.innerText,
             }
             function findByDate(date) {
@@ -350,10 +350,11 @@
               }
               
               summaryData.cases.innerText = data.c || 0;
+              summaryData.avgCases.innerText = data.cAvg || 0;
               summaryData.deaths.innerText = data.d || 0;
               summaryData.hospitalised.innerText = data.h || 0;
               summaryData.icu.innerText = data.i || 0;
-              //summaryData.testing.innerText = data.t ? data.t + '%' : '0%';
+              summaryData.testing.innerText = data.t ? data.t + '%' : '0%';
               if (typeof data.t === 'string' && data.t.includes('%')) {
                 summaryData.testing.innerText = data.t;
               }

@@ -280,7 +280,7 @@ const getData = async () => {
   const nationalDataUrl = 'https://services1.arcgis.com/eNO7HHeQ3rUcBllm/arcgis/rest/services/CovidStatisticsProfileHPSCIrelandOpenData/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&outSR=4326&f=json';
   const hospitalDataUrl = 'https://services-eu1.arcgis.com/z6bHNio59iTqqSUY/arcgis/rest/services/Covid19AcuteHospitalHistoricSummaryOpenData/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&outSR=4326&f=json';
   const icuDataUrl = 'https://services-eu1.arcgis.com/z6bHNio59iTqqSUY/arcgis/rest/services/ICUBISHistoricTimelinePublicView/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&outSR=4326&f=json';
-  const testingDataUrl = 'https://services-eu1.arcgis.com/z6bHNio59iTqqSUY/arcgis/rest/services/LaboratoryLocalTimeSeriesHistoricView/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&outSR=4326&f=json';
+  //const testingDataUrl = 'https://services-eu1.arcgis.com/z6bHNio59iTqqSUY/arcgis/rest/services/LaboratoryLocalTimeSeriesHistoricView/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&outSR=4326&f=json';
   const countyDataUrl = 'https://services1.arcgis.com/eNO7HHeQ3rUcBllm/arcgis/rest/services/Covid19CountyStatisticsHPSCIrelandOpenData/FeatureServer/0/query?where=1%3D1&outFields=CountyName,PopulationCensus16,IGEasting,IGNorthing,ConfirmedCovidCases,PopulationProportionCovidCases,ConfirmedCovidDeaths,ConfirmedCovidRecovered,x,y,FID,TimeStampDate&returnGeometry=false&outSR=4326&f=json';
   const vaccinationCSV = 'https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/country_data/Ireland.csv';
 
@@ -288,7 +288,7 @@ const getData = async () => {
   const countyResponses = await fetch(countyDataUrl);
   const hospitalResponse = await fetch(hospitalDataUrl);
   const icuResponse = await fetch(icuDataUrl);
-  const testingResponse = await fetch(testingDataUrl);
+  //const testingResponse = await fetch(testingDataUrl);
   const vaccinationResponse = await fetch(vaccinationCSV);
   const northernIreland = await getNIData();
   const irelandPop = await getIrelandPop();
@@ -298,7 +298,7 @@ const getData = async () => {
     county: processCountyData(await countyResponses.json()),
     hospital: processHospitalData(await hospitalResponse.json()),
     icu: processICUData(await icuResponse.json()),
-    testing: processTestingData(await testingResponse.json()),
+    //testing: processTestingData(await testingResponse.json()),
     vaccination: processVaccinationData(await vaccinationResponse.text()),
     northernIreland,
     irelandPop

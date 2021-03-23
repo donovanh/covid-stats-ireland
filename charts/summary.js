@@ -7,7 +7,6 @@ module.exports = (data) => {
   // const county = [...data.county];
   const hospital = [...data.hospital];
   const icu = [...data.icu];
-  const testing = [...data.testing];
   const vaccination = [...data.vaccination];
 
   const rolling7DayAvgCases = national.map((d, i) => {
@@ -35,7 +34,6 @@ module.exports = (data) => {
     previousAvgCases: format(rolling7DayAvgCases[rolling7DayAvgCases.length - 8].value),
     hospitalised: format(hospital[hospital.length - 1].hospitalisedCases),
     latestICU: format(icu[icu.length - 1].icuCases),
-    testing: testing[testing.length - 1],
     vaccinations: format(vaccination[vaccination.length - 1].doses)
   };
 };

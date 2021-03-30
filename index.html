@@ -315,7 +315,7 @@
               d: summaryData.deaths.innerText,
               h: summaryData.hospitalised.innerText,
               i: summaryData.icu.innerText,
-              t: summaryData.testing.innerText,
+              //t: summaryData.testing.innerText,
               v: summaryData.vaccination.innerText,
             }
             function findByDate(date) {
@@ -354,10 +354,10 @@
               summaryData.deaths.innerText = data.d || 0;
               summaryData.hospitalised.innerText = data.h || 0;
               summaryData.icu.innerText = data.i || 0;
-              summaryData.testing.innerText = data.t ? data.t + '%' : '0%';
-              if (typeof data.t === 'string' && data.t.includes('%')) {
-                summaryData.testing.innerText = data.t;
-              }
+              //summaryData.testing.innerText = data.t ? data.t + '%' : '0%';
+              // if (typeof data.t === 'string' && data.t.includes('%')) {
+              //   summaryData.testing.innerText = data.t;
+              // }
               summaryData.vaccination.innerText = data.v;
             }
             function summaryDateHandler(e) {

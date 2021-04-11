@@ -63,7 +63,7 @@ module.exports = (data) => {
   const xAxis = d3.axisBottom(xScale)
     .tickPadding(5)
     .tickSize(5)
-    .ticks(8);
+    .ticks(4);
 
   const yAxis = d3.axisLeft(yScale)
     .tickValues([0, 2500000, 5000000])

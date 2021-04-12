@@ -163,7 +163,10 @@ const processVaccinationData = (data) => {
       fullyVaccinated: 0
     };
     const averages = {};
-    const daysBetween = (new Date(d.date) - new Date(prevDay.date)) / (1000 * 3600 * 24) || 1;
+    let daysBetween = (new Date(d.date) - new Date(prevDay.date)) / (1000 * 3600 * 24) || 1;
+    if (new Date(d.date) > new Date('2021-04-01T00:00:00.000Z')) {
+      daysBetween = 1;
+    }
     averages.dailyAvgDoses = Math.round((d.doses - prevDay.doses) / daysBetween);
     averages.dailyFullyVaccinated = Math.round((d.fullyVaccinated - prevDay.fullyVaccinated) / daysBetween);
 

@@ -190,7 +190,7 @@ module.exports = (data) => {
     .style('font-size', 10)
     .text('Fully vaccinated');
 
-  // Legend: Daily average doses
+  // Legend: Daily doses
   const legendAvgLinePoints = [
     {
       x: margin.left + 20,
@@ -220,7 +220,7 @@ module.exports = (data) => {
     .attr('alignment-baseline', 'middle')
     .style('fill', colours.darkGrey)
     .style('font-size', 10)
-    .text('Daily average doses');
+    .text('Daily doses');
 
   d3n.html()
   const html = `

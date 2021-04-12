@@ -331,7 +331,7 @@ module.exports = (data) => {
               dateEl.innerText = formatDate(date);
               fullyVaccinatedEl.innerText = formatNumber(data.fv) + ' vaccinated';
               dosesEl.innerText = formatNumber(data.v) + ' total doses';
-              avgDosesEl.innerText = formatNumber(data.vAvg) + ' daily average doses';
+              avgDosesEl.innerText = formatNumber(data.vAvg) + ' daily doses';
             }
             // Highlight the bar
             const parentGroup = e.target.parentElement;

@@ -237,7 +237,7 @@ module.exports = (data) => {
     .style('font-size', 10)
     .text('Daily cases');
 
-  // Legend: Daily average doses
+  // Legend: Daily doses
   const legendAvgLinePoints = [
     {
       x: margin.left + 20,

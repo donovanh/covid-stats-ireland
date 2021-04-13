@@ -101,7 +101,14 @@
               <span class="data">
                 {{ charts.summary.ConfirmedCovidCases }}
               </span>
-              <span class="label">New cases</span></li>
+              <span class="label">New cases</span>
+            </li>
+            <li class="avg-cases">
+              <span class="data">
+                {{ charts.summary.avgCases }}
+              </span>
+              <span class="label">7 day average</span>
+            </li>
             <!-- <li class="avg-cases">{{ charts.summary.avgCases }} <span class="label">7 day average</span></li>
             <li class="prev-average-cases">{{ charts.summary.previousAvgCases }} <span class="label">Previous 7 day average</span></li> -->
             <li class="daily-deaths">
@@ -119,17 +126,11 @@
                 {{ charts.summary.latestICU }}
               </span>
               <span class="label">In ICU</span></li>
-            <!-- <li class="testing-weekly">{{ charts.summary.testing.tests7Day }} <span class="label">Tests over last 7 days</span></li> -->
-            <li class="testing-positive">
-              <span class="data">
-                {{ charts.summary.testing.positiveRate7Day }}%
-              </span>
-              <span class="label">Testing positive</span></li>
             <li class="vaccinations-total">
               <span class="data">
                 {{ charts.summary.vaccinations }}
               </span>
-              <span class="label">Vaccinations</span></li>
+              <span class="label">Total vaccine doses</span></li>
           </ul>
           <script>
             // Respond to show-date event

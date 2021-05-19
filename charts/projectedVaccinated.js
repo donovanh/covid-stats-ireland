@@ -154,7 +154,7 @@ module.exports = (data) => {
   // Projected line - extend from current day up to projected date
   const projectedDosesLineData = [
     {
-      x: new Date(),
+      x: d3.max(dataset, d => new Date(d.date)),
       y: d3.max(dataset, d => d.estimatedFullyVaccinated)
     },
     {

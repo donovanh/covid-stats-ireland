@@ -132,9 +132,13 @@ const getForDate = (date, dataset) => {
 const processVaccinationData = (data) => {
   const parsedData = CSV.parse(data);
   const result = [];
+  let fullyVaccinatedSoFar = 0;
   for ([index, row] of parsedData.entries()) {
     if (index === 0) {
       continue;
+    }
+    if (+(row[6])) {
+      fullyVaccinatedSoFar = +(row[6]);
     }
     if (row.length > 1) {
       result.push({
@@ -142,7 +146,7 @@ const processVaccinationData = (data) => {
         vaccineType: row[2],
         doses: +(row[4]),
         people: +(row[5]),
-        fullyVaccinated: +(row[6])
+        fullyVaccinated: fullyVaccinatedSoFar
       });
     }
   }

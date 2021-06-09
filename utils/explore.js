@@ -34,16 +34,22 @@ async function doStuff(data) {
   const vaccinationCSV = 'https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/country_data/Ireland.csv';
   const vaccinationResponse = await fetch(vaccinationCSV);
   const processed = processVaccinationData(await vaccinationResponse.text())
-  console.log(processed)
+  for (const d of processed) {
+    console.log(d.fullyVaccinated)
+  }
 };
 
 
 const processVaccinationData = (data) => {
   const parsedData = CSV.parse(data);
   const result = [];
+  let fullyVaccinatedSoFar = 0;
   for ([index, row] of parsedData.entries()) {
     if (index === 0) {
       continue;
+    }
+    if (+(row[6])) {
+      fullyVaccinatedSoFar = +(row[6]);
     }
     if (row.length > 1) {
       result.push({
@@ -51,7 +57,7 @@ const processVaccinationData = (data) => {
         vaccineType: row[2],
         doses: +(row[4]),
         people: +(row[5]),
-        fullyVaccinated: +(row[6])
+        fullyVaccinated: fullyVaccinatedSoFar
       });
     }
   }

@@ -16,7 +16,7 @@ module.exports = (data) => {
   // Establish vector
   // Is it (average daily doses / 2) per day?
   //const pop = data.irelandPop || 4970499;
-  const pop = 3700000; // ADULTS estimated
+  const pop = 3950000; // ADULTS estimated
   const estimatedGoalPop = Math.floor(pop * 0.95);// 95% of population
 
   // Current rate per day, calculate based on 7 day average
@@ -28,7 +28,7 @@ module.exports = (data) => {
 
   const totalVaccinated = dataset[dataset.length - 1].fullyVaccinated;
   const peopleYetToVaccinate = estimatedGoalPop - totalVaccinated;
-  const percentVaccinated = (totalVaccinated / estimatedGoalPop) * 100;
+  const percentVaccinated = (totalVaccinated / pop) * 100;
   const numberofDaysTo95 = peopleYetToVaccinate / (dosesPerDay / 2);
   const estDuration95MS = numberofDaysTo95 * 24 * 60 * 60 * 1000;
 

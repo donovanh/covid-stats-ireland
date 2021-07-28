@@ -16,7 +16,7 @@ module.exports = (data) => {
   // Establish vector
   // Is it (average daily doses / 2) per day?
   //const pop = data.irelandPop || 4970499;
-  const pop = 3950000; // ADULTS estimated
+  const pop = 3855500; // ADULTS estimated
   const estimatedGoalPop = Math.floor(pop * 0.95);// 95% of population
 
   // Current rate per day, calculate based on 7 day average

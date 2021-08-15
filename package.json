@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "NODE_ENV=development eleventy --serve",
+    "dev": "NODE_ENV=development eleventy --serve --port=3020",
     "build-action": "npx @11ty/eleventy --serve",
     "test": "echo \"Error: no test specified\" && exit 1",
     "screenshot": "node ./utils/screenshot",

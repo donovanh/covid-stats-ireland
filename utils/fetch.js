@@ -131,7 +131,6 @@ const processVaccinationData = (data) => {
     if (index === 0) {
       continue;
     }
-    console.log(row);
     // ,,,,,,,
     // location: Ireland,
     // date: 2021-08-01,

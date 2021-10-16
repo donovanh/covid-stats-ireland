@@ -131,24 +131,25 @@ const processVaccinationData = (data) => {
     if (index === 0) {
       continue;
     }
-    // ,,,,,,,
-    // location: Ireland,
-    // date: 2021-08-01,
-    // vaccine: "Johnson&Johnson, Moderna, Oxford/AstraZeneca, Pfizer/BioNTech",
-    // total_vaccinations: 5871111,
-    // source_url: https://covid19ireland-geohive.hub.arcgis.com/,
-    // people_vaccinated: 3319049,
-    // people_fully_vaccinated: 2768882,
-    // total_boosters
-    if (+row[6]) {
-      fullyVaccinatedSoFar = +row[6];
+    /*
+    0 date,
+    1 people_vaccinated,
+    2 people_fully_vaccinated,
+    3 total_vaccinations,
+    4 location,
+    5 source_url,
+    6 vaccine,
+    7 total_boosters
+    */
+    if (+row[2]) {
+      fullyVaccinatedSoFar = +row[2];
     }
     if (row.length > 1) {
       result.push({
-        date: new Date(row[1]),
-        vaccineType: row[2],
+        date: new Date(row[0]),
+        vaccineType: row[6],
         doses: +row[3],
-        people: +row[5],
+        people: +row[1],
         fullyVaccinated: fullyVaccinatedSoFar,
         boosters: +row[7],
       });

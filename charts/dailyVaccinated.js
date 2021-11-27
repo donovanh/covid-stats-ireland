@@ -134,6 +134,8 @@ module.exports = (data) => {
     .attr("fill", colours.green50)
     .attr("d", totalFullyVaccinatedArea);
 
+  // TODO: daily doses as lines
+
   // Daily vaccinations line
   const dailyVaccinationsLine = d3
     .line()
@@ -145,8 +147,8 @@ module.exports = (data) => {
     .datum(dataset)
     .attr("class", "daily-vaccinations-line")
     .attr("fill", "none")
-    .attr("stroke-width", 2)
-    .attr("stroke-dasharray", 2)
+    .attr("stroke-width", 0.25)
+    //.attr("stroke-dasharray", 1)
     .attr("stroke", colours.darkGrey)
     .attr("d", dailyVaccinationsLine);
 
@@ -228,7 +230,7 @@ module.exports = (data) => {
     .datum(legendAvgLinePoints)
     .attr("class", "daily-vaccinations-line")
     .attr("fill", "none")
-    .attr("stroke-width", 2)
+    .attr("stroke-width", 1)
     .attr("stroke-dasharray", 2)
     .attr("stroke", colours.darkGrey)
     .attr("d", legendAvgLine);

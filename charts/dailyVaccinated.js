@@ -138,7 +138,7 @@ module.exports = (data) => {
   const dailyVaccinationsLine = d3
     .line()
     .x((d) => xScale(new Date(d.date)))
-    .y((d) => yScale(d.dailyAvgDoses));
+    .y((d) => yScale(d.dailyAvgDoses * 100));
 
   svg
     .append("path")
@@ -240,7 +240,7 @@ module.exports = (data) => {
     .attr("alignment-baseline", "middle")
     .style("fill", colours.darkGrey)
     .style("font-size", 10)
-    .text("Daily doses");
+    .text("Daily doses (x100)");
 
   d3n.html();
   const html = `

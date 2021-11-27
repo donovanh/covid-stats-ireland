@@ -1,228 +1,248 @@
-const D3Node = require('d3-node');
-const { colours } = require('./theme');
+const D3Node = require("d3-node");
+const { colours } = require("./theme");
 
 module.exports = (data) => {
+  console.log("Generating vaccinations progress chart");
 
-  console.log('Generating vaccinations progress chart');
-
-  const options = { selector: '#vaccinations', container: '<div id="container"><div id="vaccinations"></div></div>' };
+  const options = {
+    selector: "#vaccinations",
+    container: '<div id="container"><div id="vaccinations"></div></div>',
+  };
   const d3n = new D3Node(options); // initializes D3 with container element
   const d3 = d3n.d3;
 
   // Set up dimensions and options
   const dataset = data.vaccination;
 
+  /*
+  {
+    dailyAvgDoses: 36802,
+    dailyFullyVaccinated: 2912,
+    date: '2021-11-24T00:00:00.000Z',
+    estimatedFullyVaccinated: 3783087,
+    estimatedDoses: 8031190,
+    vaccineType: 'https://covid19ireland-geohive.hub.arcgis.com/',
+    doses: 8067138,
+    people: 3851364,
+    fullyVaccinated: 3786011,
+    boosters: null
+  }*/
+
   const w = 400;
   const h = 300;
-  const margin = ({ top: 10, right: 20, bottom: 30, left: 40 });
+  const margin = { top: 10, right: 20, bottom: 30, left: 40 };
 
   // Set up scales
-  const xScale = d3.scaleTime()
+  const xScale = d3
+    .scaleTime()
     .domain([
-      d3.min(dataset, d => new Date(d.date)),
-      d3.max(dataset, d => new Date(d.date))
+      d3.min(dataset, (d) => new Date(d.date)),
+      d3.max(dataset, (d) => new Date(d.date)),
     ])
     .range([margin.left, w - margin.right]);
 
-  const xBarScale = d3.scaleBand()
-    .domain(dataset.map(d => `${new Date(d.date)}`))
+  const xBarScale = d3
+    .scaleBand()
+    .domain(dataset.map((d) => `${new Date(d.date)}`))
     .range([margin.left, w - margin.right])
     .paddingInner(0);
 
   // Scale Y to the weekly average line
-  const yScale = d3.scaleLinear()
-    .domain([0, d3.max(dataset, d => d.doses)])
+  const yScale = d3
+    .scaleLinear()
+    .domain([0, d3.max(dataset, (d) => d.doses)])
     .range([h - margin.bottom, margin.top]);
 
   // Draw containing svg
-  const svg = d3.select(d3n.document.querySelector('#vaccinations'))
-    .append('svg')
-    .attr('viewBox', `0 0 ${w} ${h}`);
+  const svg = d3
+    .select(d3n.document.querySelector("#vaccinations"))
+    .append("svg")
+    .attr("viewBox", `0 0 ${w} ${h}`);
 
   // Draw axes
-  const xAxis = d3.axisBottom(xScale)
-    .tickPadding(5)
-    .tickSize(5)
-    .ticks(4);
+  const xAxis = d3.axisBottom(xScale).tickPadding(5).tickSize(5).ticks(4);
 
-  const yAxis = d3.axisLeft(yScale)
+  const yAxis = d3
+    .axisLeft(yScale)
     .ticks(3)
     .tickPadding(5)
     .tickSize(0 - (w - margin.left - margin.right))
     .tickFormat(d3.format(".3s"));
 
-  svg.append('clipPath')
-    .attr('id', 'chart-area')
-    .append('rect')
-    .attr('x', margin.left)
-    .attr('y', margin.top)
-    .attr('width', w - margin.left - margin.right)
-    .attr('height', h - margin.top - margin.bottom);
+  svg
+    .append("clipPath")
+    .attr("id", "chart-area")
+    .append("rect")
+    .attr("x", margin.left)
+    .attr("y", margin.top)
+    .attr("width", w - margin.left - margin.right)
+    .attr("height", h - margin.top - margin.bottom);
 
   // x axis
-  svg.append('g')
-    .classed('x-axis', true)
-    .attr('transform', `translate(0, ${h - margin.bottom})`)
+  svg
+    .append("g")
+    .classed("x-axis", true)
+    .attr("transform", `translate(0, ${h - margin.bottom})`)
     .call(xAxis);
 
-  svg.select('.x-axis')
-    .select('.domain')
-    .remove();
+  svg.select(".x-axis").select(".domain").remove();
 
-  svg.selectAll('.x-axis .tick line')
-    .attr('stroke', colours.darkGrey)
+  svg.selectAll(".x-axis .tick line").attr("stroke", colours.darkGrey);
 
-  svg.selectAll('.x-axis .tick text')
-    .attr('fill', colours.darkGrey)
+  svg.selectAll(".x-axis .tick text").attr("fill", colours.darkGrey);
 
   // y axis
-  svg.append('g')
-    .classed('y-axis', true)
-    .attr('transform', `translate(${margin.left}, 0)`)
+  svg
+    .append("g")
+    .classed("y-axis", true)
+    .attr("transform", `translate(${margin.left}, 0)`)
     .call(yAxis);
 
-  svg.select('.y-axis')
-    .select('.domain')
-    .remove();
+  svg.select(".y-axis").select(".domain").remove();
 
-  svg.select('.y-axis')
-    .select('.tick:first-of-type')
-    .remove();
+  svg.select(".y-axis").select(".tick:first-of-type").remove();
 
-  svg.selectAll('.y-axis .tick line')
-    .attr('stroke', colours.lightGrey);
+  svg.selectAll(".y-axis .tick line").attr("stroke", colours.lightGrey);
 
-  svg.selectAll('.y-axis .tick text')
-    .attr('fill', colours.darkGrey);
+  svg.selectAll(".y-axis .tick text").attr("fill", colours.darkGrey);
 
   // Total doses area
-  const totalDosesArea = d3.area()
-    .x(d => (xScale(new Date(d.date))))
+  const totalDosesArea = d3
+    .area()
+    .x((d) => xScale(new Date(d.date)))
     .y0(() => yScale.range()[0])
-    .y1(d => yScale(d.doses));
+    .y1((d) => yScale(d.doses));
 
-  svg.append('path')
+  svg
+    .append("path")
     .datum(dataset)
-    .attr('class', 'total-doses')
-    .attr('fill', colours.green10)
-    .attr('d', totalDosesArea);
+    .attr("class", "total-doses")
+    .attr("fill", colours.green10)
+    .attr("d", totalDosesArea);
 
   // People fully vaccinated area
-  const totalFullyVaccinatedArea = d3.area()
-    .x(d => (xScale(new Date(d.date))))
+  const totalFullyVaccinatedArea = d3
+    .area()
+    .x((d) => xScale(new Date(d.date)))
     .y0(() => yScale.range()[0])
-    .y1(d => yScale(d.fullyVaccinated));
+    .y1((d) => yScale(d.fullyVaccinated));
 
-  svg.append('path')
+  svg
+    .append("path")
     .datum(dataset)
-    .attr('class', 'fully-vaccinated')
-    .attr('fill', colours.green50)
-    .attr('d', totalFullyVaccinatedArea);
-
+    .attr("class", "fully-vaccinated")
+    .attr("fill", colours.green50)
+    .attr("d", totalFullyVaccinatedArea);
 
   // Daily vaccinations line
-  const dailyVaccinationsLine = d3.line()
-    .x(d => xScale(new Date(d.date)))
-    .y(d => yScale(d.dailyAvgDoses));
+  const dailyVaccinationsLine = d3
+    .line()
+    .x((d) => xScale(new Date(d.date)))
+    .y((d) => yScale(d.dailyAvgDoses));
 
-  svg.append('path')
+  svg
+    .append("path")
     .datum(dataset)
-    .attr('class', 'daily-vaccinations-line')
-    .attr('fill', 'none')
-    .attr('stroke-width', 2)
-    .attr('stroke-dasharray', 2)
-    .attr('stroke', colours.darkGrey)
-    .attr('d', dailyVaccinationsLine);
-
+    .attr("class", "daily-vaccinations-line")
+    .attr("fill", "none")
+    .attr("stroke-width", 2)
+    .attr("stroke-dasharray", 2)
+    .attr("stroke", colours.darkGrey)
+    .attr("d", dailyVaccinationsLine);
 
   // Set up bar containers
-  const bars = svg
-    .append('g')
-    .attr('id', 'bars');
+  const bars = svg.append("g").attr("id", "bars");
 
   // Hover bars
-  const barGroups = bars.selectAll('.bar-group')
+  const barGroups = bars
+    .selectAll(".bar-group")
     .data(dataset, (d) => d.date)
     .enter()
-    .append('g')
-    .classed('bar-group', true);
+    .append("g")
+    .classed("bar-group", true);
 
   barGroups
-    .append('rect')
-    .classed('hover-bar', true)
-    .attr('x', (d) => xBarScale(new Date(d.date)))
-    .attr('y', margin.top)
-    .attr('data-key', d => d.date)
-    .attr('height', h - margin.bottom - margin.top)
-    .attr('width', xBarScale.bandwidth())
-    .attr('fill', 'transparent');
-
+    .append("rect")
+    .classed("hover-bar", true)
+    .attr("x", (d) => xBarScale(new Date(d.date)))
+    .attr("y", margin.top)
+    .attr("data-key", (d) => d.date)
+    .attr("height", h - margin.bottom - margin.top)
+    .attr("width", xBarScale.bandwidth())
+    .attr("fill", "transparent");
 
   // Legend: Daily doses
-  svg.append('rect')
-    .attr('x', margin.left + 20)
-    .attr('y', margin.top + 8)
-    .style('fill', colours.green10)
-    .attr('width', 10)
-    .attr('height', 10);
+  svg
+    .append("rect")
+    .attr("x", margin.left + 20)
+    .attr("y", margin.top + 8)
+    .style("fill", colours.green10)
+    .attr("width", 10)
+    .attr("height", 10);
 
-  svg.append('text')
-    .attr('x', margin.left + 35)
-    .attr('y', margin.top + 14)
-    .attr('alignment-baseline', 'middle')
-    .style('fill', colours.darkGrey)
-    .style('font-size', 10)
-    .text('Total doses');
+  svg
+    .append("text")
+    .attr("x", margin.left + 35)
+    .attr("y", margin.top + 14)
+    .attr("alignment-baseline", "middle")
+    .style("fill", colours.darkGrey)
+    .style("font-size", 10)
+    .text("Total doses");
 
   // Legend: Fully vaccinated
-  svg.append('rect')
-    .attr('x', margin.left + 20)
-    .attr('y', margin.top + 28)
-    .style('fill', colours.green50)
-    .attr('width', 10)
-    .attr('height', 10);
+  svg
+    .append("rect")
+    .attr("x", margin.left + 20)
+    .attr("y", margin.top + 28)
+    .style("fill", colours.green50)
+    .attr("width", 10)
+    .attr("height", 10);
 
-  svg.append('text')
-    .attr('x', margin.left + 35)
-    .attr('y', margin.top + 34)
-    .attr('alignment-baseline', 'middle')
-    .style('fill', colours.darkGrey)
-    .style('font-size', 10)
-    .text('Fully vaccinated');
+  svg
+    .append("text")
+    .attr("x", margin.left + 35)
+    .attr("y", margin.top + 34)
+    .attr("alignment-baseline", "middle")
+    .style("fill", colours.darkGrey)
+    .style("font-size", 10)
+    .text("Fully vaccinated");
 
   // Legend: Daily doses
   const legendAvgLinePoints = [
     {
       x: margin.left + 20,
-      y: margin.top + 53
+      y: margin.top + 53,
     },
     {
       x: margin.left + 30,
-      y: margin.top + 53
-    }
+      y: margin.top + 53,
+    },
   ];
-  const legendAvgLine = d3.line()
-    .x(d => d.x)
-    .y(d => d.y);
+  const legendAvgLine = d3
+    .line()
+    .x((d) => d.x)
+    .y((d) => d.y);
 
-  svg.append('path')
+  svg
+    .append("path")
     .datum(legendAvgLinePoints)
-    .attr('class', 'daily-vaccinations-line')
-    .attr('fill', 'none')
-    .attr('stroke-width', 2)
-    .attr('stroke-dasharray', 2)
-    .attr('stroke', colours.darkGrey)
-    .attr('d', legendAvgLine);
+    .attr("class", "daily-vaccinations-line")
+    .attr("fill", "none")
+    .attr("stroke-width", 2)
+    .attr("stroke-dasharray", 2)
+    .attr("stroke", colours.darkGrey)
+    .attr("d", legendAvgLine);
 
-  svg.append('text')
-    .attr('x', margin.left + 35)
-    .attr('y', margin.top + 54)
-    .attr('alignment-baseline', 'middle')
-    .style('fill', colours.darkGrey)
-    .style('font-size', 10)
-    .text('Daily doses');
+  svg
+    .append("text")
+    .attr("x", margin.left + 35)
+    .attr("y", margin.top + 54)
+    .attr("alignment-baseline", "middle")
+    .style("fill", colours.darkGrey)
+    .style("font-size", 10)
+    .text("Daily doses");
 
-  d3n.html()
+  d3n.html();
   const html = `
     <h2>Vaccinations progress</h2>
     <style>
@@ -323,5 +343,4 @@ module.exports = (data) => {
   `;
 
   return html;
-
-}
+};

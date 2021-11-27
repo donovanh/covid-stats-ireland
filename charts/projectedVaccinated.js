@@ -25,7 +25,7 @@ module.exports = (data) => {
   // Current rate per day, calculate based on 7 day average
   let sevenDayTotalDoses = 0;
   for (let i = 1; i < 8; i++) {
-    sevenDayTotalDoses += dataset[dataset.length - i].dailyAvgDoses;
+    sevenDayTotalDoses += dataset[dataset.length - i].dailyFullyVaccinated;
   }
   const dosesPerDay = Math.floor(sevenDayTotalDoses / 7);
 
@@ -49,7 +49,8 @@ module.exports = (data) => {
     .range([margin.left, w - margin.right]);
 
   // Scale Y to the weekly average line
-  const yMax = Math.ceil(estimatedGoalPop / 1000000) * 1000000;
+  //const yMax = Math.ceil(estimatedGoalPop / 1000000) * 1000000;
+  const yMax = 100; // Percent
 
   const yScale = d3
     .scaleLinear()
@@ -67,17 +68,10 @@ module.exports = (data) => {
 
   const yAxis = d3
     .axisLeft(yScale)
-    .tickValues([0, 2500000, 5000000])
+    .tickValues([25, 50, 75, 100])
     .tickPadding(5)
-    .tickSize(0 - (w - margin.left - margin.right))
-    .tickFormat(d3.format(".2s"));
-
-  const yAxis2 = d3
-    .axisLeft(yScale)
-    .tickValues([d3.max(dataset, (d) => d.fullyVaccinated)])
-    .tickPadding(5)
-    .tickSize(5 - (xScale(new Date()) - margin.left))
-    .tickFormat(d3.format(".2s"));
+    .tickSize(5 - (xScale(new Date(estimated95Date)) - margin.left))
+    .tickFormat((d) => d + "%");
 
   svg
     .append("clipPath")
@@ -101,7 +95,6 @@ module.exports = (data) => {
 
   svg.selectAll(".x-axis .tick text").attr("fill", colours.darkGrey);
 
-  // y axis
   svg
     .append("g")
     .classed("y-axis", true)
@@ -110,35 +103,22 @@ module.exports = (data) => {
 
   svg.select(".y-axis").select(".domain").remove();
 
-  svg.select(".y-axis").select(".tick:first-of-type").remove();
-
-  svg.selectAll(".y-axis .tick line").attr("stroke", colours.lightGrey);
+  svg
+    .selectAll(".y-axis .tick line")
+    .attr("stroke-width", 1)
+    //.attr("stroke-dasharray", 2)
+    .attr("stroke", colours.lightGrey);
 
   svg.selectAll(".y-axis .tick text").attr("fill", colours.darkGrey);
 
-  // y axis 2
-  svg
-    .append("g")
-    .classed("y-axis-2", true)
-    .attr("transform", `translate(${margin.left}, 0)`)
-    .call(yAxis2);
-
-  svg.select(".y-axis-2").select(".domain").remove();
-
-  svg
-    .selectAll(".y-axis-2 .tick line")
-    .attr("stroke-width", 0.5)
-    .attr("stroke-dasharray", 1)
-    .attr("stroke", colours.darkGrey);
-
-  svg.selectAll(".y-axis-2 .tick text").attr("fill", colours.darkGrey);
+  const estimatedPercentVaccinated = (eFV) => (eFV / estimatedGoalPop) * 95;
 
   // Total doses area
   const totalDosesArea = d3
     .area()
     .x((d) => xScale(new Date(d.date)))
     .y0(() => yScale.range()[0])
-    .y1((d) => yScale(d.estimatedFullyVaccinated));
+    .y1((d) => yScale(estimatedPercentVaccinated(d.estimatedFullyVaccinated)));
 
   svg
     .append("path")
@@ -151,11 +131,13 @@ module.exports = (data) => {
   const projectedDosesLineData = [
     {
       x: d3.max(dataset, (d) => new Date(d.date)),
-      y: d3.max(dataset, (d) => d.estimatedFullyVaccinated),
+      y: d3.max(dataset, (d) =>
+        estimatedPercentVaccinated(d.estimatedFullyVaccinated)
+      ),
     },
     {
       x: estimated95Date,
-      y: estimatedGoalPop,
+      y: 95,
     },
   ];
 
@@ -180,7 +162,7 @@ module.exports = (data) => {
     .style("fill", colours.darkGrey)
     .attr("r", 2)
     .attr("cx", xScale(estimated95Date))
-    .attr("cy", yScale(estimatedGoalPop));
+    .attr("cy", yScale(95));
 
   // Add info text about this estimate
   const formatNumber = (number) => Intl.NumberFormat("en-UK").format(number);
@@ -191,7 +173,7 @@ module.exports = (data) => {
   const text = svg
     .append("text")
     .attr("x", xScale(estimated95Date) - 150)
-    .attr("y", yScale(estimatedGoalPop) + 3)
+    .attr("y", yScale(100) + 3)
     .style("font-size", 10)
     .style("fill", colours.darkGrey);
 
@@ -199,7 +181,7 @@ module.exports = (data) => {
     .append("text")
     .text(formatDate(estimated95Date) + "*")
     .attr("x", xScale(estimated95Date) - 10)
-    .attr("y", yScale(estimatedGoalPop) + 3)
+    .attr("y", yScale(95) + 3)
     .attr("dy", 0)
     .style("font-size", 10)
     .attr("text-anchor", "end")

@@ -266,27 +266,27 @@ const processVaccinationData = (data) => {
   });
 };
 
-const getNIData = async () => {
-  const browser = await puppeteer.launch({
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-  });
-  const page = await browser.newPage();
-  await page.goto("https://nicovidtracker.org", { waitUntil: "networkidle2" });
-  await page.waitForSelector("#nipositiveBox2 h3");
-  const totalCases = await page.evaluate(
-    (el) => el.innerHTML,
-    await page.$("#nipositiveBox1 h3")
-  );
-  const per100k = await page.evaluate(
-    (el) => el.innerHTML,
-    await page.$("#nipositiveBox2 h3")
-  );
-  await browser.close();
-  return {
-    totalCases,
-    per100k,
-  };
-};
+// const getNIData = async () => {
+//   const browser = await puppeteer.launch({
+//     args: ["--no-sandbox", "--disable-setuid-sandbox"],
+//   });
+//   const page = await browser.newPage();
+//   await page.goto("https://nicovidtracker.org", { waitUntil: "networkidle2" });
+//   await page.waitForSelector("#nipositiveBox2 h3");
+//   const totalCases = await page.evaluate(
+//     (el) => el.innerHTML,
+//     await page.$("#nipositiveBox1 h3")
+//   );
+//   const per100k = await page.evaluate(
+//     (el) => el.innerHTML,
+//     await page.$("#nipositiveBox2 h3")
+//   );
+//   await browser.close();
+//   return {
+//     totalCases,
+//     per100k,
+//   };
+// };
 
 const getIrelandPop = async () => {
   const browser = await puppeteer.launch({
@@ -329,7 +329,7 @@ const getData = async () => {
   const icuResponse = await fetch(icuDataUrl);
   //const testingResponse = await fetch(testingDataUrl);
   const vaccinationResponse = await fetch(vaccinationCSV);
-  const northernIreland = await getNIData();
+  //const northernIreland = await getNIData();
   const irelandPop = await getIrelandPop();
 
   const data = {
@@ -339,7 +339,7 @@ const getData = async () => {
     icu: processICUData(await icuResponse.json()),
     //testing: processTestingData(await testingResponse.json()),
     vaccination: processVaccinationData(await vaccinationResponse.text()),
-    northernIreland,
+    northernIreland: {},
     irelandPop,
   };
 

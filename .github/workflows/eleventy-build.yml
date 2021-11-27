@@ -1,7 +1,7 @@
 name: Eleventy Build
 on:
   schedule:
-  - cron: '0 1,9,10,11,16-20 * * *'
+    - cron: "0 1-24 * * *"
 
 jobs:
   build_deploy:
@@ -13,6 +13,6 @@ jobs:
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
-          PUBLISH_DIR: _site 
+          PUBLISH_DIR: _site
           PUBLISH_BRANCH: gh-pages
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -6,6 +6,8 @@ const fetch = require("make-fetch-happen").defaults({
 });
 
 const processNationalData = (data) => {
+  let confirmedDeaths;
+
   return data.features.map((feat, i) => {
     const d = feat.attributes;
 
@@ -42,9 +44,19 @@ const processNationalData = (data) => {
     //   generatedDailyTotals[`daily${stat}`] = (d[stat] - prevDay[stat]) > 0 ? d[stat] - prevDay[stat] : 0;
     // });
 
+    // Tidy daily confirmed death numbers
+    if (new Date(d.Date) > new Date("2021-05-01")) {
+      if (d.ConfirmedCovidDeaths) {
+        confirmedDeaths = Math.round(d.ConfirmedCovidDeaths / 7);
+      }
+    } else {
+      confirmedDeaths = d.ConfirmedCovidDeaths;
+    }
+
     return {
       date: new Date(d.Date),
       ...d,
+      ConfirmedCovidDeaths: confirmedDeaths,
       //...generatedDailyTotals
     };
   });

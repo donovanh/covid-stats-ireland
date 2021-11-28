@@ -230,7 +230,7 @@ module.exports = (data) => {
     .datum(legendAvgLinePoints)
     .attr("class", "daily-vaccinations-line")
     .attr("fill", "none")
-    .attr("stroke-width", 1)
+    .attr("stroke-width", 0.25)
     //.attr("stroke-dasharray", 2)
     .attr("stroke", colours.darkGrey)
     .attr("d", legendAvgLine);

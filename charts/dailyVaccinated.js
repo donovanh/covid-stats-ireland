@@ -231,7 +231,7 @@ module.exports = (data) => {
     .attr("class", "daily-vaccinations-line")
     .attr("fill", "none")
     .attr("stroke-width", 1)
-    .attr("stroke-dasharray", 2)
+    //.attr("stroke-dasharray", 2)
     .attr("stroke", colours.darkGrey)
     .attr("d", legendAvgLine);
 

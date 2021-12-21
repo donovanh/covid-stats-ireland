@@ -5,8 +5,8 @@ const dailyHospitalised = require("../charts/dailyHospitalised");
 const dailyVaccinated = require("../charts/dailyVaccinated");
 const projectedVaccinated = require("../charts/projectedVaccinated");
 const byAge = require("../charts/byAge");
-const countyMap = require("../charts/countyMap");
-const countyList = require("../charts/countyList");
+// const countyMap = require("../charts/countyMap");
+// const countyList = require("../charts/countyList");
 const inlineData = require("../charts/inlineData");
 
 module.exports = async function () {
@@ -74,8 +74,8 @@ module.exports = async function () {
     dailyVaccinated: dailyVaccinated(data),
     projectedVaccinated: projectedVaccinated(data),
     byAge: byAge(data),
-    countyMap: countyMap(data),
-    countyList: countyList(data),
+    // countyMap: countyMap(data),
+    // countyList: countyList(data),
     inlineData: inlineData(data),
     lastUpdated,
     lastRun: new Date(),

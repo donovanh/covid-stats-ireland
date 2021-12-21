@@ -50,7 +50,6 @@ module.exports = ({ county: dataset, northernIreland }) => {
     const popPropCases = countyData
       ? countyData.PopulationProportionCovidCases
       : 0;
-
     svg
       .append("path")
       .attr("name", county.name)
@@ -61,7 +60,12 @@ module.exports = ({ county: dataset, northernIreland }) => {
       .attr("fill", colours.reds[colScale(popPropCases / 1000)])
       .attr("d", county.d)
       .attr("data-case-percent", Math.round(popPropCases / 100) / 10 + "%")
-      .attr("data-cases", countyData.ConfirmedCovidCases.toLocaleString());
+      .attr(
+        "data-cases",
+        countyData.ConfirmedCovidCases
+          ? countyData.ConfirmedCovidCases.toLocaleString()
+          : 0
+      );
   }
 
   const legendGroup = svg.append("g").classed("legend", true);

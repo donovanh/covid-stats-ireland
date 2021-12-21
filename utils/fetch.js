@@ -79,12 +79,7 @@ const processCountyData = (data) => {
     const d = feat.attributes;
     return {
       date: new Date(d.TimeStampDate),
-      CountyName: d.CountyName,
-      PopulationCensus16: d.PopulationCensus16,
-      ConfirmedCovidCases: d.ConfirmedCovidCases,
-      PopulationProportionCovidCases: d.PopulationProportionCovidCases,
-      ConfirmedCovidDeaths: d.ConfirmedCovidDeaths,
-      ConfirmedCovidRecovered: d.ConfirmedCovidRecovered,
+      ...d,
     };
   });
 };
@@ -346,7 +341,7 @@ const getData = async () => {
 
   const data = {
     national: processNationalData(await nationalResponse.json()),
-    county: processCountyData(await countyResponses.json()),
+    county: {}, // processCountyData(await countyResponses.json()),
     hospital: processHospitalData(await hospitalResponse.json()),
     icu: processICUData(await icuResponse.json()),
     //testing: processTestingData(await testingResponse.json()),

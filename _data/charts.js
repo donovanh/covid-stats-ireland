@@ -24,9 +24,9 @@ module.exports = async function () {
     national: new Date(
       data.national[data.national.length - 1].date
     ).toLocaleDateString("en-US", dateOptions),
-    county: new Date(
-      data.county[data.county.length - 1].date
-    ).toLocaleDateString("en-US", dateOptions),
+    // county: new Date(
+    //   data.county[data.county.length - 1].date
+    // ).toLocaleDateString("en-US", dateOptions),
   };
 
   // Calculate the estimated vaccination date

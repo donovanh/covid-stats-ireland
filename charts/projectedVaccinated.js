@@ -19,7 +19,7 @@ module.exports = (data) => {
   // Establish vector
   // Is it (average daily doses / 2) per day?
   // const pop = data.irelandPop || 4970499;
-  const pop = 4055500; // ADULTS estimated
+  const pop = data.irelandPop; // ALL estimated
   const estimatedGoalPop = Math.floor(pop * 0.95); // 95% of population
 
   // Current rate per day, calculate based on 7 day average
@@ -45,7 +45,10 @@ module.exports = (data) => {
   // Set up scales
   const xScale = d3
     .scaleTime()
-    .domain([d3.min(dataset, (d) => new Date(d.date)), estimated95Date])
+    .domain([
+      d3.min(dataset, (d) => new Date(d.date)),
+      d3.max(dataset, (d) => new Date(d.date)),
+    ])
     .range([margin.left, w - margin.right]);
 
   // Scale Y to the weekly average line
@@ -128,41 +131,41 @@ module.exports = (data) => {
     .attr("d", totalDosesArea);
 
   // Projected line - extend from current day up to projected date
-  const projectedDosesLineData = [
-    {
-      x: d3.max(dataset, (d) => new Date(d.date)),
-      y: d3.max(dataset, (d) =>
-        estimatedPercentVaccinated(d.estimatedFullyVaccinated)
-      ),
-    },
-    {
-      x: estimated95Date,
-      y: 95,
-    },
-  ];
+  // const projectedDosesLineData = [
+  //   {
+  //     x: d3.max(dataset, (d) => new Date(d.date)),
+  //     y: d3.max(dataset, (d) =>
+  //       estimatedPercentVaccinated(d.estimatedFullyVaccinated)
+  //     ),
+  //   },
+  //   {
+  //     x: estimated95Date,
+  //     y: 95,
+  //   },
+  // ];
 
-  const projectedDosesLine = d3
-    .line()
-    .x((d) => xScale(d.x))
-    .y((d) => yScale(d.y));
+  // const projectedDosesLine = d3
+  //   .line()
+  //   .x((d) => xScale(d.x))
+  //   .y((d) => yScale(d.y));
 
-  svg
-    .append("path")
-    .datum(projectedDosesLineData)
-    .attr("class", "projected-vaccinations-line")
-    .attr("fill", "none")
-    .attr("stroke-width", 0.5)
-    .attr("stroke-dasharray", 6)
-    .attr("stroke", colours.darkGrey)
-    .attr("d", projectedDosesLine);
+  // svg
+  //   .append("path")
+  //   .datum(projectedDosesLineData)
+  //   .attr("class", "projected-vaccinations-line")
+  //   .attr("fill", "none")
+  //   .attr("stroke-width", 0.5)
+  //   .attr("stroke-dasharray", 6)
+  //   .attr("stroke", colours.darkGrey)
+  //   .attr("d", projectedDosesLine);
 
   // Highlight the end of the estimated line
-  svg
-    .append("circle")
-    .style("fill", colours.darkGrey)
-    .attr("r", 2)
-    .attr("cx", xScale(estimated95Date))
-    .attr("cy", yScale(95));
+  // svg
+  //   .append("circle")
+  //   .style("fill", colours.darkGrey)
+  //   .attr("r", 2)
+  //   .attr("cx", xScale(estimated95Date))
+  //   .attr("cy", yScale(95));
 
   // Add info text about this estimate
   const formatNumber = (number) => Intl.NumberFormat("en-UK").format(number);
@@ -187,19 +190,19 @@ module.exports = (data) => {
     .attr("text-anchor", "end")
     .style("fill", colours.darkGrey);
 
-  svg
-    .append("text")
-    .text(
-      "* based on 7-day average rate of " +
-        formatNumber(dosesPerDay) +
-        " doses per day"
-    )
-    .attr("x", w - margin.right)
-    .attr("y", h - margin.bottom - 10)
-    .attr("dy", 0)
-    .style("font-size", 10)
-    .attr("text-anchor", "end")
-    .style("fill", colours.darkGrey);
+  // svg
+  //   .append("text")
+  //   .text(
+  //     "* based on 7-day average rate of " +
+  //       formatNumber(dosesPerDay) +
+  //       " doses per day"
+  //   )
+  //   .attr("x", w - margin.right)
+  //   .attr("y", h - margin.bottom - 10)
+  //   .attr("dy", 0)
+  //   .style("font-size", 10)
+  //   .attr("text-anchor", "end")
+  //   .style("fill", colours.darkGrey);
 
   // Legend: Total fully vaccinated
   svg
@@ -220,56 +223,56 @@ module.exports = (data) => {
     .text("Total fully vaccinated (" + percentVaccinated.toFixed(2) + "%)");
 
   // Legend: Projected rate
-  const legendAvgLinePoints = [
-    {
-      x: margin.left + 20,
-      y: margin.top + 38,
-    },
-    {
-      x: margin.left + 30,
-      y: margin.top + 28,
-    },
-  ];
-  const legendAvgLine = d3
-    .line()
-    .x((d) => d.x)
-    .y((d) => d.y);
+  // const legendAvgLinePoints = [
+  //   {
+  //     x: margin.left + 20,
+  //     y: margin.top + 38,
+  //   },
+  //   {
+  //     x: margin.left + 30,
+  //     y: margin.top + 28,
+  //   },
+  // ];
+  // const legendAvgLine = d3
+  //   .line()
+  //   .x((d) => d.x)
+  //   .y((d) => d.y);
 
-  svg
-    .append("path")
-    .datum(legendAvgLinePoints)
-    .attr("class", "daily-vaccinations-line")
-    .attr("fill", "none")
-    .attr("stroke-width", 0.5)
-    .attr("stroke-dasharray", 2)
-    .attr("stroke", colours.darkGrey)
-    .attr("d", legendAvgLine);
+  // svg
+  //   .append("path")
+  //   .datum(legendAvgLinePoints)
+  //   .attr("class", "daily-vaccinations-line")
+  //   .attr("fill", "none")
+  //   .attr("stroke-width", 0.5)
+  //   .attr("stroke-dasharray", 2)
+  //   .attr("stroke", colours.darkGrey)
+  //   .attr("d", legendAvgLine);
 
-  svg
-    .append("text")
-    .attr("x", margin.left + 35)
-    .attr("y", margin.top + 34)
-    .attr("alignment-baseline", "middle")
-    .style("fill", colours.darkGrey)
-    .style("font-size", 10)
-    .text("Projected rate");
+  // svg
+  //   .append("text")
+  //   .attr("x", margin.left + 35)
+  //   .attr("y", margin.top + 34)
+  //   .attr("alignment-baseline", "middle")
+  //   .style("fill", colours.darkGrey)
+  //   .style("font-size", 10)
+  //   .text("Projected rate");
 
   // Legend: 'Target: 95% (' + formatNumber(estimatedGoalPop) + ' people)'
-  svg
-    .append("circle")
-    .style("fill", colours.darkGrey)
-    .attr("r", 2)
-    .attr("cx", margin.left + 24)
-    .attr("cy", margin.top + 53);
+  // svg
+  //   .append("circle")
+  //   .style("fill", colours.darkGrey)
+  //   .attr("r", 2)
+  //   .attr("cx", margin.left + 24)
+  //   .attr("cy", margin.top + 53);
 
-  svg
-    .append("text")
-    .attr("x", margin.left + 35)
-    .attr("y", margin.top + 54)
-    .attr("alignment-baseline", "middle")
-    .style("fill", colours.darkGrey)
-    .style("font-size", 10)
-    .text("Target: 95% (" + formatNumber(estimatedGoalPop) + " 12+)");
+  // svg
+  //   .append("text")
+  //   .attr("x", margin.left + 35)
+  //   .attr("y", margin.top + 54)
+  //   .attr("alignment-baseline", "middle")
+  //   .style("fill", colours.darkGrey)
+  //   .style("font-size", 10)
+  //   .text("Target: 95% (" + formatNumber(estimatedGoalPop) + " 12+)");
 
   d3n.html();
   const html = `

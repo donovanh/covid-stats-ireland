@@ -139,26 +139,26 @@ const processVaccinationData = (data) => {
       continue;
     }
     /*
-    0 date,
-    1 people_vaccinated,
-    2 people_fully_vaccinated,
-    3 total_vaccinations,
-    4 location,
-    5 source_url,
-    6 vaccine,
-    7 total_boosters
+    0 location,
+    1 date
+    2 total_vaccinations
+    3 people_vaccinated
+    4 people_fully_vaccinated
+    5 total_boosters
+    6 vaccine
+    7 source_url
     */
     if (+row[2]) {
-      fullyVaccinatedSoFar = +row[2];
+      fullyVaccinatedSoFar = +row[3];
     }
     if (row.length > 1) {
       result.push({
-        date: new Date(row[0]),
+        date: new Date(row[1]),
         vaccineType: row[6],
-        doses: +row[3],
-        people: +row[1],
+        doses: +row[2],
+        people: +row[3],
         fullyVaccinated: fullyVaccinatedSoFar,
-        boosters: +row[7],
+        boosters: +row[5],
       });
     }
   }

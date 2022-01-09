@@ -7,7 +7,8 @@ description: How many vaccinations have been given so far?
 {% assign latestVaccination = charts.data.vaccination | last %}
 <h1>Vaccinations progress</h1>
 <p>How many vaccinations have been given so far?</p>
-<p>This graph shows the number of vaccine doses given since <strong>{{ firstVaccination.date | formatDate }}</strong>. So far all the vaccinations require two doses, and a total of <strong>{{ latestVaccination.doses | formatNumber }}</strong> doses have been given, enough for about <strong>{{ latestVaccination.doses : times: 0.5 | formatNumber }}</strong> people.</p>
+<p>This graph shows the number of vaccine doses given since <strong>{{ firstVaccination.date | formatDate }}</strong>. So far all the vaccinations require two doses,
+and a total of <strong>{{ latestVaccination.doses | formatNumber }}</strong> doses have been given.</p>
 <p>A total of <strong>{{ latestVaccination.fullyVaccinated | formatNumber }}</strong> people have been confirmed fully vaccinated.</p>
 <div class="chart">
   {{ charts.dailyVaccinated }}

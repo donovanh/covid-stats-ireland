@@ -141,24 +141,24 @@ const processVaccinationData = (data) => {
     /*
     0 location,
     1 date
-    2 total_vaccinations
-    3 people_vaccinated
-    4 people_fully_vaccinated
-    5 total_boosters
-    6 vaccine
-    7 source_url
+    2 vaccine
+    3 source_url
+    4 total_vaccinations
+    5 people_vaccinated
+    6 people_fully_vaccinated
+    7 total_boosters
     */
-    if (+row[2]) {
-      fullyVaccinatedSoFar = +row[3];
+    if (+row[5]) {
+      fullyVaccinatedSoFar = +row[6];
     }
     if (row.length > 1) {
       result.push({
         date: new Date(row[1]),
-        vaccineType: row[6],
-        doses: +row[2],
-        people: +row[3],
+        vaccineType: row[2],
+        doses: +row[4],
+        people: +row[5],
         fullyVaccinated: fullyVaccinatedSoFar,
-        boosters: +row[5],
+        boosters: +row[7],
       });
     }
   }

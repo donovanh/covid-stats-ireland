@@ -13,7 +13,6 @@ module.exports = (data) => {
 
   // Set up dimensions and options
   const dataset = data.vaccination;
-
   /*
   {
     dailyAvgDoses: 36802,

@@ -16,7 +16,6 @@
   "license": "ISC",
   "devDependencies": {
     "@11ty/eleventy": "^0.12.1",
-    "concurrently": "^7.0.0",
     "csv-string": "^4.0.1",
     "d3-node": "^2.2.3",
     "fs": "0.0.1-security",

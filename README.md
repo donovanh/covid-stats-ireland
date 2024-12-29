@@ -1,8 +1,8 @@
-# Covid Stats Ireland: [covidnumbers.ie](https://covidnumbers.ie)
+# Covid Stats Ireland: [covidnumbers.hop.ie](https://covidnumbers.hop.ie)
 
 This is a Covid dashboard designed to provide an overview of the currently available stats for Ireland.
 
-View it here: [https://covidnumbers.ie](https://covidnumbers.ie)
+View it here: [https://covidnumbers.hop.ie](https://covidnumbers.hop.ie)
 
 I've tried to make it easy to see the current state of Covid in the country, with case totals, hospital totals, testing percentages and vaccination numbers. It also offers a historical view by surfacing daily numbers when hovering over the two main time-based graphs.
 
@@ -10,7 +10,7 @@ You can also dig into county-based data which has been illustrated as a percenta
 
 ## Latest numbers
 
-![Latest Covid numbers](https://covidnumbers.ie/covid-stats-ireland.png)
+![Latest Covid numbers](https://covidnumbers.hop.ie/covid-stats-ireland.png)
 
 ## How it was built
 
@@ -42,9 +42,9 @@ On first run, the project will cache the API data locally in a `cached.json` fil
 
 ## Attribution
 
-If you use this project or any of the graphs, please link back to [the source](https://covidnumbers.ie), using something like:
+If you use this project or any of the graphs, please link back to [the source](https://covidnumbers.hop.ie), using something like:
 
-*Source: [CovidNumbers.ie](https://covidnumbers.ie) by Donovan Hutchinson*
+_Source: [CovidNumbers.hop.ie](https://covidnumbers.hop.ie) by Donovan Hutchinson_
 
 ## Questions and feedback
 
@@ -52,4 +52,4 @@ Any issues, please let me know [by email](mailto:d@hop.ie) or [on Twitter](https
 
 ## License
 
-MIT license applies. 
+MIT license applies.

@@ -1,459 +1,492 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-      <meta charset="utf-8">
-      <title>COVID-19 Ireland Numbers - CovidNumbers.ie</title>
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <meta name="description" content="Ireland's latest Covid-19 numbers: {{ charts.summary.ConfirmedCovidCases }} cases, {{ charts.summary.ConfirmedCovidDeaths }} deaths, {{ charts.summary.vaccinations }} vaccinations">
-      <meta property="og:title" content="COVID-19 Ireland Numbers - CovidNumbers.ie">
-      <meta property="og:description" content="Ireland's latest Covid-19 numbers: {{ charts.summary.ConfirmedCovidCases }} cases, {{ charts.summary.ConfirmedCovidDeaths }} deaths, {{ charts.summary.vaccinations }} vaccinations">
-      <meta property="og:image" content="https://covidnumbers.ie/{{ charts.screenshotFilename }}">
-      <meta property="og:url" content="https://covidnumbers.ie">
-      <meta property="og:site_name" content="Covid-19 Ireland">
-      <meta name="twitter:card" content="summary_large_image">
-      <meta name="twitter:image" content="https://covidnumbers.ie/{{ charts.screenshotFilename }}">
-      <meta name="twitter:description" content="Ireland's latest Covid-19 numbers: {{ charts.summary.ConfirmedCovidCases }} cases, {{ charts.summary.ConfirmedCovidDeaths }} deaths, {{ charts.summary.vaccinations }} vaccinations">
-      <meta name="twitter:image:alt" content="Latest: {{ charts.summary.ConfirmedCovidCases }} cases, {{ charts.summary.ConfirmedCovidDeaths }} deaths, {{ charts.summary.vaccinations }} vaccinations">
-      <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
-      <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
-      <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
-      <style>
+  <head>
+    <meta charset="utf-8" />
+    <title>COVID-19 Ireland Numbers - CovidNumbers.ie</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Ireland's latest Covid-19 numbers: {{ charts.summary.ConfirmedCovidCases }} cases, {{ charts.summary.ConfirmedCovidDeaths }} deaths, {{ charts.summary.vaccinations }} vaccinations"
+    />
+    <meta
+      property="og:title"
+      content="COVID-19 Ireland Numbers - CovidNumbers.ie"
+    />
+    <meta
+      property="og:description"
+      content="Ireland's latest Covid-19 numbers: {{ charts.summary.ConfirmedCovidCases }} cases, {{ charts.summary.ConfirmedCovidDeaths }} deaths, {{ charts.summary.vaccinations }} vaccinations"
+    />
+    <meta
+      property="og:image"
+      content="https://covidnumbers.ie/{{ charts.screenshotFilename }}"
+    />
+    <meta property="og:url" content="https://covidnumbers.ie" />
+    <meta property="og:site_name" content="Covid-19 Ireland" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/img/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/img/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/img/favicon-16x16.png"
+    />
+    <style>
+      :root {
+        --bg-color: white;
+        --text-color: #333;
+        --second-text-color: #666;
+        --third-text-color: #999;
+      }
+      @media (prefers-color-scheme: dark) {
         :root {
-          --bg-color: white;
-          --text-color: #333;
-          --second-text-color: #666;
-          --third-text-color: #999;
+          --bg-color: #222;
+          --text-color: #ddd;
+          --second-text-color: #aaa;
         }
-        @media (prefers-color-scheme: dark) {
-          :root {
-            --bg-color: #222;
-            --text-color: #ddd;
-            --second-text-color: #aaa;
-          }
+      }
+      body {
+        background: var(--bg-color);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+          "Segoe UI Symbol";
+        font-size: 14px;
+        color: var(--text-color);
+      }
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .last-updated {
+        color: var(--third-text-color);
+        margin: 0;
+      }
+      main {
+        max-width: 1280px;
+        margin: 0 auto;
+      }
+      @media only screen and (max-width: 1320px) {
+        main {
+          padding: 0 20px;
         }
-        body {
-          background: var(--bg-color);
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-          font-size: 14px;
-          color: var(--text-color);
+      }
+      svg text {
+        shape-rendering: crispEdges;
+      }
+
+      h2 {
+        color: var(--second-text-color);
+        margin: 40px 0 10px;
+        font-weight: normal;
+      }
+      .tooltip {
+        pointer-events: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 15px;
+        box-shadow: 0 0 30px -10px rgba(0, 0, 0, 0.3);
+        opacity: 0;
+        transition: opacity 0.2s ease-out;
+        padding: 12px;
+        min-width: 120px;
+      }
+      @media (prefers-color-scheme: dark) {
+        .tooltip {
+          background: rgba(0, 0, 0, 0.9);
         }
+      }
+
+      .tooltip p {
+        margin: 0;
+        white-space: nowrap;
+      }
+
+      .tooltip p.date {
+        font-size: 12px;
+        font-weight: bold;
+      }
+
+      .tooltip p.large {
+        font-size: 24px;
+      }
+
+      .tooltip p.small {
+        font-size: 12px;
+        margin-top: 0;
+      }
+
+      .tooltip.active {
+        opacity: 1;
+      }
+
+      @media only screen and (max-width: 600px) {
         header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
+          flex-wrap: wrap;
+        }
+        header h1 {
+          margin: 10px 0 0;
         }
         .last-updated {
-          color: var(--third-text-color);
-          margin: 0;
+          margin-bottom: 10px;
         }
         main {
-          max-width: 1280px;
-          margin: 0 auto;
-        }
-        @media only screen and (max-width: 1320px) {
-          main {
-            padding: 0 20px;
-          }
-        }
-        svg text {
-          shape-rendering: crispEdges;
-        }
-
-        h2 {
-          color: var(--second-text-color);
-          margin: 40px 0 10px;
-          font-weight: normal;
+          padding: 0 10px;
         }
         .tooltip {
-          pointer-events: none;
-          position: absolute;
-          top: 0;
-          left: 0;
-          background: rgba(255,255,255,0.9);
           border-radius: 15px;
-          box-shadow: 0 0 30px -10px rgba(0,0,0,.3);
-          opacity: 0;
-          transition: opacity 0.2s ease-out;
           padding: 12px;
-          min-width: 120px;
+        }
+        .tooltip p.date {
+          font-size: 10px;
+        }
+        .tooltip p.large {
+          font-size: 14px;
+        }
+        .tooltip p.small {
+          font-size: 10px;
+        }
+      }
+
+      @media only screen and (max-width: 800px) {
+        svg * {
+          shape-rendering: crispEdges;
+        }
+      }
+      @media (prefers-color-scheme: dark) {
+        a {
+          color: #bbf;
+        }
+        a:hover {
+          color: #fff;
+        }
+        /* Global graph colour overrides for dark mode */
+        .tick line {
+          stroke: #333;
+        }
+        .tick text {
+          fill: #666;
+        }
+        #cases .seven-day-avg {
+          stroke: #eee;
+        }
+        #cases .bar {
+          fill: #f9684b;
+        }
+      }
+
+      .chart-wrapper {
+        display: flex;
+      }
+      .chart-wrapper .chart {
+        width: 100%;
+      }
+      @media only screen and (max-width: 800px) {
+        .chart-wrapper {
+          flex-wrap: wrap;
+        }
+      }
+    </style>
+    <script>
+      const formatNumber = (number) =>
+        Intl.NumberFormat("en-UK").format(number);
+      const dateOptions = {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      };
+      const formatDate = (date) =>
+        new Date(date).toLocaleDateString("en-US", dateOptions);
+    </script>
+  </head>
+  <body>
+    <!-- Last deploy: {{charts.lastRun}} -->
+    <main>
+      <header>
+        <h1>COVID-19 Ireland</h1>
+        <p class="last-updated">Updated: {{charts.lastUpdated.national}}</p>
+      </header>
+      <style>
+        .summary h2 {
+          margin-top: 10px;
+        }
+        .summary ul {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          border-radius: 10px;
+          padding: 30px 20px 30px;
+          box-shadow: 0 0 30px -10px rgba(0, 0, 0, 0.1);
+          margin: 20px 0;
         }
         @media (prefers-color-scheme: dark) {
-          .tooltip {
-            background: rgba(0,0,0,0.9);
+          .summary ul {
+            background: #111;
+            box-shadow: none;
           }
         }
-
-        .tooltip p {
-          margin: 0;
-          white-space: nowrap;
-        }
-
-        .tooltip p.date {
-          font-size: 12px;
-          font-weight: bold;
-        }
-
-        .tooltip p.large {
+        .summary li {
+          display: inline-block;
+          list-style: none;
           font-size: 24px;
         }
-
-        .tooltip p.small {
+        .summary li .label {
+          display: block;
           font-size: 12px;
-          margin-top: 0;
+          color: #999;
         }
-
-        .tooltip.active {
-          opacity: 1;
+        .summary.fade-in li,
+        .summary.fade-in .summary-title {
+          animation: fade-in 1s cubic-bezier(0, 1, 0.3, 1) forwards;
         }
-
+        .summary.fade-in li:nth-of-type(2) {
+          opacity: 0;
+          animation-delay: 0.025s;
+        }
+        .summary.fade-in li:nth-of-type(3) {
+          opacity: 0;
+          animation-delay: 0.05s;
+        }
+        .summary.fade-in li:nth-of-type(4) {
+          opacity: 0;
+          animation-delay: 0.075s;
+        }
+        .summary.fade-in li:nth-of-type(5) {
+          opacity: 0;
+          animation-delay: 0.1s;
+        }
+        .summary.fade-in li:nth-of-type(6) {
+          opacity: 0;
+          animation-delay: 0.125s;
+        }
+        @keyframes fade-in {
+          0% {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          100% {
+            opacity: 1;
+            transform: none;
+          }
+        }
         @media only screen and (max-width: 600px) {
-          header {
-            flex-wrap: wrap;
-          }
-          header h1 {
-            margin: 10px 0 0;
-          }
-          .last-updated {
-            margin-bottom: 10px;
-          }
-          main {
+          .summary ul {
             padding: 0 10px;
           }
-          .tooltip {
-            border-radius: 15px;
-            padding: 12px;
-          }
-          .tooltip p.date {
-            font-size: 10px;
-          }
-          .tooltip p.large {
-            font-size: 14px;
-          }
-          .tooltip p.small {
-            font-size: 10px;
+          .summary li {
+            width: 33%;
+            padding: 10px 0;
           }
         }
-
-        @media only screen and (max-width: 800px) {
-          svg * {
-            shape-rendering: crispEdges;
-          }
+        .warning {
+          background: #eee;
+          border-left: 4px solid red;
+          padding: 10px 20px;
+          margin: 20px 0;
         }
         @media (prefers-color-scheme: dark) {
-          a {
-            color: #bbf;
-          }
-          a:hover {
-            color: #fff;
-          }
-          /* Global graph colour overrides for dark mode */
-          .tick line {
-            stroke: #333;
-          }
-          .tick text {
-            fill: #666;
-          }
-          #cases .seven-day-avg {
-            stroke: #eee;
-          }
-          #cases .bar {
-            fill: #f9684b;
-          }
-        }
-
-        .chart-wrapper {
-          display: flex;
-        }
-        .chart-wrapper .chart {
-          width: 100%;
-        }
-        @media only screen and (max-width: 800px) {
-          .chart-wrapper {
-            flex-wrap: wrap;
+          .warning {
+            background: #111;
+            box-shadow: none;
           }
         }
       </style>
-      <script>
-        const formatNumber = (number) => Intl.NumberFormat('en-UK').format(number);
-        const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        const formatDate = (date) => new Date(date).toLocaleDateString("en-US", dateOptions);
-      </script>
-    </head>
-    <body>
-      <!-- Last deploy: {{charts.lastRun}} -->
-      <main>
-        <header>
-          <h1>COVID-19 Ireland</h1>
-          <p class="last-updated">Updated: {{charts.lastUpdated.national}}</p>
-        </header>
-        <style>
-          .summary h2 {
-            margin-top: 10px;
-          }
-          .summary ul {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            border-radius: 10px;
-            padding: 30px 20px 30px;
-            box-shadow: 0 0 30px -10px rgba(0,0,0,.1);
-            margin: 20px 0;
-          }
-          @media (prefers-color-scheme: dark) {
-            .summary ul {
-              background: #111;
-              box-shadow: none;
+      <div class="summary">
+        <h2 class="summary-title">Latest numbers</h2>
+        <ul>
+          <li class="daily-cases">
+            <span class="data"> {{ charts.summary.ConfirmedCovidCases }} </span>
+            <span class="label">New cases</span>
+          </li>
+          <li class="avg-cases">
+            <span class="data"> {{ charts.summary.avgCases }} </span>
+            <span class="label">7 day average</span>
+          </li>
+          <!--<li class="prev-average-cases">{{ charts.summary.previousAvgCases }} <span class="label">Previous 7 day average</span></li> -->
+          <li class="daily-deaths">
+            <span class="data">
+              {{ charts.summary.ConfirmedCovidDeaths }}
+            </span>
+            <span class="label">Deaths</span>
+          </li>
+          <li class="in-hospital">
+            <span class="data"> {{ charts.summary.hospitalised }} </span>
+            <span class="label">In hospital</span>
+          </li>
+          <li class="in-icu">
+            <span class="data"> {{ charts.summary.latestICU }} </span>
+            <span class="label">In ICU</span>
+          </li>
+          <li class="vaccinations-total">
+            <span class="data"> {{ charts.summary.vaccinations }} </span>
+            <span class="label">Total vaccine doses</span>
+          </li>
+        </ul>
+        <script>
+          // Respond to show-date event
+          document
+            .querySelector("body")
+            .addEventListener("show-date", summaryDateHandler);
+          const summary = document.querySelector(".summary");
+          const summaryTitle = document.querySelector(".summary-title");
+          const summaryData = {
+            cases: document.querySelector(".summary .daily-cases .data"),
+            avgCases: document.querySelector(".summary .avg-cases .data"),
+            deaths: document.querySelector(".summary .daily-deaths .data"),
+            hospitalised: document.querySelector(".summary .in-hospital .data"),
+            icu: document.querySelector(".summary .in-icu .data"),
+            testing: document.querySelector(".summary .testing-positive .data"),
+            vaccination: document.querySelector(
+              ".summary .vaccinations-total .data"
+            ),
+          };
+          const todayData = {
+            c: summaryData.cases.innerText,
+            cAvg: summaryData.avgCases.innerText,
+            d: summaryData.deaths.innerText,
+            h: summaryData.hospitalised.innerText,
+            i: summaryData.icu.innerText,
+            //t: summaryData.testing.innerText,
+            v: summaryData.vaccination.innerText,
+          };
+          function findByDate(date) {
+            if (!window.inlineData) {
+              return;
             }
+            return window.inlineData.find(function (d) {
+              const date1 = new Date(d.date);
+              const compare1 = `${date1.getUTCFullYear()} ${date1.getUTCMonth()} ${date1.getUTCDate()}`;
+              const date2 = new Date(date);
+              const compare2 = `${date2.getUTCFullYear()} ${date2.getUTCMonth()} ${date2.getUTCDate()}`;
+              return compare1 === compare2;
+            });
           }
-          .summary li {
-            display: inline-block;
-            list-style: none;
-            font-size: 24px;
-          }
-          .summary li .label {
-            display: block;
-            font-size: 12px;
-            color: #999;
-          }
-          .summary.fade-in li,
-          .summary.fade-in .summary-title {
-            animation: fade-in 1s cubic-bezier(0,1,.3,1) forwards;
-          }
-          .summary.fade-in li:nth-of-type(2) {
-            opacity: 0;
-            animation-delay: 0.025s;
-          }
-          .summary.fade-in li:nth-of-type(3) {
-            opacity: 0;
-            animation-delay: 0.05s;
-          }
-          .summary.fade-in li:nth-of-type(4) {
-            opacity: 0;
-            animation-delay: 0.075s;
-          }
-          .summary.fade-in li:nth-of-type(5) {
-            opacity: 0;
-            animation-delay: 0.1s;
-          }
-          .summary.fade-in li:nth-of-type(6) {
-            opacity: 0;
-            animation-delay: 0.125s;
-          }
-          @keyframes fade-in {
-            0% {
-              opacity: 0;
-              transform: translateY(10px);
-            }
-            100% {
-              opacity: 1;
-              transform: none;
-            }
-          }
-          @media only screen and (max-width: 600px) {
-            .summary ul {
-              padding: 0 10px;
-            }
-            .summary li {
-              width: 33%;
-              padding: 10px 0;
-            }
-          }
-          .warning {
-            background: #eee;
-            border-left: 4px solid red;
-            padding: 10px 20px;
-            margin: 20px 0;
-          }
-          @media (prefers-color-scheme: dark) {
-            .warning {
-              background: #111;
-              box-shadow: none;
-            }
-          }
-        </style>
-        <div class="summary">
-          <h2 class="summary-title">Latest numbers</h2>
-          <ul>
-            <li class="daily-cases">
-              <span class="data">
-                {{ charts.summary.ConfirmedCovidCases }}
-              </span>
-              <span class="label">New cases</span></li>
-            <li class="avg-cases">
-              <span class="data">
-                {{ charts.summary.avgCases }}
-              </span>
-              <span class="label">7 day average</span>
-            </li>
-            <!--<li class="prev-average-cases">{{ charts.summary.previousAvgCases }} <span class="label">Previous 7 day average</span></li> -->
-            <li class="daily-deaths">
-              <span class="data">
-                {{ charts.summary.ConfirmedCovidDeaths }}
-              </span>
-              <span class="label">Deaths</span></li>
-            <li class="in-hospital">
-              <span class="data">
-                {{ charts.summary.hospitalised }}
-              </span>
-              <span class="label">In hospital</span></li>
-            <li class="in-icu">
-              <span class="data">
-                {{ charts.summary.latestICU }}
-              </span>
-              <span class="label">In ICU</span></li>
-            <li class="vaccinations-total">
-              <span class="data">
-                {{ charts.summary.vaccinations }}
-              </span>
-              <span class="label">Total vaccine doses</span></li>
-          </ul>
-          <script>
-            // Respond to show-date event
-            document.querySelector('body').addEventListener('show-date', summaryDateHandler);
-            const summary = document.querySelector('.summary');
-            const summaryTitle = document.querySelector('.summary-title');
-            const summaryData = {
-              cases: document.querySelector('.summary .daily-cases .data'),
-              avgCases: document.querySelector('.summary .avg-cases .data'),
-              deaths: document.querySelector('.summary .daily-deaths .data'),
-              hospitalised: document.querySelector('.summary .in-hospital .data'),
-              icu: document.querySelector('.summary .in-icu .data'),
-              testing: document.querySelector('.summary .testing-positive .data'),
-              vaccination: document.querySelector('.summary .vaccinations-total .data')
-            }
-            const todayData = {
-              c: summaryData.cases.innerText,
-              cAvg: summaryData.avgCases.innerText,
-              d: summaryData.deaths.innerText,
-              h: summaryData.hospitalised.innerText,
-              i: summaryData.icu.innerText,
-              //t: summaryData.testing.innerText,
-              v: summaryData.vaccination.innerText,
-            }
-            function findByDate(date) {
-              if (!window.inlineData) {
-                return;
-              } 
-              return window.inlineData.find(function(d) {
-                const date1 = new Date(d.date);
-                const compare1 = `${date1.getUTCFullYear()} ${date1.getUTCMonth()} ${date1.getUTCDate()}`;
-                const date2 = new Date(date);
-                const compare2 = `${date2.getUTCFullYear()} ${date2.getUTCMonth()} ${date2.getUTCDate()}`;
-                return compare1 === compare2
-              });
-            }
-            function showSummaryData(data) {
-              if (data.date) {
-                summaryTitle.innerText = formatDate(data.date);
-                if (!summary.classList.contains('changing')) {
-                  summary.classList.remove('fade-in');
-                  setTimeout(function() {
-                    summary.classList.add('fade-in');
-                  }, 10);
-                }
-                summary.classList.add('changing');
-              } else {
-                summary.classList.remove('changing');
-                summary.classList.remove('fade-in');
-                setTimeout(function() {
-                  summary.classList.add('fade-in');
+          function showSummaryData(data) {
+            if (data.date) {
+              summaryTitle.innerText = formatDate(data.date);
+              if (!summary.classList.contains("changing")) {
+                summary.classList.remove("fade-in");
+                setTimeout(function () {
+                  summary.classList.add("fade-in");
                 }, 10);
-                summaryTitle.innerText = 'Latest numbers';
               }
-              
-              summaryData.cases.innerText = data.c || 0;
-              summaryData.avgCases.innerText = data.cAvg || 0;
-              summaryData.deaths.innerText = data.d || 0;
-              summaryData.hospitalised.innerText = data.h || 0;
-              summaryData.icu.innerText = data.i || 0;
-              //summaryData.testing.innerText = data.t ? data.t + '%' : '0%';
-              // if (typeof data.t === 'string' && data.t.includes('%')) {
-              //   summaryData.testing.innerText = data.t;
-              // }
-              summaryData.vaccination.innerText = data.v;
+              summary.classList.add("changing");
+            } else {
+              summary.classList.remove("changing");
+              summary.classList.remove("fade-in");
+              setTimeout(function () {
+                summary.classList.add("fade-in");
+              }, 10);
+              summaryTitle.innerText = "Latest numbers";
             }
-            function summaryDateHandler(e) {
-              const date = e.detail;
-              const data = findByDate(date);
-              if (data) {
-                // Format the numbers first
-                const formatted = {
-                  ...data,
-                  c: formatNumber(data.c),
-                  d: formatNumber(data.d),
-                  h: formatNumber(data.h),
-                  i: formatNumber(data.i),
-                  v: formatNumber(data.v),
-                  vAvg: formatNumber(data.vAvg)
-                }
-                showSummaryData(formatted);
-              } else {
-                showSummaryData(todayData);
-              }
-            }
-          </script>
-        </div>
-        {{ charts.dailyNationalCases }}
-        <div class="chart-wrapper">
-          <div class="chart">
-            {{ charts.dailyVaccinated }}
-          </div>
-          <div class="chart">
-            {{ charts.projectedVaccinated }}
-          </div>
-        </div>
-        {{ charts.dailyHospitalised }}
-        <!-- <style>
-          .counties {
-            display: flex;
+
+            summaryData.cases.innerText = data.c || 0;
+            summaryData.avgCases.innerText = data.cAvg || 0;
+            summaryData.deaths.innerText = data.d || 0;
+            summaryData.hospitalised.innerText = data.h || 0;
+            summaryData.icu.innerText = data.i || 0;
+            //summaryData.testing.innerText = data.t ? data.t + '%' : '0%';
+            // if (typeof data.t === 'string' && data.t.includes('%')) {
+            //   summaryData.testing.innerText = data.t;
+            // }
+            summaryData.vaccination.innerText = data.v;
           }
-          .counties .map {
-            width: 50%;
-          }
-          .counties .list {
-            width: 50%;
-          }
-          @media only screen and (max-width: 800px) {
-            .counties {
-              flex-wrap: wrap;
-            }
-            .counties .map,
-            .counties .list {
-              width: 100%;
+          function summaryDateHandler(e) {
+            const date = e.detail;
+            const data = findByDate(date);
+            if (data) {
+              // Format the numbers first
+              const formatted = {
+                ...data,
+                c: formatNumber(data.c),
+                d: formatNumber(data.d),
+                h: formatNumber(data.h),
+                i: formatNumber(data.i),
+                v: formatNumber(data.v),
+                vAvg: formatNumber(data.vAvg),
+              };
+              showSummaryData(formatted);
+            } else {
+              showSummaryData(todayData);
             }
           }
-        </style>
-        <section class="counties">
-          <div class="map">{{ charts.countyMap }}</div>
-          <div class="list">{{ charts.countyList }}</div>
-        </section> -->
-        <style>
+        </script>
+      </div>
+      {{ charts.dailyNationalCases }}
+      <div class="chart-wrapper">
+        <div class="chart">{{ charts.dailyVaccinated }}</div>
+        <div class="chart">{{ charts.projectedVaccinated }}</div>
+      </div>
+      {{ charts.dailyHospitalised }}
+      <style>
+        footer {
+          border-top: 1px solid #f6f6f6;
+          color: var(--second-text-color);
+          margin: 40px 0;
+          padding: 10px 0;
+        }
+        @media (prefers-color-scheme: dark) {
           footer {
-            border-top: 1px solid #f6f6f6;
-            color: var(--second-text-color);
-            margin: 40px 0;
-            padding: 10px 0;
+            border-top: 1px solid #333;
           }
-          @media (prefers-color-scheme: dark) {
-            footer {
-              border-top: 1px solid #333;
-            }
-          }
-        </style>
-        <footer>
-          <h3>More COVID-19 numbers</h3>
-          <p>As Ireland deals with the impact of the COVID-19 pandemic, we have been tracking the daily numbers on our <a href="https://covidnumbers.ie">Irish COVID-19 dashboard</a>. </p>
-          <p>Read more about <a href="/graphs/cases/">case numbers</a>, <a href="/graphs/hospital/">hospitalisation numbers</a>, <a href="/graphs/vaccinations/">vaccination progress</a> and an estimated date for <a href="/graphs/projected-vaccinated/">when we will achieve herd immunity</a>.</p>
-          <h3>Sources</h3>
-          <p>Case data sourced from <a href="https://data.gov.ie/">data.gov.ie</a> using <a href="https://covid19ireland-geohive.hub.arcgis.com/datasets/d8eb52d56273413b84b0187a4e9117be_0">ARCGIS</a>.
-          Vaccination numbers sourced from <a href="https://github.com/owid/covid-19-data/tree/master/public/data">Our World In Data</a>.</p>
-          <h3>About this site</h3>
-          <p>Designed and built by <a href="https://hop.ie">Donovan Hutchinson</a>.</p>
-          <p>Project <a href="https://github.com/donovanh/covid-stats-ireland">source code on Github</a>.</p>
-          <h3>Last Updated</h3>
-          <p>Daily case data: <strong>{{charts.lastUpdated.national}}</strong>.
-        </footer>
-      </main>
-      {{ charts.inlineData.html }}
+        }
+      </style>
+      <footer>
+        <h3>More COVID-19 numbers</h3>
+        <p>
+          As Ireland deals with the impact of the COVID-19 pandemic, we have
+          been tracking the daily numbers on our
+          <a href="https://covidnumbers.ie">Irish COVID-19 dashboard</a>.
+        </p>
+        <p>
+          Read more about <a href="/graphs/cases/">case numbers</a>,
+          <a href="/graphs/hospital/">hospitalisation numbers</a>,
+          <a href="/graphs/vaccinations/">vaccination progress</a> and an
+          estimated date for
+          <a href="/graphs/projected-vaccinated/"
+            >when we will achieve herd immunity</a
+          >.
+        </p>
+        <h3>Sources</h3>
+        <p>
+          Case data sourced from
+          <a href="https://data.gov.ie/">data.gov.ie</a> using
+          <a
+            href="https://covid19ireland-geohive.hub.arcgis.com/datasets/d8eb52d56273413b84b0187a4e9117be_0"
+            >ARCGIS</a
+          >. Vaccination numbers sourced from
+          <a
+            href="https://github.com/owid/covid-19-data/tree/master/public/data"
+            >Our World In Data</a
+          >.
+        </p>
+        <h3>About this site</h3>
+        <p>
+          Designed and built by <a href="https://hop.ie">Donovan Hutchinson</a>.
+        </p>
+        <p>
+          Project
+          <a href="https://github.com/donovanh/covid-stats-ireland"
+            >source code on Github</a
+          >.
+        </p>
+        <h3>Last Updated</h3>
+        <p>
+          Daily case data: <strong>{{charts.lastUpdated.national}}</strong>.
+        </p>
+      </footer>
+    </main>
+    {{ charts.inlineData.html }}
   </body>
 </html>

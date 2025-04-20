@@ -12,7 +12,6 @@ TODO:
 * Blog post on Eleventy-rendered D3 using Github actions
 * Year-on-year graph for time-based graphs (from March?)
 * Lazy load everything after top graph
-* Have share image update https://cards-dev.twitter.com/validator
 
 * Hover states for county line graph, connect with map hover
  - Use custom event listeners to connect the two

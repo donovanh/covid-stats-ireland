@@ -1,25 +1,45 @@
 ---
 title: COVID-19 Numbers
 ---
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>{{ title }} - CovidNumbers.ie</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Ireland's latest Covid-19 numbers: {{ charts.summary.ConfirmedCovidCases }} cases, {{ charts.summary.ConfirmedCovidDeaths }} deaths, {{ charts.summary.vaccinations }} vaccinations">
-    <meta property="og:title" content="COVID-19 Ireland Numbers - CovidNumbers.ie">
-    <meta property="og:description" content="{{ description }}">
-    <meta property="og:image" content="https://covidnumbers.ie/{{ charts.screenshotFilename }}">
-    <meta property="og:url" content="https://covidnumbers.ie">
-    <meta property="og:site_name" content="Covid-19 Ireland">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="https://covidnumbers.ie/{{ charts.screenshotFilename }}">
-    <meta name="twitter:description" content="{{ description }}">
-    <meta name="twitter:image:alt" content="Latest: {{ charts.summary.ConfirmedCovidCases }} cases, {{ charts.summary.ConfirmedCovidDeaths }} deaths, {{ charts.summary.vaccinations }} vaccinations">
-    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Ireland's latest Covid-19 numbers: {{ charts.summary.ConfirmedCovidCases }} cases, {{ charts.summary.ConfirmedCovidDeaths }} deaths, {{ charts.summary.vaccinations }} vaccinations"
+    />
+    <meta
+      property="og:title"
+      content="COVID-19 Ireland Numbers - CovidNumbers.ie"
+    />
+    <meta property="og:description" content="{{ description }}" />
+    <meta
+      property="og:image"
+      content="https://covidnumbers.ie/{{ charts.screenshotFilename }}"
+    />
+    <meta property="og:url" content="https://covidnumbers.ie" />
+    <meta property="og:site_name" content="Covid-19 Ireland" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/img/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/img/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/img/favicon-16x16.png"
+    />
     <style>
       :root {
         --bg-color: white;
@@ -36,7 +56,9 @@ title: COVID-19 Numbers
       }
       body {
         background: var(--bg-color);
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+          "Segoe UI Symbol";
         font-size: 14px;
         color: var(--text-color);
       }
@@ -76,9 +98,9 @@ title: COVID-19 Numbers
         position: absolute;
         top: 0;
         left: 0;
-        background: rgba(255,255,255,0.9);
+        background: rgba(255, 255, 255, 0.9);
         border-radius: 15px;
-        box-shadow: 0 0 30px -10px rgba(0,0,0,.3);
+        box-shadow: 0 0 30px -10px rgba(0, 0, 0, 0.3);
         opacity: 0;
         transition: opacity 0.2s ease-out;
         padding: 12px;
@@ -86,7 +108,7 @@ title: COVID-19 Numbers
       }
       @media (prefers-color-scheme: dark) {
         .tooltip {
-          background: rgba(0,0,0,0.9);
+          background: rgba(0, 0, 0, 0.9);
         }
       }
 
@@ -179,19 +201,26 @@ title: COVID-19 Numbers
       }
     </style>
     <script>
-      const formatNumber = (number) => Intl.NumberFormat('en-UK').format(number);
-      const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-      const formatDate = (date) => new Date(date).toLocaleDateString("en-US", dateOptions);
+      const formatNumber = (number) =>
+        Intl.NumberFormat("en-UK").format(number);
+      const dateOptions = {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      };
+      const formatDate = (date) =>
+        new Date(date).toLocaleDateString("en-US", dateOptions);
       function findByDate(date) {
         if (!window.inlineData) {
           return;
-        } 
-        return window.inlineData.find(function(d) {
+        }
+        return window.inlineData.find(function (d) {
           const date1 = new Date(d.date);
           const compare1 = `${date1.getUTCFullYear()} ${date1.getUTCMonth()} ${date1.getUTCDate()}`;
           const date2 = new Date(date);
           const compare2 = `${date2.getUTCFullYear()} ${date2.getUTCMonth()} ${date2.getUTCDate()}`;
-          return compare1 === compare2
+          return compare1 === compare2;
         });
       }
     </script>
@@ -202,9 +231,7 @@ title: COVID-19 Numbers
         <h1><a href="/">COVID-19 Ireland</a></h1>
         <p class="last-updated">Updated: {{ charts.lastUpdated.national }}</p>
       </header>
-      <section class="content">
-        {{ content }}
-      </section>
+      <section class="content">{{ content }}</section>
       <style>
         footer {
           border-top: 1px solid #f6f6f6;
@@ -220,17 +247,50 @@ title: COVID-19 Numbers
       </style>
       <footer>
         <h3>More COVID-19 numbers</h3>
-        <p>As Ireland deals with the impact of the COVID-19 pandemic, we have been tracking the daily numbers on our <a href="https://covidnumbers.ie">Irish COVID-19 dashboard</a>. </p>
-        <p>Read more about <a href="/graphs/cases/">case numbers</a>, <a href="/graphs/hospital/">hospitalisation numbers</a>, <a href="/graphs/county/">county cases</a> <a href="/graphs/vaccinations/">vaccination progress</a> and an estimated date for <a href="/graphs/projected-vaccinated/">when we will achieve herd immunity</a>.</p>
+        <p>
+          As Ireland deals with the impact of the COVID-19 pandemic, we have
+          been tracking the daily numbers on our
+          <a href="https://covidnumbers.ie">Irish COVID-19 dashboard</a>.
+        </p>
+        <p>
+          Read more about <a href="/graphs/cases/">case numbers</a>,
+          <a href="/graphs/hospital/">hospitalisation numbers</a>,
+          <a href="/graphs/county/">county cases</a>
+          <a href="/graphs/vaccinations/">vaccination progress</a> and an
+          estimated date for
+          <a href="/graphs/projected-vaccinated/"
+            >when we will achieve herd immunity</a
+          >.
+        </p>
         <h3>Sources</h3>
-        <p>Case data sourced from <a href="https://data.gov.ie/">data.gov.ie</a> using <a href="https://covid19ireland-geohive.hub.arcgis.com/datasets/d8eb52d56273413b84b0187a4e9117be_0">ARCGIS</a>.
-        Vaccination numbers sourced from <a href="https://github.com/owid/covid-19-data/tree/master/public/data">Our World In Data</a>.</p>
+        <p>
+          Case data sourced from
+          <a href="https://data.gov.ie/">data.gov.ie</a> using
+          <a
+            href="https://covid19ireland-geohive.hub.arcgis.com/datasets/d8eb52d56273413b84b0187a4e9117be_0"
+            >ARCGIS</a
+          >. Vaccination numbers sourced from
+          <a
+            href="https://github.com/owid/covid-19-data/tree/master/public/data"
+            >Our World In Data</a
+          >.
+        </p>
         <h3>About this site</h3>
-        <p>Designed and built by <a href="https://hop.ie">Donovan Hutchinson</a>.</p>
-        <p>Project <a href="https://github.com/donovanh/covid-stats-ireland">source code on Github</a>.</p>
+        <p>
+          Designed and built by <a href="https://hop.ie">Donovan Hutchinson</a>.
+        </p>
+        <p>
+          Project
+          <a href="https://github.com/donovanh/covid-stats-ireland"
+            >source code on Github</a
+          >.
+        </p>
         <h3>Last Updated</h3>
-        <p>Daily case data: <strong>{{charts.lastUpdated.national}}</strong>.
-        <br>County case data: <strong>{{charts.lastUpdated.county}}</strong>.</p>
+        <p>
+          Daily case data: <strong>{{charts.lastUpdated.national}}</strong>.
+          <br />County case data:
+          <strong>{{charts.lastUpdated.county}}</strong>.
+        </p>
       </footer>
     </main>
   </body>

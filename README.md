@@ -48,7 +48,7 @@ _Source: [CovidNumbers.hop.ie](https://covidnumbers.hop.ie) by Donovan Hutchinso
 
 ## Questions and feedback
 
-Any issues, please let me know [by email](mailto:d@hop.ie) or [on Twitter](https://twitter.com/donovanh).
+Any issues, please let me know [by email](mailto:d@hop.ie) or [on Mastodon](https://mastodon.ie/donovanh).
 
 ## License
 
